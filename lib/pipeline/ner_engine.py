@@ -1,25 +1,42 @@
 """
-Pipeline Stage 02: NER Engine using spaCy + Microsoft Presidio.
-Handles multilingual NER (English + German) with confidence scoring.
+Pipeline Stage 02: NER Engine using spaCy + Presidio.
+English only. One spaCy model is loaded once and shared by Presidio and our own NER pass.
 """
 
+import os
 import re
-from typing import Tuple, List, Dict, Set
-import spacy
+from typing import Tuple, List, Dict
 from presidio_analyzer import AnalyzerEngine
+from presidio_analyzer.nlp_engine import NlpEngineProvider
 from lib.types import RedactionToken
 
-# Module-level model initialization (runs once per container)
-# This is critical for Vercel serverless performance
+# en_core_web_md (32 MB) was chosen by benchmark over en_core_web_lg (382 MB) and en_core_web_sm (12 MB).
+SPACY_MODEL = os.getenv("SPACY_MODEL", "en_core_web_md")
+
+# Presidio entity types we use, mapped to our token types. Anything else is ignored.
+PRESIDIO_TYPE_MAP = {
+    "PERSON": "PERSON",
+    "LOCATION": "LOCATION",
+    "ORGANIZATION": "ORG",
+    "EMAIL_ADDRESS": "EMAIL",
+    "PHONE_NUMBER": "PHONE",
+}
+
+# Placeholders already written into the text by earlier stages, e.g. [PHONE_02]
+EXISTING_PLACEHOLDER_RE = re.compile(r"\[([A-Z]+)_(\d+)\]")
+
+# Module-level model initialization (runs once per process).
 try:
-    nlp_en = spacy.load("en_core_web_lg")
-    nlp_de = spacy.load("de_core_news_lg")
-    analyzer = AnalyzerEngine()
+    _nlp_provider = NlpEngineProvider(nlp_configuration={
+        "nlp_engine_name": "spacy",
+        "models": [{"lang_code": "en", "model_name": SPACY_MODEL}],
+    })
+    analyzer = AnalyzerEngine(nlp_engine=_nlp_provider.create_engine(), supported_languages=["en"])
+    nlp_en = analyzer.nlp_engine.nlp["en"]  # the same object Presidio uses: loaded once
     MODELS_LOADED = True
 except Exception as e:
-    print(f"Warning: Failed to load NER models: {e}")
+    print(f"Warning: Failed to load NER model {SPACY_MODEL}: {e}")
     nlp_en = None
-    nlp_de = None
     analyzer = None
     MODELS_LOADED = False
 
@@ -81,53 +98,13 @@ class NEREngine:
         self.counters[token_type] += 1
         return f"[{token_type}_{self.counters[token_type]:02d}]"
 
-    def is_german(self, text: str) -> bool:
+    def seed_counters_from_text(self, text: str) -> None:
         """
-        Detect if text contains German language.
-        Uses umlaut detection and common German word matching.
+        Continue numbering after placeholders earlier stages already wrote, so a phone number
+        that only Presidio finds becomes [PHONE_03] rather than a second [PHONE_01].
         """
-        # Check for umlauts
-        if re.search(r'[äöüßÄÖÜ]', text):
-            return True
-
-        # Check for common German words
-        german_words = ["das", "der", "die", "ist", "nicht", "und", "aber", "von", "mit", "für"]
-        words = text.lower().split()
-        german_count = sum(1 for w in words if w in german_words)
-
-        return german_count >= 2
-
-    def is_german_text_or_names(self, text: str) -> bool:
-        """
-        Enhanced German detection: checks for German text OR German names.
-        Returns True if German NER should be run.
-        """
-        # Check for umlauts (strong indicator)
-        if re.search(r'[äöüßÄÖÜ]', text):
-            return True
-
-        # Check for common German words
-        german_words = ["das", "der", "die", "ist", "nicht", "und", "aber", "von", "mit", "für", "auch", "wie", "auf"]
-        words_lower = text.lower().split()
-        german_word_count = sum(1 for w in words_lower if w in german_words)
-        if german_word_count >= 2:
-            return True
-
-        # Check for common German surnames (weak indicator, use cautiously)
-        german_surnames = [
-            "müller", "schmidt", "schneider", "fischer", "weber", "meyer", "wagner",
-            "becker", "schulz", "hoffman", "schäfer", "koch", "bauer", "klein",
-            "wolf", "schröder", "neumann", "zimmermann"
-        ]
-        # Only trigger if we find a German surname that's capitalized (likely a name)
-        words = text.split()
-        for word in words:
-            # Check if word is capitalized and matches a German surname
-            if word and word[0].isupper():
-                if word.lower() in german_surnames:
-                    return True
-
-        return False
+        for kind, number in EXISTING_PLACEHOLDER_RE.findall(text):
+            self.counters[kind] = max(self.counters.get(kind, 0), int(number))
 
     def is_country(self, location_text: str) -> bool:
         """Check if location text is a country name."""
@@ -157,8 +134,11 @@ class NEREngine:
 
             entities = []
             for result in results:
+                token_type = PRESIDIO_TYPE_MAP.get(result.entity_type)
+                if token_type is None:
+                    continue  # a type our token schema doesn't have; it would fail validation
                 entity = {
-                    "type": result.entity_type,
+                    "type": token_type,
                     "text": text[result.start:result.end],
                     "start": result.start,
                     "end": result.end,
@@ -171,20 +151,16 @@ class NEREngine:
             print(f"Presidio analysis error: {e}")
             return []
 
-    def run_spacy(self, text: str, language: str = "en") -> List[Dict]:
+    def run_spacy(self, text: str) -> List[Dict]:
         """
-        Run spaCy NER on text.
+        Run spaCy NER (English) on text.
         Returns list of detected entities with type, text, start, end, score.
         """
-        if not MODELS_LOADED:
-            return []
-
-        nlp = nlp_en if language == "en" else nlp_de
-        if nlp is None:
+        if not MODELS_LOADED or nlp_en is None:
             return []
 
         try:
-            doc = nlp(text)
+            doc = nlp_en(text)
             entities = []
 
             for ent in doc.ents:
@@ -357,20 +333,20 @@ class NEREngine:
 
     def process(self, text: str, sender_name: str = "") -> Tuple[str, List[RedactionToken]]:
         """
-        Main NER processing function.
+        Main NER processing function (English).
         1. Check sender name for PERSON entity (if provided)
         2. Run Presidio on main text
-        3. Run spaCy (English) on main text
-        4. If German detected, run German spaCy model
-        5. Merge results
-        6. Apply location filtering
-        7. Create tokens (note: no text redaction needed, just token creation)
+        3. Run spaCy on main text
+        4. Merge results
+        5. Apply location filtering
+        6. Create tokens and redact
 
         Args:
             text: Main message text (after header removal)
             sender_name: Optional sender name from WhatsApp header to check for PERSON
         """
         self.reset_counters()
+        self.seed_counters_from_text(text)
         all_person_tokens = []
 
         if not MODELS_LOADED:
@@ -380,15 +356,7 @@ class NEREngine:
         # Step 0: Check sender name for PERSON entity (if provided)
         if sender_name and sender_name.strip() and sender_name.lower() != "user":
             # Run NER just on the sender name to see if it's a person
-            sender_entities = self.run_spacy(sender_name, language="en")
-
-            # Also check German model if sender name looks German
-            if self.is_german_text_or_names(sender_name):
-                sender_entities_de = self.run_spacy(sender_name, language="de")
-                # Merge results
-                for de_ent in sender_entities_de:
-                    if not any(e["text"] == de_ent["text"] for e in sender_entities):
-                        sender_entities.append(de_ent)
+            sender_entities = self.run_spacy(sender_name)
 
             # If sender name detected as PERSON, create a token for it
             person_entities = [e for e in sender_entities if e["type"] == "PERSON"]
@@ -408,22 +376,11 @@ class NEREngine:
         # Step 1: Run Presidio on main text
         presidio_entities = self.run_presidio(text)
 
-        # Step 2: Run spaCy (English) on main text
-        spacy_en_entities = self.run_spacy(text, language="en")
+        # Step 2: Run spaCy on main text
+        spacy_entities = self.run_spacy(text)
 
-        # Step 3: Check for German indicators (improved detection)
-        # Run German model if we detect umlauts, German words, OR potential German names
-        is_german_text = self.is_german_text_or_names(text)
-        spacy_de_entities = []
-        if is_german_text:
-            # Only run German NER if German is clearly present
-            spacy_de_entities = self.run_spacy(text, language="de")
-            # Filter German results: only keep high-confidence detections
-            spacy_de_entities = [e for e in spacy_de_entities if e.get("score", 0.85) >= 0.87]
-
-        # Step 4: Merge all entities from main text
-        all_spacy = spacy_en_entities + spacy_de_entities
-        merged_entities = self.merge_entities(presidio_entities, all_spacy)
+        # Step 3: Merge, preferring Presidio where they overlap
+        merged_entities = self.merge_entities(presidio_entities, spacy_entities)
 
         # Step 5: Apply location filtering
         filtered_entities = self.filter_locations(merged_entities)

@@ -14,14 +14,124 @@ answer before the user reads it. The model can optionally search the web through
 ### Key Features
 
 - **Multi-stage pipeline**: Regex → NER → Blocklist → Scoring → Validation
-- **Dual NER engines**: spaCy (en_core_web_lg, de_core_news_lg) + Microsoft Presidio
-- **Multilingual support**: English and German language detection
+- **NER**: spaCy `en_core_web_md` (32 MB) + Microsoft Presidio, sharing one loaded model
+- **English only**: the German model was removed; see [Model choice](#model-choice)
+- **TMI memory scanner**: a website that counts the personal information in a chatbot's memory or chat export, running on your own machine (see below)
 - **Confidence scoring**: Weighted scoring with routing decisions (pass/pass_flagged/review)
 - **Quasi-identifier detection**: Identifies role + location + age combinations
 - **Privacy-preserving**: Age bucketing, location granularity filtering
 - **Serverless ready**: Optimized for Vercel deployment with cold start handling
 - **Private chat workflow**: Anonymize → any OpenAI-compatible LLM (e.g. LM Studio) → re-enrich, with a web UI at `/chat`
 - **Private web search (optional)**: The model can search the web via Exa; queries containing personal details are blocked
+
+## TMI: the memory scanner
+
+Upload your ChatGPT, Claude or Gemini memory (or a whole chat export) and TMI counts every
+name, email, phone number, birth date, bank account, handle, place, company, age, date and
+link in it. It shows an exposure score, counts per category and masked examples
+("S•••• M•••••"), so the results are safe to screenshot.
+
+**Start it (non-technical):** on a Mac, double-click `Start TMI.command` (the first time, right-click
+it and choose Open). On Mac or Linux you can also run:
+
+```bash
+./start-scanner.sh
+```
+
+The first run installs everything into `.venv` (1-2 minutes, needs internet once). After that it
+starts in seconds and opens <http://127.0.0.1:8077>. Press Ctrl+C to stop. Needs `uv` or Python 3.10-3.12.
+
+**Start it (developers):**
+
+```bash
+uvicorn api.scanner:app --port 8077
+```
+
+**What it reads**
+
+| Input | How to get it |
+|---|---|
+| ChatGPT export (`.zip`, or `conversations.json`, including split `conversations-001.json` files) | Settings → Data controls → Export data |
+| ChatGPT saved memories (pasted text) | Settings → Personalization → Manage memories, copy everything |
+| Claude export (`.zip` with `conversations.json`, `memories*.json`, `projects.json`) | Settings → Privacy → Export data |
+| Anything else | Paste text, or upload `.txt`, `.md`, `.json`, `.html` |
+
+Only text the user wrote is scanned: AI replies, ids, timestamps and account files (`user.json`,
+`users.json`) are skipped, and so are fenced code blocks (numbers in code look like phone numbers).
+Custom instructions repeated in every ChatGPT conversation are counted once.
+
+**Privacy**
+
+- The page makes no requests to other sites: fonts are self-hosted and a Content-Security-Policy
+  allows only the page's own origin.
+- Uploads are processed in memory by one background worker and never written to disk or logged.
+  A report holds only counts and masked examples, is handed out once, then deleted (any job is
+  dropped after 15 minutes regardless).
+- On `localhost` the page says everything stays on this computer; on any other host it says
+  "processed in memory, never stored". Hosting it publicly means users send their files to that server.
+
+**API**
+
+| Endpoint | |
+|---|---|
+| `POST /api/scan` | multipart `file` or form field `text`; returns `{"jobId"}` (202) |
+| `GET /api/scan/{jobId}` | `{"status": "reading"\|"scanning", "done", "total"}`, then `{"status": "done", "report"}` once |
+| `GET /api/config` | `{"local", "maxUploadMb"}` |
+
+Limits: uploads up to 100 MB (`SCANNER_MAX_UPLOAD_MB`), pasted text up to 2 million characters,
+the first 5 million characters of an export. A 1-million-character ChatGPT export scans in about
+20 seconds on an Apple M5 Pro; the server uses about 450 MB of memory.
+
+**How counting works**
+
+- Counts are distinct values: ten mentions of the same person is one name.
+- Direct identifiers (names, emails, phones, birth dates, bank accounts, handles) are worth 4
+  points each, context details (places, companies, ages, dates, links) 1 point; the exposure score
+  is `100 × (1 − e^(−points/40))`.
+- Dates are only "birth dates" when the text says so ("born", "birthday", "DOB"). Dates the
+  pipeline mistakes for phone numbers are counted as dates. Chatbot names ("Claude", "ChatGPT")
+  and jargon ("IBAN", "API") are not counted as people or companies.
+
+**Known gaps:** most street addresses, health details and ID numbers are not detected, NER sometimes
+calls a band a company, and only English is supported.
+
+Code: `api/scanner.py` (app), `lib/scanner/` (reading exports, scanning, report, jobs),
+`public/scanner/` (page), tests in `tests/test_scanner.py` and `tests/test_scanner_api.py`.
+
+### TMI in the browser (`web/`)
+
+The same scanner as a static website for Vercel: everything runs in the visitor's browser tab and
+nothing is uploaded. It works in two stages:
+
+1. **Quick frisk:** the pattern rules above, ported to JavaScript, plus word lists and phrase rules for
+   names, places and companies (about 1 MB). Finds about two thirds of the names spaCy finds.
+2. **The detective (opt-in):** `bert-base-NER` (104 MB, downloaded once from Hugging Face, then cached)
+   via Transformers.js. In benchmarks it finds more names (89%) and companies (62%) than spaCy (86%, 45%).
+
+```bash
+python3 scripts/serve_web.py     # http://localhost:8079, with the same headers as Vercel
+node --test tests/web/*.test.mjs        # JavaScript ports checked against the Python outputs
+```
+
+Deploy: Vercel project with Root Directory `web`. Details in [web/README.md](web/README.md); design in
+[docs/superpowers/specs/2026-11-17-browser-tmi-design.md](docs/superpowers/specs/2026-11-17-browser-tmi-design.md).
+
+## Model choice
+
+The pipeline uses one English spaCy model, `en_core_web_md` (32 MB), loaded once and shared by
+Presidio and the NER stage (`SPACY_MODEL` overrides it). It replaced `en_core_web_lg` (382 MB,
+which was loaded twice) and `de_core_news_lg` (542 MB, whose findings on message text were always
+filtered out). Benchmark on 5,000 records of the Gretel PII test set, run through this pipeline:
+
+| | `en_core_web_lg` | `en_core_web_md` | `en_core_web_sm` |
+|---|---|---|---|
+| Names fully hidden and labelled PERSON | 83.9% | 85.5% | 72.4% |
+| Memory used by the pipeline | 1,366 MB | 621 MB (before sharing the model) | 162 MB |
+| Download | 382 MB | 32 MB | 12 MB |
+
+The same benchmark found 2.3% of records crashing because Presidio returned `PHONE_NUMBER`, a type
+`RedactionToken` didn't allow. Presidio results are now mapped to the pipeline's types, and NER
+placeholders continue numbering after the regex stage's (`[PHONE_03]`, not a second `[PHONE_01]`).
 
 ## Architecture
 
@@ -37,8 +147,7 @@ answer before the user reads it. The model can optionally search the web through
 
 2. **NER Engine** - Named entity recognition:
    - Presidio analyzer (primary, high precision)
-   - spaCy English model (en_core_web_lg)
-   - spaCy German model (de_core_news_lg, triggered by language detection)
+   - spaCy English model (en_core_web_md), the same loaded model Presidio uses
    - Entity types: PERSON, ORG, LOCATION
    - Location filtering: Countries preserved, cities redacted
 
@@ -80,12 +189,11 @@ answer before the user reads it. The model can optionally search the web through
    pip install -r requirements.txt
    ```
 
-   **Note:** The spaCy models (~500MB) will be installed automatically from direct wheel URLs.
+   **Note:** The spaCy model (`en_core_web_md`, 32 MB) is installed automatically from a direct wheel URL.
 
 4. **Verify installation**
    ```bash
-   python -c "import spacy; print(spacy.load('en_core_web_lg'))"
-   python -c "import spacy; print(spacy.load('de_core_news_lg'))"
+   python -c "import spacy; print(spacy.load('en_core_web_md'))"
    ```
 
 5. **Start Postgres** (used for usage quotas; requires Docker)
@@ -417,38 +525,35 @@ ROLE_KEYWORDS = {
 - Warm requests: <2 seconds
 
 ### Memory Usage
-- spaCy models: ~500MB RAM
-- Total container: ~600-700MB
+- spaCy model: about 300 MB RAM, loaded once and shared with Presidio
+- Whole process: about 450 MB after scanning a large export
 
 ### Optimization Tips
 1. Use module-level model loading (already implemented)
 2. Enable Vercel function warming
-3. Consider smaller models for faster cold starts (en_core_web_sm)
+3. `SPACY_MODEL=en_core_web_sm` halves memory again, but misses about 1 in 9 more names
 
 ## Known Limitations
 
-1. **Model size**: spaCy models are large (~500MB). May hit Vercel limits.
-   - **Mitigation**: Direct wheel URLs, external model hosting, or smaller models.
-
-2. **Cold starts**: First request slow on serverless.
+1. **Cold starts**: First request slow on serverless.
    - **Mitigation**: Function warming, health check endpoint.
 
-3. **Language support**: Currently English + German only.
+2. **Language support**: English only.
    - **Future**: Add more spaCy models for additional languages.
 
-4. **Japanese/Asian languages**: No support for non-Latin scripts.
+3. **Japanese/Asian languages**: No support for non-Latin scripts.
    - **Expected**: Some test cases may fail (acceptable for 17/20 target).
 
-5. **Detection gaps**: Street addresses are often not detected, and some dates of
+4. **Detection gaps**: Street addresses are often not detected, and some dates of
    birth or ID numbers are labelled as phone numbers (still hidden, but with the
    wrong type). Add such terms to the blocklist, and check "The AI" view in the chat.
 
-6. **Pseudonymization, not anonymization**: Clinical or other context left in the
+5. **Pseudonymization, not anonymization**: Clinical or other context left in the
    text can still identify someone in combination (e.g. age + rare condition +
    postcode). Under GDPR this counts as pseudonymized data. Running the LLM locally
    (e.g. LM Studio) keeps it on your own machine.
 
-7. **No chat memory**: Each private chat message is sent on its own; the model does
+6. **No chat memory**: Each private chat message is sent on its own; the model does
    not see earlier messages.
 
 ## Testing
@@ -458,7 +563,6 @@ ROLE_KEYWORDS = {
 Use the example curl commands above to test various scenarios:
 - ✅ Basic PII (emails, phones, names)
 - ✅ Obfuscated formats (email [at] domain dot com)
-- ✅ Multilingual (German names with umlauts)
 - ✅ Quasi-identifiers (role + location + age)
 - ✅ Clean messages (no over-redaction)
 
@@ -470,11 +574,12 @@ Use the example curl commands above to test various scenarios:
 
 Covers placeholder integrity, the vault and re-enrichment, input limits, the LLM
 client (including tool calls), the private chat workflow, the web search client and
-query guard, and the `/api/chat` endpoint. LLM and Exa calls are faked, so no model
-server or API key is needed.
+query guard, the `/api/chat` endpoint, the English-only NER setup, and the memory
+scanner (reading exports, chunking, masking, scoring, the API). LLM and Exa calls are
+faked, so no model server or API key is needed.
 
-`tests/test_sample_cases.py` is the detection benchmark; 5 of its cases currently
-fail (German/English code-switching and some city names). `tests/quick_test.py` is a
+`tests/test_sample_cases.py` is the detection benchmark and needs a running server; its
+German cases are expected to fail now that the pipeline is English only. `tests/quick_test.py` is a
 manual script, not a pytest suite.
 
 ## Security
@@ -495,9 +600,9 @@ manual script, not a pytest suite.
 # Verify models installed
 python -m spacy validate
 
-# Reinstall models
+# Reinstall the model
 pip install --force-reinstall --no-deps \
-  https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.7.1/en_core_web_lg-3.7.1-py3-none-any.whl
+  https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.8.0/en_core_web_md-3.8.0-py3-none-any.whl
 ```
 
 ### Vercel timeout on first request

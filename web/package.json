@@ -1,0 +1,5 @@
+{
+  "private": true,
+  "type": "module",
+  "description": "Browser TMI. No dependencies and no build step: Vercel serves this folder as static files."
+}

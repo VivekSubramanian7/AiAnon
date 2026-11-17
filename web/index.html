@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>TMI · What your chatbot knows about you</title>
+  <meta name="description" content="Drop in your ChatGPT, Claude or Gemini memory and count every name, number and birthday you've spilled. Scanned inside your browser: nothing is uploaded.">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="fonts/BricolageGrotesque-normal-400-800.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="logo" href="./" aria-label="TMI, home"><span class="logo-mark">TMI</span><span class="logo-dot">.</span></a>
+    <span class="status" id="status"><i class="status-dot" aria-hidden="true"></i><span id="status-text">Runs in your browser</span></span>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="kicker">Too Much Information · a privacy self-roast</p>
+        <h1 id="hero-title">Your chatbot knows <mark class="swipe">way too much</mark> about you.</h1>
+        <p class="lede">Drop in your ChatGPT, Claude or Gemini memory and we'll count every name, number and birthday you've spilled into it. It's a background check, except you ordered it on yourself.</p>
+        <ul class="proof">
+          <li><b>0</b><span>uploads. It all happens in this tab</span></li>
+          <li><b>0</b><span>accounts, cookies or trackers</span></li>
+          <li><b>11</b><span>kinds of personal info we hunt for</span></li>
+        </ul>
+      </div>
+
+      <div class="intake-wrap">
+        <div class="sheet intake" id="intake">
+          <div class="sheet-head"><span>Evidence intake</span><span>Form TMI-01</span></div>
+
+          <div class="drop" id="drop" tabindex="0" role="button" aria-describedby="drop-hint" aria-label="Choose or drop a file to scan">
+            <p class="drop-title">Drop it like it's <span class="pii">PII</span></p>
+            <p class="drop-hint" id="drop-hint">ChatGPT or Claude export (.zip or .json), or your memories as .txt. Big exports are fine: we only read the text.</p>
+            <div class="actions">
+              <button class="btn btn-primary" id="choose" type="button">Choose a file</button>
+              <button class="btn btn-ghost" id="paste-toggle" type="button">Paste instead</button>
+            </div>
+            <input type="file" id="file" accept=".zip,.json,.txt,.md,.html" hidden>
+          </div>
+
+          <form class="paste" id="paste-form" hidden>
+            <label for="paste-text" class="label">Paste your memories. Or ask your bot <q>What do you remember about me?</q> and paste the answer.</label>
+            <textarea id="paste-text" rows="8" placeholder="- Lives in Leeds&#10;- Works as a nurse at St Mary's&#10;- Has a cat called Biscuit"></textarea>
+            <div class="actions">
+              <button class="btn btn-primary" type="submit">Frisk this</button>
+              <button class="btn btn-ghost" type="button" id="paste-cancel">Back to upload</button>
+            </div>
+          </form>
+
+          <div class="scanning" id="scanning" hidden>
+            <p class="label">Quick frisk</p>
+            <p class="scan-line" id="scan-line" aria-live="polite">Patting down your memories…</p>
+            <div class="progress" role="progressbar" aria-label="Scan progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress">
+              <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <p class="progress-meta"><span id="progress-pct">0%</span><span id="progress-detail">opening the file</span></p>
+          </div>
+
+          <p class="error" id="error" role="alert" hidden></p>
+          <button class="sample" id="sample" type="button">No file handy? Frisk a fake person first <span aria-hidden="true">→</span></button>
+        </div>
+        <p class="privacy" id="privacy">Scanned inside this browser tab. Nothing gets uploaded, logged or kept. Load the page, unplug your Wi-Fi, try it. We'll wait.</p>
+      </div>
+    </section>
+
+    <section class="results" id="results" hidden aria-label="Scan results"></section>
+
+    <section class="howto" aria-labelledby="howto-title">
+      <div class="section-head">
+        <h2 id="howto-title">Where's my memory?</h2>
+        <p>Two ways in. The memory list is quick. The full export is the whole messy truth.</p>
+      </div>
+      <div class="howto-grid">
+        <article class="howto-card">
+          <h3>ChatGPT</h3>
+          <dl>
+            <dt>Memories</dt>
+            <dd>Settings → Personalization → Manage memories. Select everything, copy, paste it here.</dd>
+            <dt>Everything</dt>
+            <dd>Settings → Data controls → Export data. A zip lands in your inbox. Drop the whole zip here.</dd>
+          </dl>
+        </article>
+        <article class="howto-card">
+          <h3>Claude</h3>
+          <dl>
+            <dt>Memory</dt>
+            <dd>Ask it <q>What do you remember about me?</q> and paste the answer. It will tell on itself.</dd>
+            <dt>Everything</dt>
+            <dd>Settings → Privacy → Export data. Drop the zip from the email here.</dd>
+          </dl>
+        </article>
+        <article class="howto-card">
+          <h3>Gemini</h3>
+          <dl>
+            <dt>Saved info</dt>
+            <dd>Settings → Saved info. Copy what's there and paste it.</dd>
+            <dt>Everything</dt>
+            <dd>Google Takeout → My Activity → Gemini Apps, as JSON. Experimental, but we'll try.</dd>
+          </dl>
+        </article>
+        <article class="howto-card howto-any">
+          <h3>Any other bot</h3>
+          <dl>
+            <dt>The universal trick</dt>
+            <dd>Ask <q>List everything you remember about me. Leave nothing out.</q> Paste the answer. Watch it snitch.</dd>
+          </dl>
+        </article>
+      </div>
+    </section>
+
+    <section class="hunt" aria-labelledby="hunt-title">
+      <div class="section-head">
+        <h2 id="hunt-title">What we hunt for</h2>
+        <p>Some things point straight at you. Others only give you away in a crowd: a city plus a job plus an age is usually enough.</p>
+      </div>
+      <div class="hunt-rows">
+        <div class="hunt-row">
+          <span class="hunt-tier tier-direct">Points straight at you</span>
+          <ul class="hunt-list">
+            <li>Names</li><li>Email addresses</li><li>Phone numbers</li><li>Birth dates</li><li>Bank accounts</li><li>Social handles</li>
+          </ul>
+        </div>
+        <div class="hunt-row">
+          <span class="hunt-tier tier-context">Points at you in a crowd</span>
+          <ul class="hunt-list">
+            <li>Places</li><li>Companies and organisations</li><li>Ages</li><li>Dates</li><li>Links</li>
+          </ul>
+        </div>
+      </div>
+      <div class="method">
+        <div class="method-step">
+          <span class="method-num">01</span>
+          <h3>The quick frisk</h3>
+          <p>Pattern rules for emails, phones, bank numbers, birthdays and links, plus word lists for names, places and companies. About 1 MB. Done in seconds.</p>
+        </div>
+        <div class="method-step">
+          <span class="method-num">02</span>
+          <h3>The detective</h3>
+          <p>An AI name-spotter (bert-base-NER) that reads names it has never seen. 104 MB, downloaded once if you ask for it, then it works offline too.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>TMI runs the AnonymizeIt rules inside your browser. The detective is bert-base-NER (MIT), loaded from Hugging Face with Transformers.js. Names: US Census Bureau 1990. Places: <a href="https://www.geonames.org/" rel="noreferrer">GeoNames</a> (CC BY 4.0). English only. No accounts, no cookies, no tracking.</p>
+    <p>It's a mirror, not a lawyer. It misses most street addresses and health details, and now and then it thinks a band is a company. <button class="linkish" id="forget" type="button" hidden>Send the detective home</button></p>
+  </footer>
+</body>
+</html>

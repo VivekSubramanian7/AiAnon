@@ -1,0 +1,1023 @@
+{
+"cases": [
+{
+"text": "Name is Dana Whitfield.",
+"entities": [
+{
+"type": "PERSON",
+"text": "Dana Whitfield",
+"start": 8,
+"end": 22,
+"score": 0.95
+}
+]
+},
+{
+"text": "Works as a paediatric nurse at St Mary's Hospital in Leeds.",
+"entities": [
+{
+"type": "ORG",
+"text": "St Mary's Hospital",
+"start": 31,
+"end": 49,
+"score": 0.95
+},
+{
+"type": "LOCATION",
+"text": "Leeds",
+"start": 53,
+"end": 58,
+"score": 0.95
+}
+]
+},
+{
+"text": "Lives in Headingley, Leeds with partner Chris Doyle and a cat called Biscuit.",
+"entities": [
+{
+"type": "LOCATION",
+"text": "Headingley",
+"start": 9,
+"end": 19,
+"score": 0.95
+},
+{
+"type": "LOCATION",
+"text": "Leeds",
+"start": 21,
+"end": 26,
+"score": 0.95
+},
+{
+"type": "PERSON",
+"text": "Chris Doyle",
+"start": 40,
+"end": 51,
+"score": 0.95
+}
+]
+},
+{
+"text": "Was born on 03.07.1989.",
+"entities": []
+},
+{
+"text": "Is 36 years old.",
+"entities": []
+},
+{
+"text": "Personal email is dana.whitfield@example.com.",
+"entities": []
+},
+{
+"text": "Mobile number is +44 7700 900123.",
+"entities": []
+},
+{
+"text": "Prefers British spelling.",
+"entities": []
+},
+{
+"text": "Is training for the Great North Run in September.",
+"entities": []
+},
+{
+"text": "Sister Jess Whitfield lives in Manchester and has twin boys.",
+"entities": [
+{
+"type": "PERSON",
+"text": "Jess Whitfield",
+"start": 7,
+"end": 21,
+"score": 0.95
+},
+{
+"type": "LOCATION",
+"text": "Manchester",
+"start": 31,
+"end": 41,
+"score": 0.95
+}
+]
+},
+{
+"text": "Asked for help disputing a charge paid to IBAN GB82 WEST 1234 5698 7654 32.",
+"entities": []
+},
+{
+"text": "Has asthma and uses a blue inhaler.",
+"entities": []
+},
+{
+"text": "Posts running photos on Instagram as @dana_runs_leeds.",
+"entities": []
+},
+{
+"text": "Is planning a trip to Lisbon in May and is learning Portuguese.",
+"entities": [
+{
+"type": "LOCATION",
+"text": "Lisbon",
+"start": 22,
+"end": 28,
+"score": 0.95
+}
+]
+},
+{
+"text": "Manager Priya Shah is leaving Northern Care Trust next month.",
+"entities": [
+{
+"type": "PERSON",
+"text": "Priya Shah",
+"start": 8,
+"end": 18,
+"score": 0.95
+},
+{
+"type": "ORG",
+"text": "Northern Care Trust",
+"start": 30,
+"end": 49,
+"score": 0.95
+}
+]
+},
+{
+"text": "Prefers short answers with bullet points.",
+"entities": []
+},
+{
+"text": "I'm vegetarian and allergic to peanuts.",
+"entities": []
+},
+{
+"text": "My name is Kofi Mensah.",
+"entities": [
+{
+"type": "PERSON",
+"text": "Kofi Mensah",
+"start": 11,
+"end": 22,
+"score": 0.95
+}
+]
+},
+{
+"text": "I live in Accra but I'm moving to London in September.",
+"entities": [
+{
+"type": "LOCATION",
+"text": "Accra",
+"start": 10,
+"end": 15,
+"score": 0.95
+},
+{
+"type": "LOCATION",
+"text": "London",
+"start": 34,
+"end": 40,
+"score": 0.95
+}
+]
+},
+{
+"text": "I work as a sound engineer at Blue Room Studios.",
+"entities": [
+{
+"type": "ORG",
+"text": "Blue Room Studios",
+"start": 30,
+"end": 47,
+"score": 0.95
+}
+]
+},
+{
+"text": "My email is kofi.mensah@example.com and my phone is +233 20 555 0187.",
+"entities": []
+},
+{
+"text": "I'm 31 and my birthday is 22/01/1995.",
+"entities": []
+},
+{
+"text": "My partner Ama Owusu is a midwife.",
+"entities": []
+},
+{
+"text": "I support Arsenal and play five-a-side on Thursdays.",
+"entities": []
+},
+{
+"text": "Explain things to me like I'm a smart beginner.",
+"entities": []
+},
+{
+"text": "Here's what I remember about you:",
+"entities": []
+},
+{
+"text": "You're Sam Rivera, a high-school chemistry teacher in Denver, Colorado.",
+"entities": [
+{
+"type": "PERSON",
+"text": "Sam Rivera",
+"start": 7,
+"end": 17,
+"score": 0.95
+},
+{
+"type": "LOCATION",
+"text": "Denver",
+"start": 54,
+"end": 60,
+"score": 0.95
+},
+{
+"type": "LOCATION",
+"text": "Colorado",
+"start": 62,
+"end": 70,
+"score": 0.95
+}
+]
+},
+{
+"text": "You're 29, and your birthday is 08/04/1997. You asked me for cake ideas last year.",
+"entities": []
+},
+{
+"text": "You teach at Lincoln Park High School and coach the robotics team.",
+"entities": [
+{
+"type": "ORG",
+"text": "Lincoln Park High School",
+"start": 13,
+"end": 37,
+"score": 0.95
+}
+]
+},
+{
+"text": "Your partner is Jordan Lee, and you have a rescue greyhound called Comet.",
+"entities": [
+{
+"type": "PERSON",
+"text": "Jordan Lee",
+"start": 16,
+"end": 26,
+"score": 0.95
+}
+]
+},
+{
+"text": "You're saving for a house and asked me to compare mortgage offers from First Summit Bank.",
+"entities": [
+{
+"type": "ORG",
+"text": "First Summit Bank",
+"start": 71,
+"end": 88,
+"score": 0.95
+}
+]
+},
+{
+"text": "Your school email is s.rivera@lincolnpark.example.edu and your personal one is samrivera@example.org.",
+"entities": []
+},
+{
+"text": "You once shared your number, +1 303 555 0119, when drafting a message to a contractor.",
+"entities": []
+},
+{
+"text": "You like hiking, sour candy and long explanations with examples.",
+"entities": []
+},
+{
+"text": "Let me know if you want me to forget any of this.",
+"entities": []
+},
+{
+"text": "Prefers concise answers.",
+"entities": []
+},
+{
+"text": "Likes Python and TypeScript.",
+"entities": []
+},
+{
+"text": "Enjoys hiking and science fiction novels.",
+"entities": []
+},
+{
+"text": "Is learning to bake sourdough bread.",
+"entities": []
+},
+{
+"text": "Wants explanations with a worked example.",
+"entities": []
+},
+{
+"text": "Dislikes emojis in replies.",
+"entities": []
+},
+{
+"text": "Uses metric units.",
+"entities": []
+},
+{
+"text": "Prefers dark mode screenshots in tutorials.",
+"entities": []
+},
+{
+"text": "I'm Priya, a data analyst in Austin, Texas. I have a beagle called Pixel.",
+"entities": [
+{
+"type": "PERSON",
+"text": "Priya",
+"start": 4,
+"end": 9,
+"score": 0.95
+},
+{
+"type": "LOCATION",
+"text": "Austin",
+"start": 29,
+"end": 35,
+"score": 0.95
+},
+{
+"type": "LOCATION",
+"text": "Texas",
+"start": 37,
+"end": 42,
+"score": 0.95
+},
+{
+"type": "PERSON",
+"text": "Pixel",
+"start": 67,
+"end": 72,
+"score": 0.95
+}
+]
+},
+{
+"text": "Be concise. Use US spelling.",
+"entities": []
+},
+{
+"text": "Can you write a polite email to my landlord Tom Becker about the broken boiler? I'm Priya Natarajan, flat 4B at 18 Elm Grove, Austin TX 78704. My phone is +1 512 555 0147.",
+"entities": [
+{
+"type": "PERSON",
+"text": "Tom Becker",
+"start": 44,
+"end": 54,
+"score": 0.95
+},
+{
+"type": "PERSON",
+"text": "Priya Natarajan",
+"start": 84,
+"end": 99,
+"score": 0.95
+},
+{
+"type": "LOCATION",
+"text": "18 Elm Grove",
+"start": 112,
+"end": 124,
+"score": 0.95
+},
+{
+"type": "LOCATION",
+"text": "Austin",
+"start": 126,
+"end": 132,
+"score": 0.95
+}
+]
+},
+{
+"text": "Add that my rent is paid on the 1st and he can reach me at priya.n@example.org.",
+"entities": []
+},
+{
+"text": "Why does this crash?\n```python\nuser_id = 5125550147\nprint(users[user_id])\n```\nThe error says KeyError.",
+"entities": []
+},
+{
+"text": "My birthday is on 12/09/1993 and I want to plan a dinner in Austin for 8 people. My friends Maya Chen and Leo Garcia are coming.",
+"entities": [
+{
+"type": "LOCATION",
+"text": "Austin",
+"start": 60,
+"end": 66,
+"score": 0.95
+},
+{
+"type": "PERSON",
+"text": "Maya Chen",
+"start": 92,
+"end": 101,
+"score": 0.95
+},
+{
+"type": "PERSON",
+"text": "Leo Garcia",
+"start": 106,
+"end": 116,
+"score": 0.95
+}
+]
+},
+{
+"text": "I'm 33 next week, so make it fun. Leo is vegan.",
+"entities": [
+{
+"type": "PERSON",
+"text": "Leo",
+"start": 34,
+"end": 37,
+"score": 0.95
+}
+]
+},
+{
+"text": "Polish this cover letter:\n\nDear hiring team at Contoso Health,\n\nI currently work at Initech as a data analyst and want to move into healthcare analytics. You can see my work at https://github.com/priya-natarajan-example and reach me on X as @priyacodes.\n\nBest,\nPriya Natarajan",
+"entities": [
+{
+"type": "ORG",
+"text": "Contoso Health",
+"start": 47,
+"end": 61,
+"score": 0.95
+},
+{
+"type": "ORG",
+"text": "Initech",
+"start": 84,
+"end": 91,
+"score": 0.95
+}
+]
+},
+{
+"text": "Plan 3 days in Lisbon for me and my sister Anika. We fly from Austin on 2026-05-14.",
+"entities": [
+{
+"type": "LOCATION",
+"text": "Lisbon",
+"start": 15,
+"end": 21,
+"score": 0.95
+},
+{
+"type": "PERSON",
+"text": "Anika",
+"start": 43,
+"end": 48,
+"score": 0.95
+},
+{
+"type": "LOCATION",
+"text": "Austin",
+"start": 62,
+"end": 68,
+"score": 0.95
+}
+]
+},
+{
+"text": "Here's a photo of our itinerary, does it look right?",
+"entities": []
+},
+{
+"text": "Give me three quick dinners with chickpeas.",
+"entities": []
+},
+{
+"text": "I'm Marcus Weber, moving from Hamburg to Toronto for a job at Northwind Logistics. I was born on 21.11.1985. Which documents do I need?",
+"entities": [
+{
+"type": "PERSON",
+"text": "Marcus",
+"start": 4,
+"end": 10,
+"score": 0.95
+},
+{
+"type": "LOCATION",
+"text": "Hamburg",
+"start": 30,
+"end": 37,
+"score": 0.95
+},
+{
+"type": "LOCATION",
+"text": "Toronto",
+"start": 41,
+"end": 48,
+"score": 0.95
+},
+{
+"type": "ORG",
+"text": "Northwind Logistics",
+"start": 62,
+"end": 81,
+"score": 0.95
+}
+]
+},
+{
+"text": "My wife Anna Weber and our daughter Lena are coming too. Contact me at marcus.weber@example.net or +49 170 555 0198.",
+"entities": [
+{
+"type": "PERSON",
+"text": "Anna",
+"start": 8,
+"end": 12,
+"score": 0.95
+},
+{
+"type": "PERSON",
+"text": "Lena",
+"start": 36,
+"end": 40,
+"score": 0.95
+}
+]
+},
+{
+"text": "Help me budget. My salary goes into DE89 3704 0044 0532 0130 00 and rent is 1,450 a month.",
+"entities": []
+},
+{
+"text": "Can you make my CV sound less boring?",
+"entities": []
+},
+{
+"text": "MARCUS WEBER\nSenior Logistics Planner, Hamburg\nmarcus.weber@example.net | +49 170 555 0198\nExperience: Kuehne Freight (2015-2024), Hapag Shipping (2010-2015)\nReferences: Dr. Ingrid Sommer, ingrid.sommer@example.de",
+"entities": [
+{
+"type": "LOCATION",
+"text": "Hamburg",
+"start": 39,
+"end": 46,
+"score": 0.95
+},
+{
+"type": "PERSON",
+"text": "Ingrid Sommer",
+"start": 174,
+"end": 187,
+"score": 0.95
+}
+]
+},
+{
+"text": "Marcus is relocating to Toronto in August with his family.",
+"entities": [
+{
+"type": "PERSON",
+"text": "Marcus",
+"start": 0,
+"end": 6,
+"score": 0.95
+},
+{
+"type": "LOCATION",
+"text": "Toronto",
+"start": 24,
+"end": 31,
+"score": 0.95
+}
+]
+},
+{
+"text": "Prefers metric units and direct feedback.",
+"entities": []
+},
+{
+"text": "His daughter Lena starts school at Maple Grove Elementary in September.",
+"entities": [
+{
+"type": "PERSON",
+"text": "Lena",
+"start": 13,
+"end": 17,
+"score": 0.95
+},
+{
+"type": "LOCATION",
+"text": "Maple Grove",
+"start": 35,
+"end": 46,
+"score": 0.95
+}
+]
+},
+{
+"text": "Help Marcus Weber plan the family move from Hamburg to Toronto.",
+"entities": [
+{
+"type": "PERSON",
+"text": "Marcus",
+"start": 5,
+"end": 11,
+"score": 0.95
+},
+{
+"type": "LOCATION",
+"text": "Hamburg",
+"start": 44,
+"end": 51,
+"score": 0.95
+},
+{
+"type": "LOCATION",
+"text": "Toronto",
+"start": 55,
+"end": 62,
+"score": 0.95
+}
+]
+},
+{
+"text": "- Book movers (call Dave Kowalski at +1 416 555 0101)\n- Register Lena at school\n- Close the Hamburg flat by 31.07.2026",
+"entities": [
+{
+"type": "PERSON",
+"text": "Dave Kowalski",
+"start": 20,
+"end": 33,
+"score": 0.95
+},
+{
+"type": "PERSON",
+"text": "Lena",
+"start": 65,
+"end": 69,
+"score": 0.95
+},
+{
+"type": "LOCATION",
+"text": "Hamburg",
+"start": 92,
+"end": 99,
+"score": 0.95
+}
+]
+},
+{
+"text": "Will you check this? Reading is fun.",
+"entities": []
+},
+{
+"text": "I met Alan at Google yesterday and then flew from Austin to New York.",
+"entities": [
+{
+"type": "PERSON",
+"text": "Alan",
+"start": 6,
+"end": 10,
+"score": 0.95
+},
+{
+"type": "LOCATION",
+"text": "Austin",
+"start": 50,
+"end": 56,
+"score": 0.95
+},
+{
+"type": "LOCATION",
+"text": "New York",
+"start": 60,
+"end": 68,
+"score": 0.95
+}
+]
+},
+{
+"text": "My boss Rahul Verma works at Acme Widgets Inc. in San Francisco.",
+"entities": [
+{
+"type": "PERSON",
+"text": "Rahul Verma",
+"start": 8,
+"end": 19,
+"score": 0.95
+},
+{
+"type": "ORG",
+"text": "Acme Widgets Inc",
+"start": 29,
+"end": 45,
+"score": 0.95
+},
+{
+"type": "LOCATION",
+"text": "San Francisco",
+"start": 50,
+"end": 63,
+"score": 0.95
+}
+]
+},
+{
+"text": "my name is sam miller and I live at 42 Maple Street.",
+"entities": [
+{
+"type": "PERSON",
+"text": "sam",
+"start": 11,
+"end": 14,
+"score": 0.95
+},
+{
+"type": "LOCATION",
+"text": "42 Maple Street",
+"start": 36,
+"end": 51,
+"score": 0.95
+}
+]
+},
+{
+"text": "The Bank of America sent a letter. Grace period ends in March.",
+"entities": [
+{
+"type": "ORG",
+"text": "Bank of America",
+"start": 4,
+"end": 19,
+"score": 0.95
+}
+]
+},
+{
+"text": "Dr. Emily Stone and Mrs Patel met at the University of Leeds.",
+"entities": [
+{
+"type": "PERSON",
+"text": "Emily Stone",
+"start": 4,
+"end": 15,
+"score": 0.95
+},
+{
+"type": "PERSON",
+"text": "Patel",
+"start": 24,
+"end": 29,
+"score": 0.95
+},
+{
+"type": "ORG",
+"text": "University of Leeds",
+"start": 41,
+"end": 60,
+"score": 0.95
+}
+]
+},
+{
+"text": "Hi Priya,\nthanks for the notes. Lives in Headingley, Leeds with partner Chris Doyle.",
+"entities": [
+{
+"type": "PERSON",
+"text": "Priya",
+"start": 3,
+"end": 8,
+"score": 0.95
+},
+{
+"type": "LOCATION",
+"text": "Headingley",
+"start": 41,
+"end": 51,
+"score": 0.95
+},
+{
+"type": "LOCATION",
+"text": "Leeds",
+"start": 53,
+"end": 58,
+"score": 0.95
+},
+{
+"type": "PERSON",
+"text": "Chris Doyle",
+"start": 72,
+"end": 83,
+"score": 0.95
+}
+]
+},
+{
+"text": "Moved to Victoria last year; Victoria Beckham was not involved.",
+"entities": [
+{
+"type": "LOCATION",
+"text": "Victoria",
+"start": 9,
+"end": 17,
+"score": 0.95
+},
+{
+"type": "PERSON",
+"text": "Victoria Beckham",
+"start": 29,
+"end": 45,
+"score": 0.95
+}
+]
+},
+{
+"text": "Thanks Jordan! See you in Austin. Austin Miller says hi.",
+"entities": [
+{
+"type": "PERSON",
+"text": "Jordan",
+"start": 7,
+"end": 13,
+"score": 0.95
+},
+{
+"type": "LOCATION",
+"text": "Austin",
+"start": 26,
+"end": 32,
+"score": 0.95
+},
+{
+"type": "PERSON",
+"text": "Austin",
+"start": 34,
+"end": 40,
+"score": 0.95
+}
+]
+},
+{
+"text": "- Manager Priya Shah is leaving Northern Care Trust next month.\n- Sister Jess Whitfield lives in Manchester.",
+"entities": [
+{
+"type": "PERSON",
+"text": "Priya Shah",
+"start": 10,
+"end": 20,
+"score": 0.95
+},
+{
+"type": "ORG",
+"text": "Northern Care Trust",
+"start": 32,
+"end": 51,
+"score": 0.95
+},
+{
+"type": "PERSON",
+"text": "Jess Whitfield",
+"start": 73,
+"end": 87,
+"score": 0.95
+},
+{
+"type": "LOCATION",
+"text": "Manchester",
+"start": 97,
+"end": 107,
+"score": 0.95
+}
+]
+},
+{
+"text": "Works at Home Depot in Atlanta, GA. Studied at Georgia Tech.",
+"entities": [
+{
+"type": "LOCATION",
+"text": "Atlanta",
+"start": 23,
+"end": 30,
+"score": 0.95
+},
+{
+"type": "PERSON",
+"text": "Georgia Tech",
+"start": 47,
+"end": 59,
+"score": 0.95
+}
+]
+},
+{
+"text": "named Biscuit, called Max, dear Abigail, my daughter Zoë and my son Ömer",
+"entities": [
+{
+"type": "PERSON",
+"text": "Max",
+"start": 22,
+"end": 25,
+"score": 0.95
+},
+{
+"type": "PERSON",
+"text": "Abigail",
+"start": 32,
+"end": 39,
+"score": 0.95
+},
+{
+"type": "PERSON",
+"text": "Zoë",
+"start": 53,
+"end": 56,
+"score": 0.95
+}
+]
+},
+{
+"text": "Mr. O'Brien-Smith visited São Paulo and Zürich with McDonald.",
+"entities": [
+{
+"type": "PERSON",
+"text": "O'Brien-Smith",
+"start": 4,
+"end": 17,
+"score": 0.95
+},
+{
+"type": "LOCATION",
+"text": "São Paulo",
+"start": 26,
+"end": 35,
+"score": 0.95
+},
+{
+"type": "LOCATION",
+"text": "Zürich",
+"start": 40,
+"end": 46,
+"score": 0.95
+}
+]
+},
+{
+"text": "She grew up in Port Rhonda near Lake Christopherborough.",
+"entities": [
+{
+"type": "PERSON",
+"text": "Rhonda",
+"start": 20,
+"end": 26,
+"score": 0.95
+}
+]
+},
+{
+"text": "My employer: Contoso Health. Client of Fabrikam Ltd. Joined Northwind Traders.",
+"entities": [
+{
+"type": "ORG",
+"text": "Contoso Health",
+"start": 13,
+"end": 27,
+"score": 0.95
+},
+{
+"type": "ORG",
+"text": "Fabrikam Ltd",
+"start": 39,
+"end": 51,
+"score": 0.95
+},
+{
+"type": "ORG",
+"text": "Northwind Traders",
+"start": 60,
+"end": 77,
+"score": 0.95
+}
+]
+},
+{
+"text": "Mark said May is fine. June and April are busy. Rose Tyler and Will Smith too.",
+"entities": [
+{
+"type": "PERSON",
+"text": "Tyler",
+"start": 53,
+"end": 58,
+"score": 0.95
+}
+]
+}
+]
+}

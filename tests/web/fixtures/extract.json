@@ -1,0 +1,3653 @@
+{
+ "generatedBy": "scripts/web_fixtures_extract.py",
+ "python": "3.12.15",
+ "constants": {
+  "MAX_MEMBER_BYTES": 314572800,
+  "MAX_TOTAL_BYTES": 629145600
+ },
+ "segmentsSha256": "sha256 of UTF-8 '\\x00'.join(source + '\\x01' + text)",
+ "cases": [
+  {
+   "id": "sample:README.md",
+   "kind": "file",
+   "path": "samples/mock-memories/README.md",
+   "name": "README.md",
+   "expect": {
+    "ok": {
+     "format": "text",
+     "conversations": 0,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [],
+     "segments": [
+      {
+       "text": "# Mock memories for testing TMI",
+       "source": "memory"
+      },
+      {
+       "text": "Fake chatbot memories and exports to drop into the scanner. Everyone in them is invented:",
+       "source": "memory"
+      },
+      {
+       "text": "emails use `example.com`/`.org`/`.net`, phone numbers come from ranges reserved for fiction",
+       "source": "memory"
+      },
+      {
+       "text": "(`+1 xxx 555 01xx`, `+44 7700 900xxx`), and the IBANs are the standard published example IBANs.",
+       "source": "memory"
+      },
+      {
+       "text": "Regenerate them with `python scripts/make_mock_memories.py`. See exactly what each one finds,",
+       "source": "memory"
+      },
+      {
+       "text": "real values included, with `python scripts/scan_mock_memories.py`.",
+       "source": "memory"
+      },
+      {
+       "text": "`tests/test_mock_memories.py` checks the results below.",
+       "source": "memory"
+      },
+      {
+       "text": "## The files",
+       "source": "memory"
+      },
+      {
+       "text": "| File | What it is | Result |",
+       "source": "memory"
+      },
+      {
+       "text": "|---|---|---|",
+       "source": "memory"
+      },
+      {
+       "text": "| `chatgpt-saved-memories.txt` | ChatGPT's memory list, as copied from Settings → Personalization → Manage memories (Dana, a nurse in Leeds) | 16 things, score 66, Certified oversharer |",
+       "source": "memory"
+      },
+      {
+       "text": "| `gemini-saved-info.txt` | Gemini \"Saved info\", first-person (Kofi, Accra → London) | 9 things, score 45, Chatty |",
+       "source": "memory"
+      },
+      {
+       "text": "| `bot-answer-what-do-you-remember.txt` | A bot's reply to \"What do you remember about me?\" (Sam, a teacher in Denver) | 10 things, score 50, Certified oversharer |",
+       "source": "memory"
+      },
+      {
+       "text": "| `clean-memory.txt` | Only preferences: no names, places or numbers | 0 things, score 0, Suspiciously clean |",
+       "source": "memory"
+      },
+      {
+       "text": "| `chatgpt-export.zip` | ChatGPT data export: 6 conversations about Priya in Austin | 16 things, score 66, Certified oversharer |",
+       "source": "memory"
+      },
+      {
+       "text": "| `claude-export.zip` | Claude data export: conversations, memories, a project and an attached CV (Marcus, Hamburg → Toronto) | 17 things, score 73, Certified oversharer |",
+       "source": "memory"
+      },
+      {
+       "text": "| `chatgpt-export-large.zip` | 1,241 conversations, about 1 million characters you wrote | about 344 things, score 100; takes about 20 seconds |",
+       "source": "memory"
+      },
+      {
+       "text": "The exports contain traps the scanner has to avoid:",
+       "source": "memory"
+      },
+      {
+       "text": "**ChatGPT:** AI replies that repeat your name, a system message and a tool message, custom",
+       "source": "memory"
+      },
+      {
+       "text": "instructions repeated in all 6 conversations (counted once), a numeric ID inside a code block,",
+       "source": "memory"
+      },
+      {
+       "text": "an image plus text in one message, and `user.json` with the account's email and phone. All of",
+       "source": "memory"
+      },
+      {
+       "text": "these are skipped.",
+       "source": "memory"
+      },
+      {
+       "text": "**Claude:** AI replies, a message whose text sits only in its `content` list, `users.json` with",
+       "source": "memory"
+      },
+      {
+       "text": "the account details (skipped), plus `memories.json`, `projects.json` and an attachment, which are",
+       "source": "memory"
+      },
+      {
+       "text": "all read.",
+       "source": "memory"
+      },
+      {
+       "text": "## What each file should catch",
+       "source": "memory"
+      },
+      {
+       "text": "| File | Should find | Known misses |",
+       "source": "memory"
+      },
+      {
+       "text": "|---|---|---|",
+       "source": "memory"
+      },
+      {
+       "text": "| ChatGPT saved memories | 4 names, email, phone, birth date (03.07.1989), IBAN, @handle, age, 4 places | asthma, St Mary's Hospital |",
+       "source": "memory"
+      },
+      {
+       "text": "| Gemini saved info | 2 names, email, phone, birth date (22/01/1995), age, Accra and London, Blue Room Studios | peanut allergy |",
+       "source": "memory"
+      },
+      {
+       "text": "| Bot answer | 2 names, 2 emails, phone, birth date (08/04/1997), Denver and Colorado, school and bank | the age (\"You're 29\" isn't in the age rule) |",
+       "source": "memory"
+      },
+      {
+       "text": "| ChatGPT export | 5 names (\"Priya\" merges into \"Priya Natarajan\"), email, phone, birthday (12/09/1993), @handle, GitHub link, age 33, Austin, Lisbon and Texas, 2 employers | the street address \"flat 4B at 18 Elm Grove\"; the travel date `2026-05-14` |",
+       "source": "memory"
+      },
+      {
+       "text": "| Claude export | 6 names, 2 emails, 2 phones, birth date (21.11.1985), IBAN, Hamburg and Toronto, 2 companies, a move-out date | the school name; \"Kuehne Freight\" gets counted as a name, not a company |",
+       "source": "memory"
+      },
+      {
+       "text": "## Broken uploads (`edge-cases/`)",
+       "source": "memory"
+      },
+      {
+       "text": "| File | Message the user sees |",
+       "source": "memory"
+      },
+      {
+       "text": "|---|---|",
+       "source": "memory"
+      },
+      {
+       "text": "| `empty.txt` | That's empty. Paste your memories, or drop a file. |",
+       "source": "memory"
+      },
+      {
+       "text": "| `broken-conversations.json` | … isn't valid JSON. Upload the file exactly as it came out of the export. |",
+       "source": "memory"
+      },
+      {
+       "text": "| `settings-only.json` | We couldn't find anything you wrote in there. Nothing to judge. Suspicious. |",
+       "source": "memory"
+      },
+      {
+       "text": "| `photo.png` | That doesn't look like text. Upload a .zip export, a .json file, or a .txt with your memories. |",
+       "source": "memory"
+      },
+      {
+       "text": "| `photos-only.zip` | Found nothing to read in that zip. Use the export zip from ChatGPT or Claude. |",
+       "source": "memory"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "sample:bot-answer-what-do-you-remember.txt",
+   "kind": "file",
+   "path": "samples/mock-memories/bot-answer-what-do-you-remember.txt",
+   "name": "bot-answer-what-do-you-remember.txt",
+   "expect": {
+    "ok": {
+     "format": "text",
+     "conversations": 0,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [],
+     "segments": [
+      {
+       "text": "Here's what I remember about you:",
+       "source": "memory"
+      },
+      {
+       "text": "You're Sam Rivera, a high-school chemistry teacher in Denver, Colorado.",
+       "source": "memory"
+      },
+      {
+       "text": "You're 29, and your birthday is 08/04/1997. You asked me for cake ideas last year.",
+       "source": "memory"
+      },
+      {
+       "text": "You teach at Lincoln Park High School and coach the robotics team.",
+       "source": "memory"
+      },
+      {
+       "text": "Your partner is Jordan Lee, and you have a rescue greyhound called Comet.",
+       "source": "memory"
+      },
+      {
+       "text": "You're saving for a house and asked me to compare mortgage offers from First Summit Bank.",
+       "source": "memory"
+      },
+      {
+       "text": "Your school email is s.rivera@lincolnpark.example.edu and your personal one is samrivera@example.org.",
+       "source": "memory"
+      },
+      {
+       "text": "You once shared your number, +1 303 555 0119, when drafting a message to a contractor.",
+       "source": "memory"
+      },
+      {
+       "text": "You like hiking, sour candy and long explanations with examples.",
+       "source": "memory"
+      },
+      {
+       "text": "Let me know if you want me to forget any of this.",
+       "source": "memory"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "sample:chatgpt-export-large.zip",
+   "kind": "file",
+   "path": "samples/mock-memories/chatgpt-export-large.zip",
+   "name": "chatgpt-export-large.zip",
+   "expect": {
+    "ok": {
+     "format": "chatgpt_export",
+     "conversations": 1322,
+     "assistantMessagesSkipped": 7932,
+     "filesRead": [
+      "conversations.json"
+     ],
+     "segmentCount": 7934,
+     "sourceCounts": {
+      "profile": 2,
+      "message": 7932
+     },
+     "segmentsSha256": "32546306124652beab8926dc2966b81f22aa998f4a5a298853a54968c982054e",
+     "firstSegments": [
+      {
+       "text": "I'm Priya, a data analyst in Austin, Texas. I have a beagle called Pixel.",
+       "source": "profile"
+      },
+      {
+       "text": "Be concise. Use US spelling.",
+       "source": "profile"
+      },
+      {
+       "text": "Summarize the main arguments for and against a four-day work week. Can you help me rewrite this paragraph so it sounds more confident?",
+       "source": "message"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "sample:chatgpt-export.zip",
+   "kind": "file",
+   "path": "samples/mock-memories/chatgpt-export.zip",
+   "name": "chatgpt-export.zip",
+   "expect": {
+    "ok": {
+     "format": "chatgpt_export",
+     "conversations": 6,
+     "assistantMessagesSkipped": 7,
+     "filesRead": [
+      "conversations.json"
+     ],
+     "segments": [
+      {
+       "text": "I'm Priya, a data analyst in Austin, Texas. I have a beagle called Pixel.",
+       "source": "profile"
+      },
+      {
+       "text": "Be concise. Use US spelling.",
+       "source": "profile"
+      },
+      {
+       "text": "Can you write a polite email to my landlord Tom Becker about the broken boiler? I'm Priya Natarajan, flat 4B at 18 Elm Grove, Austin TX 78704. My phone is +1 512 555 0147.",
+       "source": "message"
+      },
+      {
+       "text": "Add that my rent is paid on the 1st and he can reach me at priya.n@example.org.",
+       "source": "message"
+      },
+      {
+       "text": "Why does this crash?\n```python\nuser_id = 5125550147\nprint(users[user_id])\n```\nThe error says KeyError.",
+       "source": "message"
+      },
+      {
+       "text": "My birthday is on 12/09/1993 and I want to plan a dinner in Austin for 8 people. My friends Maya Chen and Leo Garcia are coming.",
+       "source": "message"
+      },
+      {
+       "text": "I'm 33 next week, so make it fun. Leo is vegan.",
+       "source": "message"
+      },
+      {
+       "text": "Polish this cover letter:\n\nDear hiring team at Contoso Health,\n\nI currently work at Initech as a data analyst and want to move into healthcare analytics. You can see my work at https://github.com/priya-natarajan-example and reach me on X as @priyacodes.\n\nBest,\nPriya Natarajan",
+       "source": "message"
+      },
+      {
+       "text": "Plan 3 days in Lisbon for me and my sister Anika. We fly from Austin on 2026-05-14.",
+       "source": "message"
+      },
+      {
+       "text": "Here's a photo of our itinerary, does it look right?",
+       "source": "message"
+      },
+      {
+       "text": "Give me three quick dinners with chickpeas.",
+       "source": "message"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "sample:chatgpt-saved-memories.txt",
+   "kind": "file",
+   "path": "samples/mock-memories/chatgpt-saved-memories.txt",
+   "name": "chatgpt-saved-memories.txt",
+   "expect": {
+    "ok": {
+     "format": "text",
+     "conversations": 0,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [],
+     "segments": [
+      {
+       "text": "Name is Dana Whitfield.",
+       "source": "memory"
+      },
+      {
+       "text": "Works as a paediatric nurse at St Mary's Hospital in Leeds.",
+       "source": "memory"
+      },
+      {
+       "text": "Lives in Headingley, Leeds with partner Chris Doyle and a cat called Biscuit.",
+       "source": "memory"
+      },
+      {
+       "text": "Was born on 03.07.1989.",
+       "source": "memory"
+      },
+      {
+       "text": "Is 36 years old.",
+       "source": "memory"
+      },
+      {
+       "text": "Personal email is dana.whitfield@example.com.",
+       "source": "memory"
+      },
+      {
+       "text": "Mobile number is +44 7700 900123.",
+       "source": "memory"
+      },
+      {
+       "text": "Prefers British spelling.",
+       "source": "memory"
+      },
+      {
+       "text": "Is training for the Great North Run in September.",
+       "source": "memory"
+      },
+      {
+       "text": "Sister Jess Whitfield lives in Manchester and has twin boys.",
+       "source": "memory"
+      },
+      {
+       "text": "Asked for help disputing a charge paid to IBAN GB82 WEST 1234 5698 7654 32.",
+       "source": "memory"
+      },
+      {
+       "text": "Has asthma and uses a blue inhaler.",
+       "source": "memory"
+      },
+      {
+       "text": "Posts running photos on Instagram as @dana_runs_leeds.",
+       "source": "memory"
+      },
+      {
+       "text": "Is planning a trip to Lisbon in May and is learning Portuguese.",
+       "source": "memory"
+      },
+      {
+       "text": "Manager Priya Shah is leaving Northern Care Trust next month.",
+       "source": "memory"
+      },
+      {
+       "text": "Prefers short answers with bullet points.",
+       "source": "memory"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "sample:claude-export.zip",
+   "kind": "file",
+   "path": "samples/mock-memories/claude-export.zip",
+   "name": "claude-export.zip",
+   "expect": {
+    "ok": {
+     "format": "claude_export",
+     "conversations": 3,
+     "assistantMessagesSkipped": 3,
+     "filesRead": [
+      "conversations.json",
+      "memories.json",
+      "projects.json"
+     ],
+     "segments": [
+      {
+       "text": "I'm Marcus Weber, moving from Hamburg to Toronto for a job at Northwind Logistics. I was born on 21.11.1985. Which documents do I need?",
+       "source": "message"
+      },
+      {
+       "text": "My wife Anna Weber and our daughter Lena are coming too. Contact me at marcus.weber@example.net or +49 170 555 0198.",
+       "source": "message"
+      },
+      {
+       "text": "Help me budget. My salary goes into DE89 3704 0044 0532 0130 00 and rent is 1,450 a month.",
+       "source": "message"
+      },
+      {
+       "text": "Can you make my CV sound less boring?",
+       "source": "message"
+      },
+      {
+       "text": "MARCUS WEBER\nSenior Logistics Planner, Hamburg\nmarcus.weber@example.net | +49 170 555 0198\nExperience: Kuehne Freight (2015-2024), Hapag Shipping (2010-2015)\nReferences: Dr. Ingrid Sommer, ingrid.sommer@example.de",
+       "source": "attachment"
+      },
+      {
+       "text": "Marcus is relocating to Toronto in August with his family.",
+       "source": "memory"
+      },
+      {
+       "text": "Prefers metric units and direct feedback.",
+       "source": "memory"
+      },
+      {
+       "text": "His daughter Lena starts school at Maple Grove Elementary in September.",
+       "source": "memory"
+      },
+      {
+       "text": "Help Marcus Weber plan the family move from Hamburg to Toronto.",
+       "source": "project"
+      },
+      {
+       "text": "- Book movers (call Dave Kowalski at +1 416 555 0101)\n- Register Lena at school\n- Close the Hamburg flat by 31.07.2026",
+       "source": "project"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "sample:clean-memory.txt",
+   "kind": "file",
+   "path": "samples/mock-memories/clean-memory.txt",
+   "name": "clean-memory.txt",
+   "expect": {
+    "ok": {
+     "format": "text",
+     "conversations": 0,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [],
+     "segments": [
+      {
+       "text": "Prefers concise answers.",
+       "source": "memory"
+      },
+      {
+       "text": "Likes Python and TypeScript.",
+       "source": "memory"
+      },
+      {
+       "text": "Enjoys hiking and science fiction novels.",
+       "source": "memory"
+      },
+      {
+       "text": "Is learning to bake sourdough bread.",
+       "source": "memory"
+      },
+      {
+       "text": "Wants explanations with a worked example.",
+       "source": "memory"
+      },
+      {
+       "text": "Dislikes emojis in replies.",
+       "source": "memory"
+      },
+      {
+       "text": "Uses metric units.",
+       "source": "memory"
+      },
+      {
+       "text": "Prefers dark mode screenshots in tutorials.",
+       "source": "memory"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "sample:gemini-saved-info.txt",
+   "kind": "file",
+   "path": "samples/mock-memories/gemini-saved-info.txt",
+   "name": "gemini-saved-info.txt",
+   "expect": {
+    "ok": {
+     "format": "text",
+     "conversations": 0,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [],
+     "segments": [
+      {
+       "text": "I'm vegetarian and allergic to peanuts.",
+       "source": "memory"
+      },
+      {
+       "text": "My name is Kofi Mensah.",
+       "source": "memory"
+      },
+      {
+       "text": "I live in Accra but I'm moving to London in September.",
+       "source": "memory"
+      },
+      {
+       "text": "I work as a sound engineer at Blue Room Studios.",
+       "source": "memory"
+      },
+      {
+       "text": "My email is kofi.mensah@example.com and my phone is +233 20 555 0187.",
+       "source": "memory"
+      },
+      {
+       "text": "I'm 31 and my birthday is 22/01/1995.",
+       "source": "memory"
+      },
+      {
+       "text": "My partner Ama Owusu is a midwife.",
+       "source": "memory"
+      },
+      {
+       "text": "I support Arsenal and play five-a-side on Thursdays.",
+       "source": "memory"
+      },
+      {
+       "text": "Explain things to me like I'm a smart beginner.",
+       "source": "memory"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "sample:edge-cases/broken-conversations.json",
+   "kind": "file",
+   "path": "samples/mock-memories/edge-cases/broken-conversations.json",
+   "name": "broken-conversations.json",
+   "expect": {
+    "error": {
+     "type": "ExtractError",
+     "message": "broken-conversations.json isn't valid JSON. Upload the file exactly as it came out of the export."
+    }
+   }
+  },
+  {
+   "id": "sample:edge-cases/empty.txt",
+   "kind": "file",
+   "path": "samples/mock-memories/edge-cases/empty.txt",
+   "name": "empty.txt",
+   "expect": {
+    "error": {
+     "type": "ExtractError",
+     "message": "That's empty. Paste your memories, or drop a file."
+    }
+   }
+  },
+  {
+   "id": "sample:edge-cases/photo.png",
+   "kind": "file",
+   "path": "samples/mock-memories/edge-cases/photo.png",
+   "name": "photo.png",
+   "expect": {
+    "error": {
+     "type": "ExtractError",
+     "message": "That doesn't look like text. Upload a .zip export, a .json file, or a .txt with your memories."
+    }
+   }
+  },
+  {
+   "id": "sample:edge-cases/photos-only.zip",
+   "kind": "file",
+   "path": "samples/mock-memories/edge-cases/photos-only.zip",
+   "name": "photos-only.zip",
+   "expect": {
+    "error": {
+     "type": "ExtractError",
+     "message": "Found nothing to read in that zip. Use the export zip from ChatGPT or Claude."
+    }
+   }
+  },
+  {
+   "id": "sample:edge-cases/settings-only.json",
+   "kind": "file",
+   "path": "samples/mock-memories/edge-cases/settings-only.json",
+   "name": "settings-only.json",
+   "expect": {
+    "error": {
+     "type": "ExtractError",
+     "message": "We couldn't find anything you wrote in there. Nothing to judge. Suspicious."
+    }
+   }
+  },
+  {
+   "id": "zip:stored.zip",
+   "kind": "file",
+   "path": "tests/web/fixtures/zips/stored.zip",
+   "name": "stored.zip",
+   "expect": {
+    "ok": {
+     "format": "claude_export",
+     "conversations": 3,
+     "assistantMessagesSkipped": 2,
+     "filesRead": [
+      "conversations.json",
+      "memories.json",
+      "projects.json"
+     ],
+     "segments": [
+      {
+       "text": "Hello, I'm Marcus from Hamburg.",
+       "source": "message"
+      },
+      {
+       "text": "Marcus Weber, CV",
+       "source": "attachment"
+      },
+      {
+       "text": "from content one\nfrom content two",
+       "source": "message"
+      },
+      {
+       "text": "Find a logistics job in Toronto",
+       "source": "project"
+      },
+      {
+       "text": "You help Marcus.",
+       "source": "project"
+      },
+      {
+       "text": "Call Anna Schulz",
+       "source": "project"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "zip:data-descriptor.zip",
+   "kind": "file",
+   "path": "tests/web/fixtures/zips/data-descriptor.zip",
+   "name": "data-descriptor.zip",
+   "expect": {
+    "ok": {
+     "format": "chatgpt_export",
+     "conversations": 2,
+     "assistantMessagesSkipped": 1,
+     "filesRead": [
+      "conversations.json"
+     ],
+     "segments": [
+      {
+       "text": "I'm Priya, a data engineer in Austin.",
+       "source": "profile"
+      },
+      {
+       "text": "Keep it short.",
+       "source": "profile"
+      },
+      {
+       "text": "My number is +1 512 555 0142",
+       "source": "message"
+      },
+      {
+       "text": "I'm moving from Austin to Lisbon in May.",
+       "source": "message"
+      },
+      {
+       "text": "What's in this photo?",
+       "source": "message"
+      },
+      {
+       "text": "print(42)",
+       "source": "message"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "zip:zip64.zip",
+   "kind": "file",
+   "path": "tests/web/fixtures/zips/zip64.zip",
+   "name": "zip64.zip",
+   "expect": {
+    "ok": {
+     "format": "chatgpt_export",
+     "conversations": 2,
+     "assistantMessagesSkipped": 1,
+     "filesRead": [
+      "conversations-000.json",
+      "conversations-001.json"
+     ],
+     "segments": [
+      {
+       "text": "I'm Priya, a data engineer in Austin.",
+       "source": "profile"
+      },
+      {
+       "text": "Keep it short.",
+       "source": "profile"
+      },
+      {
+       "text": "My number is +1 512 555 0142",
+       "source": "message"
+      },
+      {
+       "text": "I'm moving from Austin to Lisbon in May.",
+       "source": "message"
+      },
+      {
+       "text": "What's in this photo?",
+       "source": "message"
+      },
+      {
+       "text": "print(42)",
+       "source": "message"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "zip:zip64-prefixed.zip",
+   "kind": "file",
+   "path": "tests/web/fixtures/zips/zip64-prefixed.zip",
+   "name": "zip64-prefixed.zip",
+   "expect": {
+    "ok": {
+     "format": "chatgpt_export",
+     "conversations": 2,
+     "assistantMessagesSkipped": 1,
+     "filesRead": [
+      "conversations-000.json",
+      "conversations-001.json"
+     ],
+     "segments": [
+      {
+       "text": "I'm Priya, a data engineer in Austin.",
+       "source": "profile"
+      },
+      {
+       "text": "Keep it short.",
+       "source": "profile"
+      },
+      {
+       "text": "My number is +1 512 555 0142",
+       "source": "message"
+      },
+      {
+       "text": "I'm moving from Austin to Lisbon in May.",
+       "source": "message"
+      },
+      {
+       "text": "What's in this photo?",
+       "source": "message"
+      },
+      {
+       "text": "print(42)",
+       "source": "message"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "zip:prefixed-comment.zip",
+   "kind": "file",
+   "path": "tests/web/fixtures/zips/prefixed-comment.zip",
+   "name": "prefixed-comment.zip",
+   "expect": {
+    "ok": {
+     "format": "claude_export",
+     "conversations": 3,
+     "assistantMessagesSkipped": 2,
+     "filesRead": [
+      "export/conversations.json"
+     ],
+     "segments": [
+      {
+       "text": "Hello, I'm Marcus from Hamburg.",
+       "source": "message"
+      },
+      {
+       "text": "Marcus Weber, CV",
+       "source": "attachment"
+      },
+      {
+       "text": "from content one\nfrom content two",
+       "source": "message"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "zip:export-nested.zip",
+   "kind": "file",
+   "path": "tests/web/fixtures/zips/export-nested.zip",
+   "name": "export-nested.zip",
+   "expect": {
+    "ok": {
+     "format": "claude_export",
+     "conversations": 3,
+     "assistantMessagesSkipped": 2,
+     "filesRead": [
+      "Export/Conversations-001.JSON",
+      "Export/memories/Memory-2024.json",
+      "Export/projects.json"
+     ],
+     "segments": [
+      {
+       "text": "Hello, I'm Marcus from Hamburg.",
+       "source": "message"
+      },
+      {
+       "text": "Marcus Weber, CV",
+       "source": "attachment"
+      },
+      {
+       "text": "from content one\nfrom content two",
+       "source": "message"
+      },
+      {
+       "text": "Find a logistics job in Toronto",
+       "source": "project"
+      },
+      {
+       "text": "You help Marcus.",
+       "source": "project"
+      },
+      {
+       "text": "Call Anna Schulz",
+       "source": "project"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "zip:dotless-i.zip",
+   "kind": "file",
+   "path": "tests/web/fixtures/zips/dotless-i.zip",
+   "name": "dotless-i.zip",
+   "expect": {
+    "ok": {
+     "format": "claude_export",
+     "conversations": 3,
+     "assistantMessagesSkipped": 2,
+     "filesRead": [
+      "Conversatıons.json"
+     ],
+     "segments": [
+      {
+       "text": "Hello, I'm Marcus from Hamburg.",
+       "source": "message"
+      },
+      {
+       "text": "Marcus Weber, CV",
+       "source": "attachment"
+      },
+      {
+       "text": "from content one\nfrom content two",
+       "source": "message"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "zip:names.zip",
+   "kind": "file",
+   "path": "tests/web/fixtures/zips/names.zip",
+   "name": "names.zip",
+   "expect": {
+    "ok": {
+     "format": "json",
+     "conversations": 0,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [
+      "folder/more.markdown",
+      "notes-über.txt",
+      "français-notes.txt",
+      "evil.txt",
+      "ünïcode-päth.txt",
+      "wrong-crc-placeholder.txt",
+      "folder\\windows.txt",
+      "trailing-newline.txt\n",
+      "data.json",
+      "README.MD"
+     ],
+     "segments": [
+      {
+       "text": "from a markdown file",
+       "source": "document"
+      },
+      {
+       "text": "cp437 name",
+       "source": "document"
+      },
+      {
+       "text": "UTF-8 name",
+       "source": "document"
+      },
+      {
+       "text": "cut at the NUL byte",
+       "source": "document"
+      },
+      {
+       "text": "named by the Unicode path field",
+       "source": "document"
+      },
+      {
+       "text": "Unicode path field ignored",
+       "source": "document"
+      },
+      {
+       "text": "backslash kept",
+       "source": "document"
+      },
+      {
+       "text": "Python's $ matches before a final newline",
+       "source": "document"
+      },
+      {
+       "text": "Generic JSON in a zip",
+       "source": "document"
+      },
+      {
+       "text": "# Upper-case extension",
+       "source": "document"
+      },
+      {
+       "text": "counts as text",
+       "source": "document"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "zip:text-members.zip",
+   "kind": "file",
+   "path": "tests/web/fixtures/zips/text-members.zip",
+   "name": "text-members.zip",
+   "expect": {
+    "ok": {
+     "format": "json",
+     "conversations": 0,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [
+      "notes.txt",
+      "list.md",
+      "data.json",
+      "empty.txt"
+     ],
+     "segments": [
+      {
+       "text": "﻿My notes",
+       "source": "document"
+      },
+      {
+       "text": "Lives in Leeds",
+       "source": "document"
+      },
+      {
+       "text": "```\nsecret = 123\n```",
+       "source": "document"
+      },
+      {
+       "text": "Bad bytes: � end",
+       "source": "document"
+      },
+      {
+       "text": "one",
+       "source": "document"
+      },
+      {
+       "text": "two",
+       "source": "document"
+      },
+      {
+       "text": "three",
+       "source": "document"
+      },
+      {
+       "text": "Has a cat called Biscuit",
+       "source": "document"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "zip:invalid-member.zip",
+   "kind": "file",
+   "path": "tests/web/fixtures/zips/invalid-member.zip",
+   "name": "invalid-member.zip",
+   "expect": {
+    "error": {
+     "type": "ExtractError",
+     "message": "conversations.json isn't valid JSON. Upload the file exactly as it came out of the export."
+    }
+   }
+  },
+  {
+   "id": "zip:invalid-utf8-member.zip",
+   "kind": "file",
+   "path": "tests/web/fixtures/zips/invalid-utf8-member.zip",
+   "name": "invalid-utf8-member.zip",
+   "expect": {
+    "error": {
+     "type": "ExtractError",
+     "message": "data.json isn't valid JSON. Upload the file exactly as it came out of the export."
+    }
+   }
+  },
+  {
+   "id": "zip:empty.zip",
+   "kind": "file",
+   "path": "tests/web/fixtures/zips/empty.zip",
+   "name": "empty.zip",
+   "expect": {
+    "error": {
+     "type": "ExtractError",
+     "message": "Found nothing to read in that zip. Use the export zip from ChatGPT or Claude."
+    }
+   }
+  },
+  {
+   "id": "zip:dirs-only.zip",
+   "kind": "file",
+   "path": "tests/web/fixtures/zips/dirs-only.zip",
+   "name": "dirs-only.zip",
+   "expect": {
+    "error": {
+     "type": "ExtractError",
+     "message": "Found nothing to read in that zip. Use the export zip from ChatGPT or Claude."
+    }
+   }
+  },
+  {
+   "id": "zip:too-big-member.zip",
+   "kind": "file",
+   "path": "tests/web/fixtures/zips/too-big-member.zip",
+   "name": "too-big-member.zip",
+   "expect": {
+    "error": {
+     "type": "ExtractError",
+     "message": "That export is too big to scan in one go (over 600 MB unpacked)."
+    }
+   }
+  },
+  {
+   "id": "zip:too-big-total.zip",
+   "kind": "file",
+   "path": "tests/web/fixtures/zips/too-big-total.zip",
+   "name": "too-big-total.zip",
+   "expect": {
+    "error": {
+     "type": "ExtractError",
+     "message": "That export is too big to scan in one go (over 600 MB unpacked)."
+    }
+   }
+  },
+  {
+   "id": "zip:bad-crc.zip",
+   "kind": "file",
+   "path": "tests/web/fixtures/zips/bad-crc.zip",
+   "name": "bad-crc.zip",
+   "expect": {
+    "error": {
+     "type": "crash",
+     "pyType": "BadZipFile",
+     "message": "Bad CRC-32 for file 'conversations.json'"
+    }
+   }
+  },
+  {
+   "id": "zip:overlap.zip",
+   "kind": "file",
+   "path": "tests/web/fixtures/zips/overlap.zip",
+   "name": "overlap.zip",
+   "expect": {
+    "error": {
+     "type": "crash",
+     "pyType": "BadZipFile",
+     "message": "Overlapped entries: 'conversations.json' (possible zip bomb)"
+    }
+   }
+  },
+  {
+   "id": "zip:multidisk.zip",
+   "kind": "file",
+   "path": "tests/web/fixtures/zips/multidisk.zip",
+   "name": "multidisk.zip",
+   "expect": {
+    "error": {
+     "type": "ExtractError",
+     "message": "That doesn't look like text. Upload a .zip export, a .json file, or a .txt with your memories."
+    }
+   }
+  },
+  {
+   "id": "zip:truncated.zip",
+   "kind": "file",
+   "path": "tests/web/fixtures/zips/truncated.zip",
+   "name": "truncated.zip",
+   "expect": {
+    "error": {
+     "type": "ExtractError",
+     "message": "That doesn't look like text. Upload a .zip export, a .json file, or a .txt with your memories."
+    }
+   }
+  },
+  {
+   "id": "zip:plain-text.zip",
+   "kind": "file",
+   "path": "tests/web/fixtures/zips/plain-text.zip",
+   "name": "plain-text.zip",
+   "expect": {
+    "ok": {
+     "format": "text",
+     "conversations": 0,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [],
+     "segments": [
+      {
+       "text": "Not a zip at all",
+       "source": "memory"
+      },
+      {
+       "text": "just text with a .zip name",
+       "source": "memory"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "zip:encrypted.zip",
+   "kind": "file",
+   "path": "tests/web/fixtures/zips/encrypted.zip",
+   "name": "encrypted.zip",
+   "expect": {
+    "ok": {
+     "format": "text",
+     "conversations": 0,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [
+      "notes.txt"
+     ],
+     "segments": [
+      {
+       "text": "Readable notes",
+       "source": "document"
+      }
+     ]
+    }
+   },
+   "pythonActual": {
+    "error": {
+     "type": "crash",
+     "pyType": "RuntimeError",
+     "message": "File <ZipInfo filename='secret.txt' compress_type=deflate filemode='?rw-------' file_size=9 compress_size=11> is encrypted, password required for extraction"
+    }
+   }
+  },
+  {
+   "id": "zip:bzip2.zip",
+   "kind": "file",
+   "path": "tests/web/fixtures/zips/bzip2.zip",
+   "name": "bzip2.zip",
+   "expect": {
+    "ok": {
+     "format": "text",
+     "conversations": 0,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [
+      "notes.txt"
+     ],
+     "segments": [
+      {
+       "text": "Readable notes",
+       "source": "document"
+      }
+     ]
+    }
+   },
+   "pythonActual": {
+    "ok": {
+     "format": "text",
+     "conversations": 0,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [
+      "notes.txt",
+      "more.txt"
+     ],
+     "segments": [
+      {
+       "text": "Readable notes",
+       "source": "document"
+      },
+      {
+       "text": "bzip2 member",
+       "source": "document"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "file:chat.html",
+   "kind": "file",
+   "name": "chat.html",
+   "base64": "PCFET0NUWVBFIGh0bWw+PGh0bWw+PGhlYWQ+PG1ldGEgY2hhcnNldD0iVVRGLTgiPjx0aXRsZT5DaGF0R1BUIERhdGEgRXhwb3J0PC90aXRsZT4KPHN0eWxlPmJvZHkgeyBmb250LWZhbWlseTogc2Fucy1zZXJpZjsgfTwvc3R5bGU+PC9oZWFkPjxib2R5PjxkaXYgaWQ9InJvb3QiPjwvZGl2Pgo8c2NyaXB0Pgp2YXIganNvbkRhdGEgPSBbeyJ0aXRsZSI6ICJNb3ZpbmciLCAiY3JlYXRlX3RpbWUiOiAxNzAwMDAwMDAwLjAsICJtYXBwaW5nIjogeyJyb290IjogeyJpZCI6ICJyb290IiwgIm1lc3NhZ2UiOiBudWxsLCAicGFyZW50IjogbnVsbCwgImNoaWxkcmVuIjogWyJhIl19LCAic3lzIjogeyJpZCI6ICJzeXMiLCAibWVzc2FnZSI6IHsiaWQiOiAic3lzIiwgImF1dGhvciI6IHsicm9sZSI6ICJzeXN0ZW0ifSwgImNyZWF0ZV90aW1lIjogbnVsbCwgImNvbnRlbnQiOiB7ImNvbnRlbnRfdHlwZSI6ICJ0ZXh0IiwgInBhcnRzIjogWyIiXX19LCAicGFyZW50IjogbnVsbCwgImNoaWxkcmVuIjogW119LCAiY3R4IjogeyJpZCI6ICJjdHgiLCAibWVzc2FnZSI6IHsiaWQiOiAiY3R4IiwgImF1dGhvciI6IHsicm9sZSI6ICJ1c2VyIn0sICJjcmVhdGVfdGltZSI6IG51bGwsICJjb250ZW50IjogeyJjb250ZW50X3R5cGUiOiAidXNlcl9lZGl0YWJsZV9jb250ZXh0IiwgInVzZXJfcHJvZmlsZSI6ICJJJ20gUHJpeWEsIGEgZGF0YSBlbmdpbmVlciBpbiBBdXN0aW4uIiwgInVzZXJfaW5zdHJ1Y3Rpb25zIjogIktlZXAgaXQgc2hvcnQuIn19LCAicGFyZW50IjogbnVsbCwgImNoaWxkcmVuIjogW119LCAiYSI6IHsiaWQiOiAiYSIsICJtZXNzYWdlIjogeyJpZCI6ICJhIiwgImF1dGhvciI6IHsicm9sZSI6ICJ1c2VyIn0sICJjcmVhdGVfdGltZSI6IDE3MDAwMDAwMDMuNSwgImNvbnRlbnQiOiB7ImNvbnRlbnRfdHlwZSI6ICJ0ZXh0IiwgInBhcnRzIjogWyJJJ20gbW92aW5nIGZyb20gQXVzdGluIHRvIExpc2JvbiBpbiBNYXkuIl19fSwgInBhcmVudCI6IG51bGwsICJjaGlsZHJlbiI6IFtdfSwgImIiOiB7ImlkIjogImIiLCAibWVzc2FnZSI6IHsiaWQiOiAiYiIsICJhdXRob3IiOiB7InJvbGUiOiAiYXNzaXN0YW50In0sICJjcmVhdGVfdGltZSI6IDE3MDAwMDAwMDQuMCwgImNvbnRlbnQiOiB7ImNvbnRlbnRfdHlwZSI6ICJ0ZXh0IiwgInBhcnRzIjogWyJMaXNib24gaXMgbG92ZWx5LCBQcml5YSEiXX19LCAicGFyZW50IjogbnVsbCwgImNoaWxkcmVuIjogW119LCAiYyI6IHsiaWQiOiAiYyIsICJtZXNzYWdlIjogeyJpZCI6ICJjIiwgImF1dGhvciI6IHsicm9sZSI6ICJ1c2VyIn0sICJjcmVhdGVfdGltZSI6IDE3MDAwMDAwMDEuMjUsICJjb250ZW50IjogeyJjb250ZW50X3R5cGUiOiAidGV4dCIsICJwYXJ0cyI6IFsiTXkgbnVtYmVyIGlzICsxIDUxMiA1NTUgMDE0MiJdfX0sICJwYXJlbnQiOiBudWxsLCAiY2hpbGRyZW4iOiBbXX0sICJkIjogeyJpZCI6ICJkIiwgIm1lc3NhZ2UiOiB7ImlkIjogImQiLCAiYXV0aG9yIjogeyJyb2xlIjogInRvb2wifSwgImNyZWF0ZV90aW1lIjogMTcwMDAwMDAwMi4wLCAiY29udGVudCI6IHsiY29udGVudF90eXBlIjogInRleHQiLCAicGFydHMiOiBbInNlYXJjaCByZXN1bHRzIl19fSwgInBhcmVudCI6IG51bGwsICJjaGlsZHJlbiI6IFtdfSwgImUiOiB7ImlkIjogImUiLCAibWVzc2FnZSI6IHsiaWQiOiAiZSIsICJhdXRob3IiOiB7InJvbGUiOiAidXNlciJ9LCAiY3JlYXRlX3RpbWUiOiAxNzAwMDAwMDA1LCAiY29udGVudCI6IHsiY29udGVudF90eXBlIjogInRleHQiLCAicGFydHMiOiBbeyJjb250ZW50X3R5cGUiOiAiaW1hZ2VfYXNzZXRfcG9pbnRlciJ9LCAiV2hhdCdzIGluIHRoaXMgcGhvdG8/Il19fSwgInBhcmVudCI6IG51bGwsICJjaGlsZHJlbiI6IFtdfX19LCB7InRpdGxlIjogIkNvZGUiLCAiY3JlYXRlX3RpbWUiOiAxNzAwMDAwMDAwLjAsICJtYXBwaW5nIjogeyJjdHgiOiB7ImlkIjogImN0eCIsICJtZXNzYWdlIjogeyJpZCI6ICJjdHgiLCAiYXV0aG9yIjogeyJyb2xlIjogInVzZXIifSwgImNyZWF0ZV90aW1lIjogbnVsbCwgImNvbnRlbnQiOiB7ImNvbnRlbnRfdHlwZSI6ICJ1c2VyX2VkaXRhYmxlX2NvbnRleHQiLCAidXNlcl9wcm9maWxlIjogIkknbSBQcml5YSwgYSBkYXRhIGVuZ2luZWVyIGluIEF1c3Rpbi4iLCAidXNlcl9pbnN0cnVjdGlvbnMiOiAiS2VlcCBpdCBzaG9ydC4ifX0sICJwYXJlbnQiOiBudWxsLCAiY2hpbGRyZW4iOiBbXX0sICJmIjogeyJpZCI6ICJmIiwgIm1lc3NhZ2UiOiB7ImlkIjogImYiLCAiYXV0aG9yIjogeyJyb2xlIjogInVzZXIifSwgImNyZWF0ZV90aW1lIjogMTcwMDAwMDEwMCwgImNvbnRlbnQiOiB7ImNvbnRlbnRfdHlwZSI6ICJjb2RlIiwgInRleHQiOiAicHJpbnQoNDIpICAifX0sICJwYXJlbnQiOiBudWxsLCAiY2hpbGRyZW4iOiBbXX19fV07CmZ1bmN0aW9uIHJlbmRlcigpeyByZXR1cm4ganNvbkRhdGEubGVuZ3RoOyB9Cjwvc2NyaXB0PjwvYm9keT48L2h0bWw+Cg==",
+   "expect": {
+    "ok": {
+     "format": "chatgpt_export",
+     "conversations": 2,
+     "assistantMessagesSkipped": 1,
+     "filesRead": [
+      "chat.html"
+     ],
+     "segments": [
+      {
+       "text": "I'm Priya, a data engineer in Austin.",
+       "source": "profile"
+      },
+      {
+       "text": "Keep it short.",
+       "source": "profile"
+      },
+      {
+       "text": "My number is +1 512 555 0142",
+       "source": "message"
+      },
+      {
+       "text": "I'm moving from Austin to Lisbon in May.",
+       "source": "message"
+      },
+      {
+       "text": "What's in this photo?",
+       "source": "message"
+      },
+      {
+       "text": "print(42)",
+       "source": "message"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "file:chat-broken.html",
+   "kind": "file",
+   "name": "chat-broken.html",
+   "base64": "PGh0bWw+PGJvZHk+PGgxPkNoYXRzPC9oMT4KPHNjcmlwdD4KdmFyIGpzb25EYXRhID0gW3sidGl0bGUiOiAiT29wcyIsIF07Cjwvc2NyaXB0Pgo8cD5TaG93biB3aGVuIHRoZSBlbWJlZGRlZCBKU09OIGlzIGJyb2tlbjwvcD48L2JvZHk+PC9odG1sPgo=",
+   "expect": {
+    "ok": {
+     "format": "text",
+     "conversations": 0,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [],
+     "segments": [
+      {
+       "text": "Chats",
+       "source": "document"
+      },
+      {
+       "text": "Shown when the embedded JSON is broken",
+       "source": "document"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "file:page.htm",
+   "kind": "file",
+   "name": "page.htm",
+   "base64": "77u/PGh0bWw+PGhlYWQ+PFNUWUxFPnAgeyBjb2xvcjogcmVkIH08L3N0eWxlPjxzY3JpcHQgdHlwZT0ieCI+dmFyIHggPSAxOzwvU0NSSVBUPjwvaGVhZD48Ym9keT48aDI+QWJvdXQgbWU8L2gyPjxwPkxpdmVzIGluIExlZWRzICZhbXA7IHdvcmtzIGF0IFN0IE1hcnkmIzM5O3M8L3A+PGRpdj5MaW5lPGJyPmJyZWFrPEJSLz5hZ2FpbjxiciAvPmVuZDwvZGl2Pjx1bD48bGk+LSBidWxsZXQgaW4gYSBsaXN0PC9saT48bGk+Mi4gbnVtYmVyZWQ8L2xpPjwvdWw+PGjZoz5BcmFiaWMtaW5kaWMgaGVhZGluZyBkaWdpdDwvaNmjPjxwPiZjb3B5IDIwMjYgJm5vdGl0OyAmYW1weCAmTm90RXF1YWxUaWxkZTsgJnVua25vd247ICYjeDFGNjAwOyAmIzA7ICYjMTI4OyAmI3hEODAwOyAmIzExMTQxMTI7ICYjeEZGRkU7ICYjNjUgJiN4OyAmbHQ7YiZndDs8L3A+PHNjcmlwdHg+a2VwdDogbm90IGEgc2NyaXB0IHRhZzwvc2NyaXB0eD48cHJlPmBgYApjb2RlIGluIHByZQpgYGA8L3ByZT48cD5CYWQgYnl0ZXM6IP/DIOKCIO2ggCBlbmQ8L3A+PHN0eWxlPnVuY2xvc2VkIHN0eWxlCjxwPnN0aWxsIHZpc2libGU/PC9wPg==",
+   "expect": {
+    "ok": {
+     "format": "text",
+     "conversations": 0,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [],
+     "segments": [
+      {
+       "text": "﻿       About me",
+       "source": "document"
+      },
+      {
+       "text": "Lives in Leeds & works at St Mary's",
+       "source": "document"
+      },
+      {
+       "text": "Line",
+       "source": "document"
+      },
+      {
+       "text": "break",
+       "source": "document"
+      },
+      {
+       "text": "again",
+       "source": "document"
+      },
+      {
+       "text": "end",
+       "source": "document"
+      },
+      {
+       "text": "bullet in a list",
+       "source": "document"
+      },
+      {
+       "text": "numbered",
+       "source": "document"
+      },
+      {
+       "text": "Arabic-indic heading digit",
+       "source": "document"
+      },
+      {
+       "text": "© 2026 ¬it; &x ≂̸ &unknown; 😀 � € � �  A &#x; <b>",
+       "source": "document"
+      },
+      {
+       "text": "kept: not a script tag",
+       "source": "document"
+      },
+      {
+       "text": "```\ncode in pre\n```",
+       "source": "document"
+      },
+      {
+       "text": "Bad bytes: �� � ��� end",
+       "source": "document"
+      },
+      {
+       "text": "unclosed style",
+       "source": "document"
+      },
+      {
+       "text": "still visible?",
+       "source": "document"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "file:memories.JSON",
+   "kind": "file",
+   "name": "memories.JSON",
+   "base64": "77u/WwogIiAgRmlyc3QgbWVtb3J5ICAiLAogIiIsCiAiU2Vjb25kIG1lbW9yeSIsCiAiICAiCl0=",
+   "expect": {
+    "ok": {
+     "format": "json",
+     "conversations": 0,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [
+      "memories.JSON"
+     ],
+     "segments": [
+      {
+       "text": "First memory",
+       "source": "memory"
+      },
+      {
+       "text": "Second memory",
+       "source": "memory"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "file:chatgpt-weird.json",
+   "kind": "file",
+   "name": "chatgpt-weird.json",
+   "base64": "WwogewogICJ0aXRsZSI6ICJBIiwKICAiY3JlYXRlX3RpbWUiOiAxNzAwMDAwMDAwLjAsCiAgIm1hcHBpbmciOiB7CiAgICJyb290IjogewogICAgImlkIjogInJvb3QiLAogICAgIm1lc3NhZ2UiOiBudWxsLAogICAgInBhcmVudCI6IG51bGwsCiAgICAiY2hpbGRyZW4iOiBbCiAgICAgIm4xIgogICAgXQogICB9LAogICAibjMiOiB7CiAgICAiaWQiOiAibjMiLAogICAgIm1lc3NhZ2UiOiB7CiAgICAgImlkIjogIm4zIiwKICAgICAiYXV0aG9yIjogewogICAgICAicm9sZSI6ICJ1c2VyIgogICAgIH0sCiAgICAgImNyZWF0ZV90aW1lIjogMywKICAgICAiY29udGVudCI6IHsKICAgICAgImNvbnRlbnRfdHlwZSI6ICJ0ZXh0IiwKICAgICAgInBhcnRzIjogWwogICAgICAgInRoaXJkIGJ5IHRpbWUiCiAgICAgIF0KICAgICB9CiAgICB9LAogICAgInBhcmVudCI6IG51bGwsCiAgICAiY2hpbGRyZW4iOiBbXQogICB9LAogICAibjEiOiB7CiAgICAiaWQiOiAibjEiLAogICAgIm1lc3NhZ2UiOiB7CiAgICAgImlkIjogIm4xIiwKICAgICAiYXV0aG9yIjogewogICAgICAicm9sZSI6ICJ1c2VyIgogICAgIH0sCiAgICAgImNyZWF0ZV90aW1lIjogMS41LAogICAgICJjb250ZW50IjogewogICAgICAiY29udGVudF90eXBlIjogInRleHQiLAogICAgICAicGFydHMiOiBbCiAgICAgICAiZmlyc3QgYnkgdGltZSIsCiAgICAgICB7CiAgICAgICAgImFzc2V0X3BvaW50ZXIiOiAiZmlsZS0xIgogICAgICAgfSwKICAgICAgICIgIGFuZCBtb3JlICAiCiAgICAgIF0KICAgICB9CiAgICB9LAogICAgInBhcmVudCI6IG51bGwsCiAgICAiY2hpbGRyZW4iOiBbXQogICB9LAogICAibjIiOiB7CiAgICAiaWQiOiAibjIiLAogICAgIm1lc3NhZ2UiOiB7CiAgICAgImlkIjogIm4yIiwKICAgICAiYXV0aG9yIjogewogICAgICAicm9sZSI6ICJhc3Npc3RhbnQiCiAgICAgfSwKICAgICAiY3JlYXRlX3RpbWUiOiAyLAogICAgICJjb250ZW50IjogewogICAgICAiY29udGVudF90eXBlIjogInRleHQiLAogICAgICAicGFydHMiOiBbCiAgICAgICAiYXNzaXN0YW50IHJlcGx5IgogICAgICBdCiAgICAgfQogICAgfSwKICAgICJwYXJlbnQiOiBudWxsLAogICAgImNoaWxkcmVuIjogW10KICAgfSwKICAgInN5cyI6IHsKICAgICJpZCI6ICJzeXMiLAogICAgIm1lc3NhZ2UiOiB7CiAgICAgImlkIjogInN5cyIsCiAgICAgImF1dGhvciI6IHsKICAgICAgInJvbGUiOiAic3lzdGVtIgogICAgIH0sCiAgICAgImNyZWF0ZV90aW1lIjogbnVsbCwKICAgICAiY29udGVudCI6IHsKICAgICAgImNvbnRlbnRfdHlwZSI6ICJ0ZXh0IiwKICAgICAgInBhcnRzIjogWwogICAgICAgInN5c3RlbSBwcm9tcHQiCiAgICAgIF0KICAgICB9CiAgICB9LAogICAgInBhcmVudCI6IG51bGwsCiAgICAiY2hpbGRyZW4iOiBbXQogICB9LAogICAidG9vbCI6IHsKICAgICJtZXNzYWdlIjogewogICAgICJhdXRob3IiOiB7CiAgICAgICJyb2xlIjogInRvb2wiCiAgICAgfSwKICAgICAiY29udGVudCI6IHsKICAgICAgInBhcnRzIjogWwogICAgICAgInRvb2wgb3V0cHV0IgogICAgICBdCiAgICAgfQogICAgfQogICB9LAogICAiY3R4IjogewogICAgImlkIjogImN0eCIsCiAgICAibWVzc2FnZSI6IHsKICAgICAiaWQiOiAiY3R4IiwKICAgICAiYXV0aG9yIjogewogICAgICAicm9sZSI6ICJ1c2VyIgogICAgIH0sCiAgICAgImNyZWF0ZV90aW1lIjogbnVsbCwKICAgICAiY29udGVudCI6IHsKICAgICAgImNvbnRlbnRfdHlwZSI6ICJ1c2VyX2VkaXRhYmxlX2NvbnRleHQiLAogICAgICAidXNlcl9wcm9maWxlIjogIiAgSSBhbSBQcml5YS4gICIsCiAgICAgICJ1c2VyX2luc3RydWN0aW9ucyI6ICJCZSBicmllZi4iCiAgICAgfQogICAgfSwKICAgICJwYXJlbnQiOiBudWxsLAogICAgImNoaWxkcmVuIjogW10KICAgfSwKICAgInQiOiB7CiAgICAiaWQiOiAidCIsCiAgICAibWVzc2FnZSI6IHsKICAgICAiaWQiOiAidCIsCiAgICAgImF1dGhvciI6IHsKICAgICAgInJvbGUiOiAidXNlciIKICAgICB9LAogICAgICJjcmVhdGVfdGltZSI6IHRydWUsCiAgICAgImNvbnRlbnQiOiB7CiAgICAgICJjb250ZW50X3R5cGUiOiAiY29kZSIsCiAgICAgICJ0ZXh0IjogIiAgdGV4dCBmaWVsZCBvbmx5ICAiCiAgICAgfQogICAgfSwKICAgICJwYXJlbnQiOiBudWxsLAogICAgImNoaWxkcmVuIjogW10KICAgfSwKICAgImNoYXJzIjogewogICAgImlkIjogImNoYXJzIiwKICAgICJtZXNzYWdlIjogewogICAgICJpZCI6ICJjaGFycyIsCiAgICAgImF1dGhvciI6IHsKICAgICAgInJvbGUiOiAidXNlciIKICAgICB9LAogICAgICJjcmVhdGVfdGltZSI6IDQsCiAgICAgImNvbnRlbnQiOiB7CiAgICAgICJjb250ZW50X3R5cGUiOiAidGV4dCIsCiAgICAgICJwYXJ0cyI6ICJhYmMiCiAgICAgfQogICAgfSwKICAgICJwYXJlbnQiOiBudWxsLAogICAgImNoaWxkcmVuIjogW10KICAgfSwKICAgImtleXMiOiB7CiAgICAiaWQiOiAia2V5cyIsCiAgICAibWVzc2FnZSI6IHsKICAgICAiaWQiOiAia2V5cyIsCiAgICAgImF1dGhvciI6IHsKICAgICAgInJvbGUiOiAidXNlciIKICAgICB9LAogICAgICJjcmVhdGVfdGltZSI6IDUsCiAgICAgImNvbnRlbnQiOiB7CiAgICAgICJjb250ZW50X3R5cGUiOiAidGV4dCIsCiAgICAgICJwYXJ0cyI6IHsKICAgICAgICJrZXkgb25lIjogMSwKICAgICAgICJrZXkgdHdvIjogMgogICAgICB9CiAgICAgfQogICAgfSwKICAgICJwYXJlbnQiOiBudWxsLAogICAgImNoaWxkcmVuIjogW10KICAgfSwKICAgImVtcHR5Ijoge30sCiAgICJudWwiOiBudWxsLAogICAiemVybyI6IDAKICB9CiB9LAogewogICJ0aXRsZSI6ICJCIiwKICAiY3JlYXRlX3RpbWUiOiAxNzAwMDAwMDAwLjAsCiAgIm1hcHBpbmciOiB7CiAgICJjdHgyIjogewogICAgImlkIjogImN0eDIiLAogICAgIm1lc3NhZ2UiOiB7CiAgICAgImlkIjogImN0eDIiLAogICAgICJhdXRob3IiOiB7CiAgICAgICJyb2xlIjogInVzZXIiCiAgICAgfSwKICAgICAiY3JlYXRlX3RpbWUiOiBudWxsLAogICAgICJjb250ZW50IjogewogICAgICAiY29udGVudF90eXBlIjogInVzZXJfZWRpdGFibGVfY29udGV4dCIsCiAgICAgICJ1c2VyX3Byb2ZpbGUiOiAiSSBhbSBQcml5YS4iLAogICAgICAidXNlcl9pbnN0cnVjdGlvbnMiOiAiQmUga2luZC4iCiAgICAgfQogICAgfSwKICAgICJwYXJlbnQiOiBudWxsLAogICAgImNoaWxkcmVuIjogW10KICAgfQogIH0KIH0sCiB7CiAgInRpdGxlIjogIkMiLAogICJtYXBwaW5nIjogbnVsbAogfSwKIHsKICAidGl0bGUiOiAiRCIKIH0sCiAibm90IGEgY29udmVyc2F0aW9uIiwKIDQyCl0=",
+   "expect": {
+    "ok": {
+     "format": "chatgpt_export",
+     "conversations": 4,
+     "assistantMessagesSkipped": 1,
+     "filesRead": [
+      "chatgpt-weird.json"
+     ],
+     "segments": [
+      {
+       "text": "I am Priya.",
+       "source": "profile"
+      },
+      {
+       "text": "Be brief.",
+       "source": "profile"
+      },
+      {
+       "text": "text field only",
+       "source": "message"
+      },
+      {
+       "text": "first by time\n  and more",
+       "source": "message"
+      },
+      {
+       "text": "third by time",
+       "source": "message"
+      },
+      {
+       "text": "a\nb\nc",
+       "source": "message"
+      },
+      {
+       "text": "key one\nkey two",
+       "source": "message"
+      },
+      {
+       "text": "Be kind.",
+       "source": "profile"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "file:claude-weird.json",
+   "kind": "file",
+   "name": "claude-weird.json",
+   "base64": "WwogewogICJ1dWlkIjogImMxIiwKICAibmFtZSI6ICJNb3ZlIiwKICAiY2hhdF9tZXNzYWdlcyI6IFsKICAgewogICAgInNlbmRlciI6ICJodW1hbiIsCiAgICAidGV4dCI6ICIgIEhlbGxvLCBJJ20gTWFyY3VzIGZyb20gSGFtYnVyZy4gICIsCiAgICAiY29udGVudCI6IFsKICAgICB7CiAgICAgICJ0eXBlIjogInRleHQiLAogICAgICAidGV4dCI6ICJpZ25vcmVkLCB0aGUgdGV4dCBmaWVsZCB3aW5zIgogICAgIH0KICAgIF0sCiAgICAiYXR0YWNobWVudHMiOiBbCiAgICAgewogICAgICAiZmlsZV9uYW1lIjogImN2LnR4dCIsCiAgICAgICJleHRyYWN0ZWRfY29udGVudCI6ICIgIE1hcmN1cyBXZWJlciwgQ1YgICIKICAgICB9LAogICAgIHsKICAgICAgImV4dHJhY3RlZF9jb250ZW50IjogIiAgICIKICAgICB9LAogICAgICJzdHJpbmcgYXR0YWNobWVudCIsCiAgICAgbnVsbCwKICAgICB7CiAgICAgICJleHRyYWN0ZWRfY29udGVudCI6IDUKICAgICB9CiAgICBdCiAgIH0sCiAgIHsKICAgICJzZW5kZXIiOiAiYXNzaXN0YW50IiwKICAgICJ0ZXh0IjogIkhpIE1hcmN1cyIKICAgfSwKICAgewogICAgInNlbmRlciI6ICJodW1hbiIsCiAgICAidGV4dCI6ICIgICAiLAogICAgImNvbnRlbnQiOiBbCiAgICAgewogICAgICAidHlwZSI6ICJ0ZXh0IiwKICAgICAgInRleHQiOiAiZnJvbSBjb250ZW50IG9uZSIKICAgICB9LAogICAgIHsKICAgICAgInR5cGUiOiAidG9vbF91c2UiLAogICAgICAidGV4dCI6ICJub3BlIgogICAgIH0sCiAgICAgewogICAgICAidHlwZSI6ICJ0ZXh0IiwKICAgICAgInRleHQiOiAiZnJvbSBjb250ZW50IHR3byIKICAgICB9LAogICAgICJ4IiwKICAgICB7CiAgICAgICJ0eXBlIjogInRleHQiLAogICAgICAidGV4dCI6IDUKICAgICB9CiAgICBdCiAgIH0sCiAgIHsKICAgICJzZW5kZXIiOiAiaHVtYW4iLAogICAgInRleHQiOiBudWxsLAogICAgImNvbnRlbnQiOiAic3RyaW5nIGNvbnRlbnQiCiAgIH0sCiAgIHsKICAgICJzZW5kZXIiOiBudWxsLAogICAgInRleHQiOiAibm8gc2VuZGVyIgogICB9LAogICAibm90IGEgbWVzc2FnZSIsCiAgIHsKICAgICJzZW5kZXIiOiAiaHVtYW4iLAogICAgImNvbnRlbnQiOiB7CiAgICAgInR5cGUiOiAidGV4dCIKICAgIH0KICAgfQogIF0KIH0sCiB7CiAgInV1aWQiOiAiYzIiLAogICJjaGF0X21lc3NhZ2VzIjogbnVsbAogfSwKIHsKICAidXVpZCI6ICJjMyIsCiAgImNoYXRfbWVzc2FnZXMiOiAiYWJjIgogfSwKIFtdCl0=",
+   "expect": {
+    "ok": {
+     "format": "claude_export",
+     "conversations": 3,
+     "assistantMessagesSkipped": 2,
+     "filesRead": [
+      "claude-weird.json"
+     ],
+     "segments": [
+      {
+       "text": "Hello, I'm Marcus from Hamburg.",
+       "source": "message"
+      },
+      {
+       "text": "Marcus Weber, CV",
+       "source": "attachment"
+      },
+      {
+       "text": "from content one\nfrom content two",
+       "source": "message"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "file:ordered.json",
+   "kind": "file",
+   "name": "ordered.json",
+   "base64": "eyIxMCI6IHsidGV4dCI6ICJ0ZW4gdGV4dCJ9LCAiOSI6IHsidGV4dCI6ICJuaW5lIHRleHQifSwgInRpdGxlIjogIk15IGxpc3QgdGl0bGUiLCAiMiI6ICJ0d28iLCAiMSI6IHsibm90ZSI6ICJvbmUgbm90ZSJ9fQ==",
+   "expect": {
+    "ok": {
+     "format": "json",
+     "conversations": 0,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [
+      "ordered.json"
+     ],
+     "segments": [
+      {
+       "text": "ten text",
+       "source": "memory"
+      },
+      {
+       "text": "nine text",
+       "source": "memory"
+      },
+      {
+       "text": "My list title",
+       "source": "memory"
+      },
+      {
+       "text": "one note",
+       "source": "memory"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "file:nan.json",
+   "kind": "file",
+   "name": "nan.json",
+   "base64": "eyJtZW1vcnkiOiAiTGlrZXMgTmFOIGpva2VzIiwgInNjb3JlIjogTmFOLCAib3RoZXIiOiBbSW5maW5pdHksIC1JbmZpbml0eV19",
+   "expect": {
+    "ok": {
+     "format": "json",
+     "conversations": 0,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [
+      "nan.json"
+     ],
+     "segments": [
+      {
+       "text": "Likes NaN jokes",
+       "source": "memory"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "file:broken.json",
+   "kind": "file",
+   "name": "broken.json",
+   "base64": "eyJub3RlIjogImNhZukifQ==",
+   "expect": {
+    "error": {
+     "type": "ExtractError",
+     "message": "broken.json isn't valid JSON. Upload the file exactly as it came out of the export."
+    }
+   }
+  },
+  {
+   "id": "file:double-bom.json",
+   "kind": "file",
+   "name": "double-bom.json",
+   "base64": "77u/77u/WyJ4Il0=",
+   "expect": {
+    "error": {
+     "type": "ExtractError",
+     "message": "double-bom.json isn't valid JSON. Upload the file exactly as it came out of the export."
+    }
+   }
+  },
+  {
+   "id": "file:trailing-comma.json",
+   "kind": "file",
+   "name": "trailing-comma.json",
+   "base64": "WyJhIiwgImIiLF0=",
+   "expect": {
+    "error": {
+     "type": "ExtractError",
+     "message": "trailing-comma.json isn't valid JSON. Upload the file exactly as it came out of the export."
+    }
+   }
+  },
+  {
+   "id": "file:crash.json",
+   "kind": "file",
+   "name": "crash.json",
+   "base64": "W3sibWFwcGluZyI6IHsiYSI6ICJzdHJpbmcgbm9kZSJ9fV0=",
+   "expect": {
+    "error": {
+     "type": "crash",
+     "pyType": "AttributeError",
+     "message": "'str' object has no attribute 'get'"
+    }
+   }
+  },
+  {
+   "id": "file:notes.txt",
+   "kind": "file",
+   "name": "notes.txt",
+   "base64": "77u/TXkgbm90ZXMNCi0gTGl2ZXMgaW4gTGVlZHMNCg0KYGBgCnNlY3JldCA9IDEyMwpgYGAKQmFkIGJ5dGVzOiA/IGVuZAo=",
+   "expect": {
+    "ok": {
+     "format": "text",
+     "conversations": 0,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [],
+     "segments": [
+      {
+       "text": "My notes",
+       "source": "memory"
+      },
+      {
+       "text": "Lives in Leeds",
+       "source": "memory"
+      },
+      {
+       "text": "```\nsecret = 123\n```",
+       "source": "memory"
+      },
+      {
+       "text": "Bad bytes: ? end",
+       "source": "memory"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "file:latin1.txt",
+   "kind": "file",
+   "name": "latin1.txt",
+   "base64": "Q2Fm6SBpbiBa/HJpY2g=",
+   "expect": {
+    "error": {
+     "type": "ExtractError",
+     "message": "That doesn't look like text. Upload a .zip export, a .json file, or a .txt with your memories."
+    }
+   }
+  },
+  {
+   "id": "file:utf16.txt",
+   "kind": "file",
+   "name": "utf16.txt",
+   "base64": "//5IAGUAbABsAG8A",
+   "expect": {
+    "error": {
+     "type": "ExtractError",
+     "message": "That doesn't look like text. Upload a .zip export, a .json file, or a .txt with your memories."
+    }
+   }
+  },
+  {
+   "id": "file:memories.md",
+   "kind": "file",
+   "name": "memories.md",
+   "base64": "IyBNeSBtZW1vcmllcwotIExpdmVzIGluIExlZWRzCmBgYGpzCmNvbnN0IGlkID0gMTIzOwpgYGAKMi4gVHdvCg==",
+   "expect": {
+    "ok": {
+     "format": "text",
+     "conversations": 0,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [],
+     "segments": [
+      {
+       "text": "# My memories",
+       "source": "memory"
+      },
+      {
+       "text": "Lives in Leeds",
+       "source": "memory"
+      },
+      {
+       "text": "```js\nconst id = 123;\n```",
+       "source": "memory"
+      },
+      {
+       "text": "Two",
+       "source": "memory"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "file:(no name)",
+   "kind": "file",
+   "name": "",
+   "base64": "QSBmaWxlIHdpdGhvdXQgYSBuYW1lCg==",
+   "expect": {
+    "ok": {
+     "format": "text",
+     "conversations": 0,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [],
+     "segments": [
+      {
+       "text": "A file without a name",
+       "source": "memory"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "file:nul-bytes.txt",
+   "kind": "file",
+   "name": "nul-bytes.txt",
+   "base64": "YmVmb3JlAGFmdGVyCnNlY29uZCBsaW5l",
+   "expect": {
+    "ok": {
+     "format": "text",
+     "conversations": 0,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [],
+     "segments": [
+      {
+       "text": "before\u0000after",
+       "source": "memory"
+      },
+      {
+       "text": "second line",
+       "source": "memory"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "text:bullets",
+   "kind": "text",
+   "text": "- Lives in Leeds\n* Works as a nurse\n• Has a cat called Biscuit\n· Likes tea\n1. First numbered\n2) Second numbered\n  10.   Indented ten\n-no space dash\n*\n- \n3.no space\n",
+   "expect": {
+    "ok": {
+     "format": "text",
+     "conversations": 0,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [],
+     "segments": [
+      {
+       "text": "Lives in Leeds",
+       "source": "memory"
+      },
+      {
+       "text": "Works as a nurse",
+       "source": "memory"
+      },
+      {
+       "text": "Has a cat called Biscuit",
+       "source": "memory"
+      },
+      {
+       "text": "Likes tea",
+       "source": "memory"
+      },
+      {
+       "text": "First numbered",
+       "source": "memory"
+      },
+      {
+       "text": "Second numbered",
+       "source": "memory"
+      },
+      {
+       "text": "Indented ten",
+       "source": "memory"
+      },
+      {
+       "text": "-no space dash",
+       "source": "memory"
+      },
+      {
+       "text": "*",
+       "source": "memory"
+      },
+      {
+       "text": "3.no space",
+       "source": "memory"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "text:fences",
+   "kind": "text",
+   "text": "Memory one\n```\ncode 123\n  indented\n```\nMemory two ``` inline ``` after\n```python\nunclosed fence\nstill code\n",
+   "expect": {
+    "ok": {
+     "format": "text",
+     "conversations": 0,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [],
+     "segments": [
+      {
+       "text": "Memory one",
+       "source": "memory"
+      },
+      {
+       "text": "```\ncode 123\n  indented\n```",
+       "source": "memory"
+      },
+      {
+       "text": "Memory two",
+       "source": "memory"
+      },
+      {
+       "text": "``` inline ```",
+       "source": "memory"
+      },
+      {
+       "text": "after",
+       "source": "memory"
+      },
+      {
+       "text": "```python\nunclosed fence\nstill code",
+       "source": "memory"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "text:blank-lines",
+   "kind": "text",
+   "text": "\n\n   First line   \n\n\n\t Second line\t\n\n\n",
+   "expect": {
+    "ok": {
+     "format": "text",
+     "conversations": 0,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [],
+     "segments": [
+      {
+       "text": "First line",
+       "source": "memory"
+      },
+      {
+       "text": "Second line",
+       "source": "memory"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "text:crlf",
+   "kind": "text",
+   "text": "Line one\r\nLine two\r\n\r\nLine three\rLine four\r\n- Bullet five\r\n",
+   "expect": {
+    "ok": {
+     "format": "text",
+     "conversations": 0,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [],
+     "segments": [
+      {
+       "text": "Line one",
+       "source": "memory"
+      },
+      {
+       "text": "Line two",
+       "source": "memory"
+      },
+      {
+       "text": "Line three",
+       "source": "memory"
+      },
+      {
+       "text": "Line four",
+       "source": "memory"
+      },
+      {
+       "text": "Bullet five",
+       "source": "memory"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "text:unicode-separators",
+   "kind": "text",
+   "text": "Zoë lives in Zürich Ünïcödé line José 😀 likes 🌮next after NEL\u001cfile sep\u001dgroup sep\u001erecord sep\u000bvertical tab\fform feed\u001funit sep stays",
+   "expect": {
+    "ok": {
+     "format": "text",
+     "conversations": 0,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [],
+     "segments": [
+      {
+       "text": "Zoë lives in Zürich",
+       "source": "memory"
+      },
+      {
+       "text": "Ünïcödé line",
+       "source": "memory"
+      },
+      {
+       "text": "José 😀 likes 🌮",
+       "source": "memory"
+      },
+      {
+       "text": "next after NEL",
+       "source": "memory"
+      },
+      {
+       "text": "file sep",
+       "source": "memory"
+      },
+      {
+       "text": "group sep",
+       "source": "memory"
+      },
+      {
+       "text": "record sep",
+       "source": "memory"
+      },
+      {
+       "text": "vertical tab",
+       "source": "memory"
+      },
+      {
+       "text": "form feed\u001funit sep stays",
+       "source": "memory"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "text:unicode-bullets",
+   "kind": "text",
+   "text": " - NBSP before dash\n　• ideographic space before bullet\n１２. Fullwidth digits\n٣) Arabic-indic digit\n- dash then NBSP\n-\u001fdash then unit separator\n﻿BOM-led line\n​zero width space line\n",
+   "expect": {
+    "ok": {
+     "format": "text",
+     "conversations": 0,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [],
+     "segments": [
+      {
+       "text": "NBSP before dash",
+       "source": "memory"
+      },
+      {
+       "text": "ideographic space before bullet",
+       "source": "memory"
+      },
+      {
+       "text": "Fullwidth digits",
+       "source": "memory"
+      },
+      {
+       "text": "Arabic-indic digit",
+       "source": "memory"
+      },
+      {
+       "text": "dash then NBSP",
+       "source": "memory"
+      },
+      {
+       "text": "dash then unit separator",
+       "source": "memory"
+      },
+      {
+       "text": "﻿BOM-led line",
+       "source": "memory"
+      },
+      {
+       "text": "​zero width space line",
+       "source": "memory"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "text:only-whitespace",
+   "kind": "text",
+   "text": " \n\t 　  \u001c ",
+   "expect": {
+    "error": {
+     "type": "ExtractError",
+     "message": "That's empty. Paste your memories, or drop a file."
+    }
+   }
+  },
+  {
+   "id": "text:bom-only",
+   "kind": "text",
+   "text": "﻿",
+   "expect": {
+    "ok": {
+     "format": "text",
+     "conversations": 0,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [],
+     "segments": [
+      {
+       "text": "﻿",
+       "source": "memory"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "text:fence-only",
+   "kind": "text",
+   "text": "```\n```",
+   "expect": {
+    "ok": {
+     "format": "text",
+     "conversations": 0,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [],
+     "segments": [
+      {
+       "text": "```\n```",
+       "source": "memory"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "text:json-chatgpt",
+   "kind": "text",
+   "text": "[{\"title\": \"Moving\", \"create_time\": 1700000000.0, \"mapping\": {\"root\": {\"id\": \"root\", \"message\": null, \"parent\": null, \"children\": [\"a\"]}, \"sys\": {\"id\": \"sys\", \"message\": {\"id\": \"sys\", \"author\": {\"role\": \"system\"}, \"create_time\": null, \"content\": {\"content_type\": \"text\", \"parts\": [\"\"]}}, \"parent\": null, \"children\": []}, \"ctx\": {\"id\": \"ctx\", \"message\": {\"id\": \"ctx\", \"author\": {\"role\": \"user\"}, \"create_time\": null, \"content\": {\"content_type\": \"user_editable_context\", \"user_profile\": \"I'm Priya, a data engineer in Austin.\", \"user_instructions\": \"Keep it short.\"}}, \"parent\": null, \"children\": []}, \"a\": {\"id\": \"a\", \"message\": {\"id\": \"a\", \"author\": {\"role\": \"user\"}, \"create_time\": 1700000003.5, \"content\": {\"content_type\": \"text\", \"parts\": [\"I'm moving from Austin to Lisbon in May.\"]}}, \"parent\": null, \"children\": []}, \"b\": {\"id\": \"b\", \"message\": {\"id\": \"b\", \"author\": {\"role\": \"assistant\"}, \"create_time\": 1700000004.0, \"content\": {\"content_type\": \"text\", \"parts\": [\"Lisbon is lovely, Priya!\"]}}, \"parent\": null, \"children\": []}, \"c\": {\"id\": \"c\", \"message\": {\"id\": \"c\", \"author\": {\"role\": \"user\"}, \"create_time\": 1700000001.25, \"content\": {\"content_type\": \"text\", \"parts\": [\"My number is +1 512 555 0142\"]}}, \"parent\": null, \"children\": []}, \"d\": {\"id\": \"d\", \"message\": {\"id\": \"d\", \"author\": {\"role\": \"tool\"}, \"create_time\": 1700000002.0, \"content\": {\"content_type\": \"text\", \"parts\": [\"search results\"]}}, \"parent\": null, \"children\": []}, \"e\": {\"id\": \"e\", \"message\": {\"id\": \"e\", \"author\": {\"role\": \"user\"}, \"create_time\": 1700000005, \"content\": {\"content_type\": \"text\", \"parts\": [{\"content_type\": \"image_asset_pointer\"}, \"What's in this photo?\"]}}, \"parent\": null, \"children\": []}}}, {\"title\": \"Code\", \"create_time\": 1700000000.0, \"mapping\": {\"ctx\": {\"id\": \"ctx\", \"message\": {\"id\": \"ctx\", \"author\": {\"role\": \"user\"}, \"create_time\": null, \"content\": {\"content_type\": \"user_editable_context\", \"user_profile\": \"I'm Priya, a data engineer in Austin.\", \"user_instructions\": \"Keep it short.\"}}, \"parent\": null, \"children\": []}, \"f\": {\"id\": \"f\", \"message\": {\"id\": \"f\", \"author\": {\"role\": \"user\"}, \"create_time\": 1700000100, \"content\": {\"content_type\": \"code\", \"text\": \"print(42)  \"}}, \"parent\": null, \"children\": []}}}]",
+   "expect": {
+    "ok": {
+     "format": "chatgpt_export",
+     "conversations": 2,
+     "assistantMessagesSkipped": 1,
+     "filesRead": [],
+     "segments": [
+      {
+       "text": "I'm Priya, a data engineer in Austin.",
+       "source": "profile"
+      },
+      {
+       "text": "Keep it short.",
+       "source": "profile"
+      },
+      {
+       "text": "My number is +1 512 555 0142",
+       "source": "message"
+      },
+      {
+       "text": "I'm moving from Austin to Lisbon in May.",
+       "source": "message"
+      },
+      {
+       "text": "What's in this photo?",
+       "source": "message"
+      },
+      {
+       "text": "print(42)",
+       "source": "message"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "text:json-claude",
+   "kind": "text",
+   "text": "[{\"uuid\": \"c1\", \"name\": \"Move\", \"chat_messages\": [{\"sender\": \"human\", \"text\": \"  Hello, I'm Marcus from Hamburg.  \", \"content\": [{\"type\": \"text\", \"text\": \"ignored, the text field wins\"}], \"attachments\": [{\"file_name\": \"cv.txt\", \"extracted_content\": \"  Marcus Weber, CV  \"}, {\"extracted_content\": \"   \"}, \"string attachment\", null, {\"extracted_content\": 5}]}, {\"sender\": \"assistant\", \"text\": \"Hi Marcus\"}, {\"sender\": \"human\", \"text\": \"   \", \"content\": [{\"type\": \"text\", \"text\": \"from content one\"}, {\"type\": \"tool_use\", \"text\": \"nope\"}, {\"type\": \"text\", \"text\": \"from content two\"}, \"x\", {\"type\": \"text\", \"text\": 5}]}, {\"sender\": \"human\", \"text\": null, \"content\": \"string content\"}, {\"sender\": null, \"text\": \"no sender\"}, \"not a message\", {\"sender\": \"human\", \"content\": {\"type\": \"text\"}}]}, {\"uuid\": \"c2\", \"chat_messages\": null}, {\"uuid\": \"c3\", \"chat_messages\": \"abc\"}, []]",
+   "expect": {
+    "ok": {
+     "format": "claude_export",
+     "conversations": 3,
+     "assistantMessagesSkipped": 2,
+     "filesRead": [],
+     "segments": [
+      {
+       "text": "Hello, I'm Marcus from Hamburg.",
+       "source": "message"
+      },
+      {
+       "text": "Marcus Weber, CV",
+       "source": "attachment"
+      },
+      {
+       "text": "from content one\nfrom content two",
+       "source": "message"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "text:json-generic",
+   "kind": "text",
+   "text": "{\"memories\": [{\"id\": \"m1\", \"content\": \"Prefers window seats\", \"created_at\": \"2026\"}, {\"content\": \"ok\"}], \"summary\": \"Frequent flyer\"}",
+   "expect": {
+    "ok": {
+     "format": "json",
+     "conversations": 0,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [],
+     "segments": [
+      {
+       "text": "Prefers window seats",
+       "source": "memory"
+      },
+      {
+       "text": "Frequent flyer",
+       "source": "memory"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "text:json-list-of-strings",
+   "kind": "text",
+   "text": "[\"  a  \", \"\", \"Lives in Leeds\", \"  \"]",
+   "expect": {
+    "ok": {
+     "format": "json",
+     "conversations": 0,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [],
+     "segments": [
+      {
+       "text": "a",
+       "source": "memory"
+      },
+      {
+       "text": "Lives in Leeds",
+       "source": "memory"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "text:json-list-mixed",
+   "kind": "text",
+   "text": "[\"Lives in Leeds\", 5]",
+   "expect": {
+    "error": {
+     "type": "ExtractError",
+     "message": "We couldn't find anything you wrote in there. Nothing to judge. Suspicious."
+    }
+   }
+  },
+  {
+   "id": "text:json-invalid",
+   "kind": "text",
+   "text": "[{\"broken\": true,]\n- but this is a bullet",
+   "expect": {
+    "ok": {
+     "format": "text",
+     "conversations": 0,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [],
+     "segments": [
+      {
+       "text": "[{\"broken\": true,]",
+       "source": "memory"
+      },
+      {
+       "text": "but this is a bullet",
+       "source": "memory"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "text:json-empty-object",
+   "kind": "text",
+   "text": "{}",
+   "expect": {
+    "error": {
+     "type": "ExtractError",
+     "message": "We couldn't find anything you wrote in there. Nothing to judge. Suspicious."
+    }
+   }
+  },
+  {
+   "id": "text:json-empty-list",
+   "kind": "text",
+   "text": "  []  ",
+   "expect": {
+    "error": {
+     "type": "ExtractError",
+     "message": "We couldn't find anything you wrote in there. Nothing to judge. Suspicious."
+    }
+   }
+  },
+  {
+   "id": "text:json-proto",
+   "kind": "text",
+   "text": "{\"__proto__\": {\"text\": \"proto text here\"}, \"constructor\": {\"note\": \"constructor note\"}, \"toString\": \"x\", \"valueOf\": {\"text\": [\"value of text\"]}}",
+   "expect": {
+    "ok": {
+     "format": "json",
+     "conversations": 0,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [],
+     "segments": [
+      {
+       "text": "proto text here",
+       "source": "memory"
+      },
+      {
+       "text": "constructor note",
+       "source": "memory"
+      },
+      {
+       "text": "value of text",
+       "source": "memory"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "text:json-integer-keys",
+   "kind": "text",
+   "text": "{\"10\": {\"text\": \"ten text\"}, \"9\": {\"text\": \"nine text\"}, \"title\": \"My list title\", \"2\": \"two\", \"1\": {\"note\": \"one note\"}}",
+   "expect": {
+    "ok": {
+     "format": "json",
+     "conversations": 0,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [],
+     "segments": [
+      {
+       "text": "ten text",
+       "source": "memory"
+      },
+      {
+       "text": "nine text",
+       "source": "memory"
+      },
+      {
+       "text": "My list title",
+       "source": "memory"
+      },
+      {
+       "text": "one note",
+       "source": "memory"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "text:json-escaped-integer-keys",
+   "kind": "text",
+   "text": "{\"b\": {\"text\": \"bee text\"}, \"\\u0031\": {\"text\": \"escaped one\"}}",
+   "expect": {
+    "ok": {
+     "format": "json",
+     "conversations": 0,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [],
+     "segments": [
+      {
+       "text": "bee text",
+       "source": "memory"
+      },
+      {
+       "text": "escaped one",
+       "source": "memory"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "text:json-duplicate-keys",
+   "kind": "text",
+   "text": "{\"text\": \"first value\", \"id\": 1, \"text\": \"second value\"}",
+   "expect": {
+    "ok": {
+     "format": "json",
+     "conversations": 0,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [],
+     "segments": [
+      {
+       "text": "second value",
+       "source": "memory"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "text:json-nan",
+   "kind": "text",
+   "text": "[NaN, \"Lives in Leeds\"]",
+   "expect": {
+    "error": {
+     "type": "ExtractError",
+     "message": "We couldn't find anything you wrote in there. Nothing to judge. Suspicious."
+    }
+   }
+  },
+  {
+   "id": "text:json-short-strings",
+   "kind": "text",
+   "text": "{\"note\": \"😀😀\", \"text\": \"ab\", \"fact\": \"abc\", \"memory\": \"😀😀😀\", \"notes\": \" 　 xy 　 \"}",
+   "expect": {
+    "ok": {
+     "format": "json",
+     "conversations": 0,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [],
+     "segments": [
+      {
+       "text": "abc",
+       "source": "memory"
+      },
+      {
+       "text": "😀😀😀",
+       "source": "memory"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "text:json-nested-text-keys",
+   "kind": "text",
+   "text": "{\"data\": {\"text\": {\"inner\": \"nested string skipped\", \"deep\": [\"list item kept\"], \"deeper\": {\"x\": {\"y\": \"skipped too\"}, \"z\": [{\"w\": \"skipped in list\"}]}}}}",
+   "expect": {
+    "ok": {
+     "format": "json",
+     "conversations": 0,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [],
+     "segments": [
+      {
+       "text": "list item kept",
+       "source": "memory"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "text:json-skip-keys",
+   "kind": "text",
+   "text": "{\"Text\": \"Case-insensitive key\", \"ID\": \"skipped id\", \"URL\": \"https://example.com\", \"Sender\": \"skipped sender\", \"body\": {\"role\": \"skipped role\", \"value\": \"kept value\"}}",
+   "expect": {
+    "ok": {
+     "format": "json",
+     "conversations": 0,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [],
+     "segments": [
+      {
+       "text": "Case-insensitive key",
+       "source": "memory"
+      },
+      {
+       "text": "kept value",
+       "source": "memory"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "text:json-top-level-string-in-list",
+   "kind": "text",
+   "text": "[[\"nested\", \"strings\"], {\"note\": \"a note here\"}]",
+   "expect": {
+    "ok": {
+     "format": "json",
+     "conversations": 0,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [],
+     "segments": [
+      {
+       "text": "a note here",
+       "source": "memory"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "text:chatgpt-string-create-times",
+   "kind": "text",
+   "text": "[{\"mapping\": {\"a\": {\"message\": {\"author\": {\"role\": \"user\"}, \"create_time\": \"b\", \"content\": {\"parts\": [\"second\"]}}}, \"b\": {\"message\": {\"author\": {\"role\": \"user\"}, \"create_time\": \"a\", \"content\": {\"parts\": [\"first\"]}}}}}]",
+   "expect": {
+    "ok": {
+     "format": "chatgpt_export",
+     "conversations": 1,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [],
+     "segments": [
+      {
+       "text": "first",
+       "source": "message"
+      },
+      {
+       "text": "second",
+       "source": "message"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "text:chatgpt-list-create-times",
+   "kind": "text",
+   "text": "[{\"mapping\": {\"a\": {\"message\": {\"author\": {\"role\": \"user\"}, \"create_time\": [1, 2], \"content\": {\"parts\": [\"second\"]}}}, \"b\": {\"message\": {\"author\": {\"role\": \"user\"}, \"create_time\": [1, 1], \"content\": {\"parts\": [\"first\"]}}}, \"c\": {\"message\": {\"author\": {\"role\": \"user\"}, \"create_time\": [1], \"content\": {\"parts\": [\"zeroth\"]}}}}}]",
+   "expect": {
+    "ok": {
+     "format": "chatgpt_export",
+     "conversations": 1,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [],
+     "segments": [
+      {
+       "text": "zeroth",
+       "source": "message"
+      },
+      {
+       "text": "first",
+       "source": "message"
+      },
+      {
+       "text": "second",
+       "source": "message"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "text:chatgpt-equal-create-times",
+   "kind": "text",
+   "text": "[{\"mapping\": {\"x\": {\"message\": {\"author\": {\"role\": \"user\"}, \"create_time\": 5, \"content\": {\"parts\": [\"one\"]}}}, \"y\": {\"message\": {\"author\": {\"role\": \"user\"}, \"create_time\": 5.0, \"content\": {\"parts\": [\"two\"]}}}, \"z\": {\"message\": {\"author\": {\"role\": \"user\"}, \"create_time\": 5, \"content\": {\"parts\": [\"three\"]}}}, \"w\": {\"message\": {\"author\": {\"role\": \"user\"}, \"create_time\": -1, \"content\": {\"parts\": [\"zero\"]}}}}}]",
+   "expect": {
+    "ok": {
+     "format": "chatgpt_export",
+     "conversations": 1,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [],
+     "segments": [
+      {
+       "text": "zero",
+       "source": "message"
+      },
+      {
+       "text": "one",
+       "source": "message"
+      },
+      {
+       "text": "two",
+       "source": "message"
+      },
+      {
+       "text": "three",
+       "source": "message"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "text:chatgpt-single-dict-create-time",
+   "kind": "text",
+   "text": "[{\"mapping\": {\"a\": {\"message\": {\"author\": {\"role\": \"user\"}, \"create_time\": {\"x\": 1}, \"content\": {\"parts\": [\"only one\"]}}}}}]",
+   "expect": {
+    "ok": {
+     "format": "chatgpt_export",
+     "conversations": 1,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [],
+     "segments": [
+      {
+       "text": "only one",
+       "source": "message"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "text:chatgpt-falsy-nodes",
+   "kind": "text",
+   "text": "[{\"mapping\": {\"a\": {\"message\": false}, \"b\": {\"message\": {\"author\": {\"role\": \"user\"}, \"create_time\": null, \"content\": {\"parts\": [\"kept\"]}}}, \"c\": 0, \"d\": \"\", \"e\": [], \"f\": {}}}]",
+   "expect": {
+    "ok": {
+     "format": "chatgpt_export",
+     "conversations": 1,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [],
+     "segments": [
+      {
+       "text": "kept",
+       "source": "message"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "text:chatgpt-mapping-empty-list",
+   "kind": "text",
+   "text": "[{\"mapping\": []}]",
+   "expect": {
+    "error": {
+     "type": "ExtractError",
+     "message": "We couldn't find anything you wrote in there. Nothing to judge. Suspicious."
+    }
+   }
+  },
+  {
+   "id": "text:crash-mapping-list",
+   "kind": "text",
+   "text": "[{\"mapping\": [1]}]",
+   "expect": {
+    "error": {
+     "type": "crash",
+     "pyType": "AttributeError",
+     "message": "'list' object has no attribute 'values'"
+    }
+   }
+  },
+  {
+   "id": "text:crash-mapping-string-node",
+   "kind": "text",
+   "text": "[{\"mapping\": {\"a\": \"string node\"}}]",
+   "expect": {
+    "error": {
+     "type": "crash",
+     "pyType": "AttributeError",
+     "message": "'str' object has no attribute 'get'"
+    }
+   }
+  },
+  {
+   "id": "text:crash-parts-number",
+   "kind": "text",
+   "text": "[{\"mapping\": {\"a\": {\"message\": {\"author\": {\"role\": \"user\"}, \"content\": {\"parts\": 5}}}}}]",
+   "expect": {
+    "error": {
+     "type": "crash",
+     "pyType": "TypeError",
+     "message": "'int' object is not iterable"
+    }
+   }
+  },
+  {
+   "id": "text:crash-content-string",
+   "kind": "text",
+   "text": "[{\"mapping\": {\"a\": {\"message\": {\"author\": {\"role\": \"user\"}, \"content\": \"just a string\"}}}}]",
+   "expect": {
+    "error": {
+     "type": "crash",
+     "pyType": "AttributeError",
+     "message": "'str' object has no attribute 'get'"
+    }
+   }
+  },
+  {
+   "id": "text:crash-author-string",
+   "kind": "text",
+   "text": "[{\"mapping\": {\"a\": {\"message\": {\"author\": \"user\", \"content\": {\"parts\": [\"hi\"]}}}}}]",
+   "expect": {
+    "error": {
+     "type": "crash",
+     "pyType": "AttributeError",
+     "message": "'str' object has no attribute 'get'"
+    }
+   }
+  },
+  {
+   "id": "text:crash-profile-list",
+   "kind": "text",
+   "text": "[{\"mapping\": {\"a\": {\"message\": {\"content\": {\"content_type\": \"user_editable_context\", \"user_profile\": [\"x\"]}}}}}]",
+   "expect": {
+    "error": {
+     "type": "crash",
+     "pyType": "AttributeError",
+     "message": "'list' object has no attribute 'strip'"
+    }
+   }
+  },
+  {
+   "id": "text:crash-mixed-create-times",
+   "kind": "text",
+   "text": "[{\"mapping\": {\"a\": {\"message\": {\"author\": {\"role\": \"user\"}, \"create_time\": \"2024\", \"content\": {\"parts\": [\"x\"]}}}, \"b\": {\"message\": {\"author\": {\"role\": \"user\"}, \"create_time\": 5, \"content\": {\"parts\": [\"y\"]}}}}}]",
+   "expect": {
+    "error": {
+     "type": "crash",
+     "pyType": "TypeError",
+     "message": "'<' not supported between instances of 'int' and 'str'"
+    }
+   }
+  },
+  {
+   "id": "text:crash-two-dict-create-times",
+   "kind": "text",
+   "text": "[{\"mapping\": {\"a\": {\"message\": {\"author\": {\"role\": \"user\"}, \"create_time\": {\"t\": 1}, \"content\": {\"parts\": [\"x\"]}}}, \"b\": {\"message\": {\"author\": {\"role\": \"user\"}, \"create_time\": {\"t\": 2}, \"content\": {\"parts\": [\"y\"]}}}}}]",
+   "expect": {
+    "error": {
+     "type": "crash",
+     "pyType": "TypeError",
+     "message": "'<' not supported between instances of 'dict' and 'dict'"
+    }
+   }
+  },
+  {
+   "id": "text:crash-claude-messages-number",
+   "kind": "text",
+   "text": "[{\"chat_messages\": 5}]",
+   "expect": {
+    "error": {
+     "type": "crash",
+     "pyType": "TypeError",
+     "message": "'int' object is not iterable"
+    }
+   }
+  }
+ ],
+ "zipListings": [
+  {
+   "path": "samples/mock-memories/chatgpt-export-large.zip",
+   "isZip": true,
+   "entries": [
+    {
+     "name": "conversations.json",
+     "size": 7058377,
+     "compressedSize": 134987,
+     "method": 8,
+     "offset": 0,
+     "crc": 928986471,
+     "flags": 0,
+     "read": {
+      "length": 7058377,
+      "sha256": "af6bb4858fc833c6a25eb60f2835a15f6c77e0b14838a27128a08146f35ffcb0"
+     }
+    }
+   ]
+  },
+  {
+   "path": "samples/mock-memories/chatgpt-export.zip",
+   "isZip": true,
+   "entries": [
+    {
+     "name": "conversations.json",
+     "size": 15256,
+     "compressedSize": 1617,
+     "method": 8,
+     "offset": 0,
+     "crc": 3977471017,
+     "flags": 0,
+     "read": {
+      "length": 15256,
+      "sha256": "67565c08c0b9ecd6112a5f40a932b57ae3c44f168561cacef3dc600780448df0"
+     }
+    },
+    {
+     "name": "user.json",
+     "size": 109,
+     "compressedSize": 95,
+     "method": 8,
+     "offset": 1665,
+     "crc": 942268224,
+     "flags": 0,
+     "read": {
+      "length": 109,
+      "sha256": "b64d769af6a3116944ed3d18dc10ed7273fe490c877d72bf21b4a750120211d9"
+     }
+    },
+    {
+     "name": "message_feedback.json",
+     "size": 2,
+     "compressedSize": 4,
+     "method": 8,
+     "offset": 1799,
+     "crc": 223132457,
+     "flags": 0,
+     "read": {
+      "length": 2,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+     }
+    },
+    {
+     "name": "shared_conversations.json",
+     "size": 2,
+     "compressedSize": 4,
+     "method": 8,
+     "offset": 1854,
+     "crc": 223132457,
+     "flags": 0,
+     "read": {
+      "length": 2,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+     }
+    },
+    {
+     "name": "chat.html",
+     "size": 84,
+     "compressedSize": 77,
+     "method": 8,
+     "offset": 1913,
+     "crc": 1639305159,
+     "flags": 0,
+     "read": {
+      "length": 84,
+      "sha256": "8e574417566129c5f44d8e842c419f0b00821d915c0c5547d6840a69682c3e4d"
+     }
+    }
+   ]
+  },
+  {
+   "path": "samples/mock-memories/claude-export.zip",
+   "isZip": true,
+   "entries": [
+    {
+     "name": "conversations.json",
+     "size": 2912,
+     "compressedSize": 882,
+     "method": 8,
+     "offset": 0,
+     "crc": 2825875863,
+     "flags": 0,
+     "read": {
+      "length": 2912,
+      "sha256": "a81d7b58df6c53d6b31a9a8f3a16d0b95123f4de1d347576bb5041a64cbaee58"
+     }
+    },
+    {
+     "name": "memories.json",
+     "size": 385,
+     "compressedSize": 212,
+     "method": 8,
+     "offset": 930,
+     "crc": 146388126,
+     "flags": 0,
+     "read": {
+      "length": 385,
+      "sha256": "d2cf9504740c4b2276988949f242c1fc8a6684e3c800ee79523058537a828647"
+     }
+    },
+    {
+     "name": "projects.json",
+     "size": 385,
+     "compressedSize": 264,
+     "method": 8,
+     "offset": 1185,
+     "crc": 3317944399,
+     "flags": 0,
+     "read": {
+      "length": 385,
+      "sha256": "e1fcd3a6d14b9608e8fbf32d6bc4bf814df07b2c2f5f79e769c76a1303a7bf58"
+     }
+    },
+    {
+     "name": "users.json",
+     "size": 150,
+     "compressedSize": 126,
+     "method": 8,
+     "offset": 1492,
+     "crc": 2776490491,
+     "flags": 0,
+     "read": {
+      "length": 150,
+      "sha256": "52c3cef11d483f1ed41356e3912327ade8fba4b0f2948bed68e9e470c16a0993"
+     }
+    }
+   ]
+  },
+  {
+   "path": "samples/mock-memories/edge-cases/photos-only.zip",
+   "isZip": true,
+   "entries": [
+    {
+     "name": "photos/IMG_0001.png",
+     "size": 2056,
+     "compressedSize": 2056,
+     "method": 0,
+     "offset": 0,
+     "crc": 3359804887,
+     "flags": 0,
+     "read": {
+      "length": 2056,
+      "sha256": "d597c85ae9381fff929ec0fd0adaabcb720c7e4fb72bf27b0b944e885d2e475e"
+     }
+    }
+   ]
+  },
+  {
+   "path": "tests/web/fixtures/zips/stored.zip",
+   "isZip": true,
+   "entries": [
+    {
+     "name": "conversations.json",
+     "size": 1247,
+     "compressedSize": 1247,
+     "method": 0,
+     "offset": 0,
+     "crc": 2498616392,
+     "flags": 0,
+     "read": {
+      "length": 1247,
+      "sha256": "132757f134ca9b9569f4c86582ee481b8850d98c3691cfa2eca282c8eca1151d"
+     }
+    },
+    {
+     "name": "memories.json",
+     "size": 155,
+     "compressedSize": 155,
+     "method": 0,
+     "offset": 1295,
+     "crc": 3897234072,
+     "flags": 0,
+     "read": {
+      "length": 155,
+      "sha256": "47bf68a3637aa6f97e0c80fc12cfeb15ab842fc9895e86cc918fc71d70f3a8ac"
+     }
+    },
+    {
+     "name": "projects.json",
+     "size": 228,
+     "compressedSize": 228,
+     "method": 0,
+     "offset": 1493,
+     "crc": 3312160912,
+     "flags": 0,
+     "read": {
+      "length": 228,
+      "sha256": "4d124996e51c9564de2a0799e78bce065214b930d0fc672a94a0a47b60338923"
+     }
+    },
+    {
+     "name": "users.json",
+     "size": 96,
+     "compressedSize": 96,
+     "method": 0,
+     "offset": 1764,
+     "crc": 3397172483,
+     "flags": 0,
+     "read": {
+      "length": 96,
+      "sha256": "6f916f1e45ef28960f80a8913a521f100c58a7858c44218109ba025366f07faf"
+     }
+    }
+   ]
+  },
+  {
+   "path": "tests/web/fixtures/zips/data-descriptor.zip",
+   "isZip": true,
+   "entries": [
+    {
+     "name": "conversations.json",
+     "size": 3146,
+     "compressedSize": 553,
+     "method": 8,
+     "offset": 0,
+     "crc": 114937072,
+     "flags": 8,
+     "read": {
+      "length": 3146,
+      "sha256": "d7a21597c318dee994e94f9796b065181480d83be9452344df6c90709ebcc4a0"
+     }
+    },
+    {
+     "name": "user.json",
+     "size": 33,
+     "compressedSize": 35,
+     "method": 8,
+     "offset": 617,
+     "crc": 1984319473,
+     "flags": 8,
+     "read": {
+      "length": 33,
+      "sha256": "f9795db952c3a244efcd5dd718371d7cc7f1c05a40f75ba3d1dde21aab3e065a"
+     }
+    },
+    {
+     "name": "chat.html",
+     "size": 21,
+     "compressedSize": 19,
+     "method": 8,
+     "offset": 707,
+     "crc": 2937870423,
+     "flags": 8,
+     "read": {
+      "length": 21,
+      "sha256": "11817cae77b12a631a8b1350784f768ca878dcda0f994a0eb608bdc81441e041"
+     }
+    }
+   ]
+  },
+  {
+   "path": "tests/web/fixtures/zips/zip64.zip",
+   "isZip": true,
+   "entries": [
+    {
+     "name": "conversations-000.json",
+     "size": 2433,
+     "compressedSize": 497,
+     "method": 8,
+     "offset": 0,
+     "crc": 34795296,
+     "flags": 0,
+     "read": {
+      "length": 2433,
+      "sha256": "d0316bfbc5f2486cc52f7683a7da5d450b77a84743b0aab2b867da5797869a6f"
+     }
+    },
+    {
+     "name": "conversations-001.json",
+     "size": 715,
+     "compressedSize": 273,
+     "method": 8,
+     "offset": 569,
+     "crc": 3710605516,
+     "flags": 0,
+     "read": {
+      "length": 715,
+      "sha256": "3629f9c21968659e9b079502c3c7181640c9ad3c4d5586daa91b769b36d22b8b"
+     }
+    },
+    {
+     "name": "notes.txt",
+     "size": 30,
+     "compressedSize": 32,
+     "method": 8,
+     "offset": 914,
+     "crc": 2079446448,
+     "flags": 0,
+     "read": {
+      "length": 30,
+      "sha256": "c8858cfbf30278b80ace381f270a6d9c541de994459002240b19e03eb0139ad0"
+     }
+    }
+   ]
+  },
+  {
+   "path": "tests/web/fixtures/zips/zip64-prefixed.zip",
+   "isZip": true,
+   "entries": [
+    {
+     "name": "conversations-000.json",
+     "size": 2433,
+     "compressedSize": 497,
+     "method": 8,
+     "offset": 360,
+     "crc": 34795296,
+     "flags": 0,
+     "read": {
+      "length": 2433,
+      "sha256": "d0316bfbc5f2486cc52f7683a7da5d450b77a84743b0aab2b867da5797869a6f"
+     }
+    },
+    {
+     "name": "conversations-001.json",
+     "size": 715,
+     "compressedSize": 273,
+     "method": 8,
+     "offset": 929,
+     "crc": 3710605516,
+     "flags": 0,
+     "read": {
+      "length": 715,
+      "sha256": "3629f9c21968659e9b079502c3c7181640c9ad3c4d5586daa91b769b36d22b8b"
+     }
+    },
+    {
+     "name": "notes.txt",
+     "size": 30,
+     "compressedSize": 32,
+     "method": 8,
+     "offset": 1274,
+     "crc": 2079446448,
+     "flags": 0,
+     "read": {
+      "length": 30,
+      "sha256": "c8858cfbf30278b80ace381f270a6d9c541de994459002240b19e03eb0139ad0"
+     }
+    }
+   ]
+  },
+  {
+   "path": "tests/web/fixtures/zips/prefixed-comment.zip",
+   "isZip": true,
+   "entries": [
+    {
+     "name": "export/conversations.json",
+     "size": 1244,
+     "compressedSize": 366,
+     "method": 8,
+     "offset": 360,
+     "crc": 3734371383,
+     "flags": 0,
+     "read": {
+      "length": 1244,
+      "sha256": "9e4fcdad6968dd9b74e84be5d066eff05dbb3ab34e0f24680414012f2c7c4ecf"
+     }
+    }
+   ]
+  },
+  {
+   "path": "tests/web/fixtures/zips/export-nested.zip",
+   "isZip": true,
+   "entries": [
+    {
+     "name": "Export/Conversations-001.JSON",
+     "size": 1244,
+     "compressedSize": 366,
+     "method": 8,
+     "offset": 39,
+     "crc": 3734371383,
+     "flags": 0,
+     "read": {
+      "length": 1244,
+      "sha256": "9e4fcdad6968dd9b74e84be5d066eff05dbb3ab34e0f24680414012f2c7c4ecf"
+     }
+    },
+    {
+     "name": "Export/memories/Memory-2024.json",
+     "size": 155,
+     "compressedSize": 126,
+     "method": 8,
+     "offset": 464,
+     "crc": 3897234072,
+     "flags": 0,
+     "read": {
+      "length": 155,
+      "sha256": "47bf68a3637aa6f97e0c80fc12cfeb15ab842fc9895e86cc918fc71d70f3a8ac"
+     }
+    },
+    {
+     "name": "Export/projects.json",
+     "size": 228,
+     "compressedSize": 163,
+     "method": 8,
+     "offset": 652,
+     "crc": 3312160912,
+     "flags": 0,
+     "read": {
+      "length": 228,
+      "sha256": "4d124996e51c9564de2a0799e78bce065214b930d0fc672a94a0a47b60338923"
+     }
+    },
+    {
+     "name": "Export/notes.txt",
+     "size": 30,
+     "compressedSize": 32,
+     "method": 8,
+     "offset": 865,
+     "crc": 2079446448,
+     "flags": 0,
+     "read": {
+      "length": 30,
+      "sha256": "c8858cfbf30278b80ace381f270a6d9c541de994459002240b19e03eb0139ad0"
+     }
+    },
+    {
+     "name": "__MACOSX/Export/._Conversations-001.JSON",
+     "size": 16,
+     "compressedSize": 18,
+     "method": 8,
+     "offset": 943,
+     "crc": 939545822,
+     "flags": 0,
+     "read": {
+      "length": 16,
+      "sha256": "9a0a35261d10a0c6a6e1c92558a90fb108d9e6a417829c33227988b0de017a07"
+     }
+    },
+    {
+     "name": "conversations.json.bak",
+     "size": 8,
+     "compressedSize": 10,
+     "method": 8,
+     "offset": 1031,
+     "crc": 903655236,
+     "flags": 0,
+     "read": {
+      "length": 8,
+      "sha256": "a1ff022ae4fc631a21f7b7b2b05853efa7ae600d4804e57cab10ee3c90f1482d"
+     }
+    }
+   ]
+  },
+  {
+   "path": "tests/web/fixtures/zips/dotless-i.zip",
+   "isZip": true,
+   "entries": [
+    {
+     "name": "Conversatıons.json",
+     "size": 1244,
+     "compressedSize": 366,
+     "method": 8,
+     "offset": 0,
+     "crc": 3734371383,
+     "flags": 2048,
+     "read": {
+      "length": 1244,
+      "sha256": "9e4fcdad6968dd9b74e84be5d066eff05dbb3ab34e0f24680414012f2c7c4ecf"
+     }
+    },
+    {
+     "name": "notes.txt",
+     "size": 46,
+     "compressedSize": 48,
+     "method": 8,
+     "offset": 415,
+     "crc": 1660290521,
+     "flags": 0,
+     "read": {
+      "length": 46,
+      "sha256": "66001f946935220379ee5b6d71fad5c81439142b75db36578f1f0159a50d678b"
+     }
+    }
+   ]
+  },
+  {
+   "path": "tests/web/fixtures/zips/names.zip",
+   "isZip": true,
+   "entries": [
+    {
+     "name": "folder/more.markdown",
+     "size": 22,
+     "compressedSize": 24,
+     "method": 8,
+     "offset": 39,
+     "crc": 3113661044,
+     "flags": 0,
+     "read": {
+      "length": 22,
+      "sha256": "1997ea477019ac37a1b351e1c0bea8dad887c8452b87a794a9ccc4f3f0ec3721"
+     }
+    },
+    {
+     "name": "notes-über.txt",
+     "size": 10,
+     "compressedSize": 12,
+     "method": 8,
+     "offset": 113,
+     "crc": 372002707,
+     "flags": 0,
+     "read": {
+      "length": 10,
+      "sha256": "781ecd9f1804324fe79a44e738327b0a21a0377b4cb63ba4b1caf890da11183f"
+     }
+    },
+    {
+     "name": "français-notes.txt",
+     "size": 10,
+     "compressedSize": 12,
+     "method": 8,
+     "offset": 169,
+     "crc": 2216603112,
+     "flags": 2048,
+     "read": {
+      "length": 10,
+      "sha256": "b898f872d7265a7ccb926032441d7fbb742970a3f5d364a02ac4d37be6251b1e"
+     }
+    },
+    {
+     "name": "evil.txt",
+     "size": 19,
+     "compressedSize": 21,
+     "method": 8,
+     "offset": 230,
+     "crc": 3036311035,
+     "flags": 0,
+     "read": {
+      "length": 19,
+      "sha256": "b68ba5abbe18161352a8c9b4315f0ee261f1f35d4dcc311b8d41dd218f64add1"
+     }
+    },
+    {
+     "name": "ünïcode-päth.txt",
+     "size": 31,
+     "compressedSize": 33,
+     "method": 8,
+     "offset": 294,
+     "crc": 3186077518,
+     "flags": 0,
+     "read": {
+      "length": 31,
+      "sha256": "4d9da9a0e1d4afc8b1bcf89ba01e27ff80a72b6d92f2851b5d05e1e1f178d586"
+     }
+    },
+    {
+     "name": "wrong-crc-placeholder.txt",
+     "size": 26,
+     "compressedSize": 28,
+     "method": 8,
+     "offset": 413,
+     "crc": 1125965152,
+     "flags": 0,
+     "read": {
+      "length": 26,
+      "sha256": "2fe7adb3502801b550ab43a282f4b2a1927c2d55660c0583c2cdc37683754363"
+     }
+    },
+    {
+     "name": "folder\\windows.txt",
+     "size": 14,
+     "compressedSize": 16,
+     "method": 8,
+     "offset": 515,
+     "crc": 3669405581,
+     "flags": 0,
+     "read": {
+      "length": 14,
+      "sha256": "7552de9589c0d545fe01820b83b99f716c1a59fee4b90110dde8bea9c749d5af"
+     }
+    },
+    {
+     "name": "trailing-newline.txt\n",
+     "size": 41,
+     "compressedSize": 43,
+     "method": 8,
+     "offset": 579,
+     "crc": 1368982047,
+     "flags": 0,
+     "read": {
+      "length": 41,
+      "sha256": "7372c5b5cb3cda1403f362facc41c924f17fd3313066ac81dc31d8c64c4b63b7"
+     }
+    },
+    {
+     "name": "notes.txt.bak",
+     "size": 8,
+     "compressedSize": 10,
+     "method": 8,
+     "offset": 673,
+     "crc": 903655236,
+     "flags": 0,
+     "read": {
+      "length": 8,
+      "sha256": "a1ff022ae4fc631a21f7b7b2b05853efa7ae600d4804e57cab10ee3c90f1482d"
+     }
+    },
+    {
+     "name": "image.png",
+     "size": 8,
+     "compressedSize": 10,
+     "method": 8,
+     "offset": 726,
+     "crc": 2047281572,
+     "flags": 0,
+     "read": {
+      "length": 8,
+      "sha256": "4c4b6a3be1314ab86138bef4314dde022e600960d8689a2c8f8631802d20dab6"
+     }
+    },
+    {
+     "name": "user.json",
+     "size": 29,
+     "compressedSize": 31,
+     "method": 8,
+     "offset": 775,
+     "crc": 4240279657,
+     "flags": 0,
+     "read": {
+      "length": 29,
+      "sha256": "36cb6f23a4b600bbc44cf3658b683141a90ec96630247124c09e66d0d4dcc28d"
+     }
+    },
+    {
+     "name": "Settings.JSON",
+     "size": 20,
+     "compressedSize": 22,
+     "method": 8,
+     "offset": 845,
+     "crc": 4218204028,
+     "flags": 0,
+     "read": {
+      "length": 20,
+      "sha256": "10af92effa7f723a9ba656f3e71dd471d82a74af8c75dcca0767396f58872f1f"
+     }
+    },
+    {
+     "name": "account.json",
+     "size": 40,
+     "compressedSize": 42,
+     "method": 8,
+     "offset": 910,
+     "crc": 2110313667,
+     "flags": 0,
+     "read": {
+      "length": 40,
+      "sha256": "431090972c841a0ef06a92c0f9e2890894bf2680897d4e72ee6215a433d8fd5c"
+     }
+    },
+    {
+     "name": "data.json",
+     "size": 70,
+     "compressedSize": 67,
+     "method": 8,
+     "offset": 994,
+     "crc": 2263898930,
+     "flags": 0,
+     "read": {
+      "length": 70,
+      "sha256": "942fc919b6062dea2bf6ca6a3353737650c7257b0a2c8636f40669d9f3fe06d5"
+     }
+    },
+    {
+     "name": "README.MD",
+     "size": 40,
+     "compressedSize": 41,
+     "method": 8,
+     "offset": 1100,
+     "crc": 1270473477,
+     "flags": 0,
+     "read": {
+      "length": 40,
+      "sha256": "e48727be57b16173563eb3e19cb217108ff756c73724b7c94574636e42160334"
+     }
+    },
+    {
+     "name": "__MACOSX/._notes.txt",
+     "size": 4,
+     "compressedSize": 6,
+     "method": 8,
+     "offset": 1180,
+     "crc": 2775793027,
+     "flags": 0,
+     "read": {
+      "length": 4,
+      "sha256": "26af2039e3563c710de3d6585af9e7b430427ee7767b88b5723bf276186e0043"
+     }
+    }
+   ]
+  },
+  {
+   "path": "tests/web/fixtures/zips/text-members.zip",
+   "isZip": true,
+   "entries": [
+    {
+     "name": "notes.txt",
+     "size": 71,
+     "compressedSize": 68,
+     "method": 8,
+     "offset": 0,
+     "crc": 1648692312,
+     "flags": 0,
+     "read": {
+      "length": 71,
+      "sha256": "1e5bcd752aa6420a58c0b91dfa36e43dcc77ab2b2be08b495b2b4f2d5a1c8602"
+     }
+    },
+    {
+     "name": "list.md",
+     "size": 21,
+     "compressedSize": 23,
+     "method": 8,
+     "offset": 107,
+     "crc": 926306377,
+     "flags": 0,
+     "read": {
+      "length": 21,
+      "sha256": "7be31e68eeaa6a2e3cdcda89d3a0506e23dbc32501d6a53e42892883042f442b"
+     }
+    },
+    {
+     "name": "data.json",
+     "size": 70,
+     "compressedSize": 67,
+     "method": 8,
+     "offset": 167,
+     "crc": 1470281930,
+     "flags": 0,
+     "read": {
+      "length": 70,
+      "sha256": "363bca4b3ffc26cc202982d6558d708c0845244155a65120541b2f53901f735b"
+     }
+    },
+    {
+     "name": "empty.txt",
+     "size": 0,
+     "compressedSize": 2,
+     "method": 8,
+     "offset": 273,
+     "crc": 0,
+     "flags": 0,
+     "read": {
+      "length": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+     }
+    }
+   ]
+  },
+  {
+   "path": "tests/web/fixtures/zips/invalid-member.zip",
+   "isZip": true,
+   "entries": [
+    {
+     "name": "conversations.json",
+     "size": 13,
+     "compressedSize": 15,
+     "method": 8,
+     "offset": 0,
+     "crc": 3475026459,
+     "flags": 0,
+     "read": {
+      "length": 13,
+      "sha256": "6c4a98818c0d39ac2c19ed70e52454e756f7b4e70798368eb625ca4de93cd651"
+     }
+    }
+   ]
+  },
+  {
+   "path": "tests/web/fixtures/zips/invalid-utf8-member.zip",
+   "isZip": true,
+   "entries": [
+    {
+     "name": "data.json",
+     "size": 16,
+     "compressedSize": 18,
+     "method": 8,
+     "offset": 0,
+     "crc": 1810297303,
+     "flags": 0,
+     "read": {
+      "length": 16,
+      "sha256": "6298c0a789138a08a90dc79265ee2fd0ee7d10ac3ce2e2782d699b4401dcb6aa"
+     }
+    }
+   ]
+  },
+  {
+   "path": "tests/web/fixtures/zips/empty.zip",
+   "isZip": true,
+   "entries": []
+  },
+  {
+   "path": "tests/web/fixtures/zips/dirs-only.zip",
+   "isZip": true,
+   "entries": []
+  },
+  {
+   "path": "tests/web/fixtures/zips/too-big-member.zip",
+   "isZip": true,
+   "entries": [
+    {
+     "name": "conversations.json",
+     "size": 419430400,
+     "compressedSize": 1244,
+     "method": 0,
+     "offset": 0,
+     "crc": 3734371383,
+     "flags": 0,
+     "read": {
+      "length": 1244,
+      "sha256": "9e4fcdad6968dd9b74e84be5d066eff05dbb3ab34e0f24680414012f2c7c4ecf"
+     }
+    }
+   ]
+  },
+  {
+   "path": "tests/web/fixtures/zips/too-big-total.zip",
+   "isZip": true,
+   "entries": [
+    {
+     "name": "a/conversations.json",
+     "size": 262144000,
+     "compressedSize": 1244,
+     "method": 0,
+     "offset": 0,
+     "crc": 3734371383,
+     "flags": 0,
+     "read": {
+      "length": 1244,
+      "sha256": "9e4fcdad6968dd9b74e84be5d066eff05dbb3ab34e0f24680414012f2c7c4ecf"
+     }
+    },
+    {
+     "name": "b/conversations.json",
+     "size": 262144000,
+     "compressedSize": 1244,
+     "method": 0,
+     "offset": 1294,
+     "crc": 3734371383,
+     "flags": 0,
+     "read": {
+      "length": 1244,
+      "sha256": "9e4fcdad6968dd9b74e84be5d066eff05dbb3ab34e0f24680414012f2c7c4ecf"
+     }
+    },
+    {
+     "name": "c/conversations.json",
+     "size": 262144000,
+     "compressedSize": 1244,
+     "method": 0,
+     "offset": 2588,
+     "crc": 3734371383,
+     "flags": 0,
+     "read": {
+      "length": 1244,
+      "sha256": "9e4fcdad6968dd9b74e84be5d066eff05dbb3ab34e0f24680414012f2c7c4ecf"
+     }
+    }
+   ]
+  },
+  {
+   "path": "tests/web/fixtures/zips/bad-crc.zip",
+   "isZip": true,
+   "entries": [
+    {
+     "name": "conversations.json",
+     "size": 1244,
+     "compressedSize": 366,
+     "method": 8,
+     "offset": 0,
+     "crc": 1,
+     "flags": 0,
+     "read": {
+      "error": "BadZipFile"
+     }
+    }
+   ]
+  },
+  {
+   "path": "tests/web/fixtures/zips/overlap.zip",
+   "isZip": true,
+   "entries": [
+    {
+     "name": "conversations.json",
+     "size": 1244,
+     "compressedSize": 1254,
+     "method": 0,
+     "offset": 0,
+     "crc": 3734371383,
+     "flags": 0,
+     "read": {
+      "error": "BadZipFile"
+     }
+    },
+    {
+     "name": "z.txt",
+     "size": 5,
+     "compressedSize": 5,
+     "method": 0,
+     "offset": 1292,
+     "crc": 2302955073,
+     "flags": 0,
+     "read": {
+      "length": 5,
+      "sha256": "f39592393ef0859cb196a52693d2cea00fb2df784b3c04ae54aa7cadb8e562f8"
+     }
+    }
+   ]
+  },
+  {
+   "path": "tests/web/fixtures/zips/multidisk.zip",
+   "isZip": false
+  },
+  {
+   "path": "tests/web/fixtures/zips/truncated.zip",
+   "isZip": false
+  },
+  {
+   "path": "tests/web/fixtures/zips/plain-text.zip",
+   "isZip": false
+  },
+  {
+   "path": "tests/web/fixtures/zips/encrypted.zip",
+   "isZip": true,
+   "entries": [
+    {
+     "name": "notes.txt",
+     "size": 14,
+     "compressedSize": 16,
+     "method": 8,
+     "offset": 0,
+     "crc": 2232917530,
+     "flags": 0,
+     "read": {
+      "length": 14,
+      "sha256": "adc7ff7f182a03830aeb3e25ba317964dc68d91463844932cd98fbb02db2fc89"
+     }
+    },
+    {
+     "name": "secret.txt",
+     "size": 9,
+     "compressedSize": 11,
+     "method": 8,
+     "offset": 55,
+     "crc": 1467498611,
+     "flags": 1,
+     "read": {
+      "error": "RuntimeError"
+     }
+    }
+   ]
+  },
+  {
+   "path": "tests/web/fixtures/zips/bzip2.zip",
+   "isZip": true,
+   "entries": [
+    {
+     "name": "notes.txt",
+     "size": 14,
+     "compressedSize": 16,
+     "method": 8,
+     "offset": 0,
+     "crc": 2232917530,
+     "flags": 0,
+     "read": {
+      "length": 14,
+      "sha256": "adc7ff7f182a03830aeb3e25ba317964dc68d91463844932cd98fbb02db2fc89"
+     }
+    },
+    {
+     "name": "more.txt",
+     "size": 12,
+     "compressedSize": 51,
+     "method": 12,
+     "offset": 55,
+     "crc": 3071534247,
+     "flags": 0,
+     "read": {
+      "length": 12,
+      "sha256": "517dd9fce55929c8fbcd46b7a8f14d79c1b0f77697e1a2e21b4718a3514d8d3e"
+     }
+    }
+   ]
+  }
+ ]
+}

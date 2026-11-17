@@ -1,0 +1,1154 @@
+{
+ "files": [
+  "chatgpt-saved-memories.txt",
+  "gemini-saved-info.txt",
+  "bot-answer-what-do-you-remember.txt",
+  "clean-memory.txt",
+  "chatgpt-export.zip",
+  "claude-export.zip",
+  "chatgpt-export-large.zip"
+ ],
+ "reports": {
+  "chatgpt-saved-memories.txt": {
+   "source": {
+    "format": "text",
+    "label": "pasted memories",
+    "conversations": 0,
+    "piecesScanned": 16,
+    "piecesWithFinds": 12,
+    "kinds": {
+     "memory": 16
+    },
+    "assistantMessagesSkipped": 0,
+    "codeBlocksSkipped": 0,
+    "charactersScanned": 739,
+    "truncated": false,
+    "failedChunks": 0
+   },
+   "totals": {
+    "mentions": 17,
+    "unique": 16,
+    "directUnique": 9,
+    "contextUnique": 7
+   },
+   "score": 66,
+   "level": "oversharer",
+   "categories": [
+    {
+     "key": "names",
+     "label": "Names",
+     "tier": "direct",
+     "count": 4,
+     "unique": 4,
+     "examples": [
+      {
+       "masked": "D••• W••••••••",
+       "count": 1
+      },
+      {
+       "masked": "C•••• D••••",
+       "count": 1
+      },
+      {
+       "masked": "J••• W••••••••",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "emails",
+     "label": "Email addresses",
+     "tier": "direct",
+     "count": 1,
+     "unique": 1,
+     "examples": [
+      {
+       "masked": "d•••.•••••••••@e••••••.com",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "phones",
+     "label": "Phone numbers",
+     "tier": "direct",
+     "count": 1,
+     "unique": 1,
+     "examples": [
+      {
+       "masked": "+•• •••• ••••23",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "birthdays",
+     "label": "Birth dates",
+     "tier": "direct",
+     "count": 1,
+     "unique": 1,
+     "examples": [
+      {
+       "masked": "••.••.••••",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "bank",
+     "label": "Bank accounts",
+     "tier": "direct",
+     "count": 1,
+     "unique": 1,
+     "examples": [
+      {
+       "masked": "•••• •••• •••• •••• •••• 32",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "handles",
+     "label": "Social handles",
+     "tier": "direct",
+     "count": 1,
+     "unique": 1,
+     "examples": [
+      {
+       "masked": "@d•••_••••_•••••",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "places",
+     "label": "Places",
+     "tier": "context",
+     "count": 5,
+     "unique": 4,
+     "examples": [
+      {
+       "masked": "L••••",
+       "count": 2
+      },
+      {
+       "masked": "H•••••••••",
+       "count": 1
+      },
+      {
+       "masked": "M•••••••••",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "orgs",
+     "label": "Companies and organisations",
+     "tier": "context",
+     "count": 2,
+     "unique": 2,
+     "examples": [
+      {
+       "masked": "S• M•••'• H•••••••",
+       "count": 1
+      },
+      {
+       "masked": "N••••••• C••• T••••",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "ages",
+     "label": "Ages",
+     "tier": "context",
+     "count": 1,
+     "unique": 1,
+     "examples": [
+      {
+       "masked": "30s",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "dates",
+     "label": "Dates",
+     "tier": "context",
+     "count": 0,
+     "unique": 0,
+     "examples": []
+    },
+    {
+     "key": "links",
+     "label": "Links",
+     "tier": "context",
+     "count": 0,
+     "unique": 0,
+     "examples": []
+    }
+   ]
+  },
+  "gemini-saved-info.txt": {
+   "source": {
+    "format": "text",
+    "label": "pasted memories",
+    "conversations": 0,
+    "piecesScanned": 9,
+    "piecesWithFinds": 5,
+    "kinds": {
+     "memory": 9
+    },
+    "assistantMessagesSkipped": 0,
+    "codeBlocksSkipped": 0,
+    "charactersScanned": 403,
+    "truncated": false,
+    "failedChunks": 0
+   },
+   "totals": {
+    "mentions": 8,
+    "unique": 8,
+    "directUnique": 4,
+    "contextUnique": 4
+   },
+   "score": 39,
+   "level": "chatty",
+   "categories": [
+    {
+     "key": "names",
+     "label": "Names",
+     "tier": "direct",
+     "count": 1,
+     "unique": 1,
+     "examples": [
+      {
+       "masked": "K••• M•••••",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "emails",
+     "label": "Email addresses",
+     "tier": "direct",
+     "count": 1,
+     "unique": 1,
+     "examples": [
+      {
+       "masked": "k•••.••••••@e••••••.com",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "phones",
+     "label": "Phone numbers",
+     "tier": "direct",
+     "count": 1,
+     "unique": 1,
+     "examples": [
+      {
+       "masked": "+••• •• ••• ••87",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "birthdays",
+     "label": "Birth dates",
+     "tier": "direct",
+     "count": 1,
+     "unique": 1,
+     "examples": [
+      {
+       "masked": "••/••/••••",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "bank",
+     "label": "Bank accounts",
+     "tier": "direct",
+     "count": 0,
+     "unique": 0,
+     "examples": []
+    },
+    {
+     "key": "handles",
+     "label": "Social handles",
+     "tier": "direct",
+     "count": 0,
+     "unique": 0,
+     "examples": []
+    },
+    {
+     "key": "places",
+     "label": "Places",
+     "tier": "context",
+     "count": 2,
+     "unique": 2,
+     "examples": [
+      {
+       "masked": "A••••",
+       "count": 1
+      },
+      {
+       "masked": "L•••••",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "orgs",
+     "label": "Companies and organisations",
+     "tier": "context",
+     "count": 1,
+     "unique": 1,
+     "examples": [
+      {
+       "masked": "B••• R••• S••••••",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "ages",
+     "label": "Ages",
+     "tier": "context",
+     "count": 1,
+     "unique": 1,
+     "examples": [
+      {
+       "masked": "30s",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "dates",
+     "label": "Dates",
+     "tier": "context",
+     "count": 0,
+     "unique": 0,
+     "examples": []
+    },
+    {
+     "key": "links",
+     "label": "Links",
+     "tier": "context",
+     "count": 0,
+     "unique": 0,
+     "examples": []
+    }
+   ]
+  },
+  "bot-answer-what-do-you-remember.txt": {
+   "source": {
+    "format": "text",
+    "label": "pasted memories",
+    "conversations": 0,
+    "piecesScanned": 10,
+    "piecesWithFinds": 7,
+    "kinds": {
+     "memory": 10
+    },
+    "assistantMessagesSkipped": 0,
+    "codeBlocksSkipped": 0,
+    "charactersScanned": 714,
+    "truncated": false,
+    "failedChunks": 0
+   },
+   "totals": {
+    "mentions": 10,
+    "unique": 10,
+    "directUnique": 6,
+    "contextUnique": 4
+   },
+   "score": 50,
+   "level": "oversharer",
+   "categories": [
+    {
+     "key": "names",
+     "label": "Names",
+     "tier": "direct",
+     "count": 2,
+     "unique": 2,
+     "examples": [
+      {
+       "masked": "S•• R•••••",
+       "count": 1
+      },
+      {
+       "masked": "J••••• L••",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "emails",
+     "label": "Email addresses",
+     "tier": "direct",
+     "count": 2,
+     "unique": 2,
+     "examples": [
+      {
+       "masked": "s••••••••@e••••••.org",
+       "count": 1
+      },
+      {
+       "masked": "s.••••••@l••••••••••.•••••••.edu",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "phones",
+     "label": "Phone numbers",
+     "tier": "direct",
+     "count": 1,
+     "unique": 1,
+     "examples": [
+      {
+       "masked": "+• ••• ••• ••19",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "birthdays",
+     "label": "Birth dates",
+     "tier": "direct",
+     "count": 1,
+     "unique": 1,
+     "examples": [
+      {
+       "masked": "••/••/••••",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "bank",
+     "label": "Bank accounts",
+     "tier": "direct",
+     "count": 0,
+     "unique": 0,
+     "examples": []
+    },
+    {
+     "key": "handles",
+     "label": "Social handles",
+     "tier": "direct",
+     "count": 0,
+     "unique": 0,
+     "examples": []
+    },
+    {
+     "key": "places",
+     "label": "Places",
+     "tier": "context",
+     "count": 2,
+     "unique": 2,
+     "examples": [
+      {
+       "masked": "D•••••",
+       "count": 1
+      },
+      {
+       "masked": "C•••••••",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "orgs",
+     "label": "Companies and organisations",
+     "tier": "context",
+     "count": 2,
+     "unique": 2,
+     "examples": [
+      {
+       "masked": "L•••••• P••• H••• S•••••",
+       "count": 1
+      },
+      {
+       "masked": "F•••• S••••• B•••",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "ages",
+     "label": "Ages",
+     "tier": "context",
+     "count": 0,
+     "unique": 0,
+     "examples": []
+    },
+    {
+     "key": "dates",
+     "label": "Dates",
+     "tier": "context",
+     "count": 0,
+     "unique": 0,
+     "examples": []
+    },
+    {
+     "key": "links",
+     "label": "Links",
+     "tier": "context",
+     "count": 0,
+     "unique": 0,
+     "examples": []
+    }
+   ]
+  },
+  "clean-memory.txt": {
+   "source": {
+    "format": "text",
+    "label": "pasted memories",
+    "conversations": 0,
+    "piecesScanned": 8,
+    "piecesWithFinds": 0,
+    "kinds": {
+     "memory": 8
+    },
+    "assistantMessagesSkipped": 0,
+    "codeBlocksSkipped": 0,
+    "charactersScanned": 258,
+    "truncated": false,
+    "failedChunks": 0
+   },
+   "totals": {
+    "mentions": 0,
+    "unique": 0,
+    "directUnique": 0,
+    "contextUnique": 0
+   },
+   "score": 0,
+   "level": "clean",
+   "categories": [
+    {
+     "key": "names",
+     "label": "Names",
+     "tier": "direct",
+     "count": 0,
+     "unique": 0,
+     "examples": []
+    },
+    {
+     "key": "emails",
+     "label": "Email addresses",
+     "tier": "direct",
+     "count": 0,
+     "unique": 0,
+     "examples": []
+    },
+    {
+     "key": "phones",
+     "label": "Phone numbers",
+     "tier": "direct",
+     "count": 0,
+     "unique": 0,
+     "examples": []
+    },
+    {
+     "key": "birthdays",
+     "label": "Birth dates",
+     "tier": "direct",
+     "count": 0,
+     "unique": 0,
+     "examples": []
+    },
+    {
+     "key": "bank",
+     "label": "Bank accounts",
+     "tier": "direct",
+     "count": 0,
+     "unique": 0,
+     "examples": []
+    },
+    {
+     "key": "handles",
+     "label": "Social handles",
+     "tier": "direct",
+     "count": 0,
+     "unique": 0,
+     "examples": []
+    },
+    {
+     "key": "places",
+     "label": "Places",
+     "tier": "context",
+     "count": 0,
+     "unique": 0,
+     "examples": []
+    },
+    {
+     "key": "orgs",
+     "label": "Companies and organisations",
+     "tier": "context",
+     "count": 0,
+     "unique": 0,
+     "examples": []
+    },
+    {
+     "key": "ages",
+     "label": "Ages",
+     "tier": "context",
+     "count": 0,
+     "unique": 0,
+     "examples": []
+    },
+    {
+     "key": "dates",
+     "label": "Dates",
+     "tier": "context",
+     "count": 0,
+     "unique": 0,
+     "examples": []
+    },
+    {
+     "key": "links",
+     "label": "Links",
+     "tier": "context",
+     "count": 0,
+     "unique": 0,
+     "examples": []
+    }
+   ]
+  },
+  "chatgpt-export.zip": {
+   "source": {
+    "format": "chatgpt_export",
+    "label": "ChatGPT export",
+    "conversations": 6,
+    "piecesScanned": 11,
+    "piecesWithFinds": 7,
+    "kinds": {
+     "profile": 2,
+     "message": 9
+    },
+    "assistantMessagesSkipped": 7,
+    "codeBlocksSkipped": 1,
+    "charactersScanned": 1027,
+    "truncated": false,
+    "failedChunks": 0
+   },
+   "totals": {
+    "mentions": 23,
+    "unique": 18,
+    "directUnique": 10,
+    "contextUnique": 8
+   },
+   "score": 70,
+   "level": "oversharer",
+   "categories": [
+    {
+     "key": "names",
+     "label": "Names",
+     "tier": "direct",
+     "count": 8,
+     "unique": 6,
+     "examples": [
+      {
+       "masked": "P•••• N••••••••",
+       "count": 2
+      },
+      {
+       "masked": "L•• G•••••",
+       "count": 2
+      },
+      {
+       "masked": "P••••",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "emails",
+     "label": "Email addresses",
+     "tier": "direct",
+     "count": 1,
+     "unique": 1,
+     "examples": [
+      {
+       "masked": "p••••.•@e••••••.org",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "phones",
+     "label": "Phone numbers",
+     "tier": "direct",
+     "count": 1,
+     "unique": 1,
+     "examples": [
+      {
+       "masked": "+• ••• ••• ••47",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "birthdays",
+     "label": "Birth dates",
+     "tier": "direct",
+     "count": 1,
+     "unique": 1,
+     "examples": [
+      {
+       "masked": "••/••/••••",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "bank",
+     "label": "Bank accounts",
+     "tier": "direct",
+     "count": 0,
+     "unique": 0,
+     "examples": []
+    },
+    {
+     "key": "handles",
+     "label": "Social handles",
+     "tier": "direct",
+     "count": 1,
+     "unique": 1,
+     "examples": [
+      {
+       "masked": "@p•••••••••",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "places",
+     "label": "Places",
+     "tier": "context",
+     "count": 7,
+     "unique": 4,
+     "examples": [
+      {
+       "masked": "A•••••",
+       "count": 4
+      },
+      {
+       "masked": "T••••",
+       "count": 1
+      },
+      {
+       "masked": "1• E•• G••••",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "orgs",
+     "label": "Companies and organisations",
+     "tier": "context",
+     "count": 2,
+     "unique": 2,
+     "examples": [
+      {
+       "masked": "C•••••• H•••••",
+       "count": 1
+      },
+      {
+       "masked": "I••••••",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "ages",
+     "label": "Ages",
+     "tier": "context",
+     "count": 1,
+     "unique": 1,
+     "examples": [
+      {
+       "masked": "30s",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "dates",
+     "label": "Dates",
+     "tier": "context",
+     "count": 0,
+     "unique": 0,
+     "examples": []
+    },
+    {
+     "key": "links",
+     "label": "Links",
+     "tier": "context",
+     "count": 1,
+     "unique": 1,
+     "examples": [
+      {
+       "masked": "github.com/•••",
+       "count": 1
+      }
+     ]
+    }
+   ]
+  },
+  "claude-export.zip": {
+   "source": {
+    "format": "claude_export",
+    "label": "Claude export",
+    "conversations": 3,
+    "piecesScanned": 10,
+    "piecesWithFinds": 8,
+    "kinds": {
+     "message": 4,
+     "attachment": 1,
+     "memory": 3,
+     "project": 2
+    },
+    "assistantMessagesSkipped": 3,
+    "codeBlocksSkipped": 0,
+    "charactersScanned": 942,
+    "truncated": false,
+    "failedChunks": 0
+   },
+   "totals": {
+    "mentions": 27,
+    "unique": 16,
+    "directUnique": 11,
+    "contextUnique": 5
+   },
+   "score": 71,
+   "level": "oversharer",
+   "categories": [
+    {
+     "key": "names",
+     "label": "Names",
+     "tier": "direct",
+     "count": 9,
+     "unique": 5,
+     "examples": [
+      {
+       "masked": "M•••••",
+       "count": 3
+      },
+      {
+       "masked": "L•••",
+       "count": 3
+      },
+      {
+       "masked": "A•••",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "emails",
+     "label": "Email addresses",
+     "tier": "direct",
+     "count": 3,
+     "unique": 2,
+     "examples": [
+      {
+       "masked": "m•••••.•••••@e••••••.net",
+       "count": 2
+      },
+      {
+       "masked": "i•••••.••••••@e••••••.de",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "phones",
+     "label": "Phone numbers",
+     "tier": "direct",
+     "count": 3,
+     "unique": 2,
+     "examples": [
+      {
+       "masked": "+•• ••• ••• ••98",
+       "count": 2
+      },
+      {
+       "masked": "+• ••• ••• ••01",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "birthdays",
+     "label": "Birth dates",
+     "tier": "direct",
+     "count": 1,
+     "unique": 1,
+     "examples": [
+      {
+       "masked": "•••• •• ••.••.••••",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "bank",
+     "label": "Bank accounts",
+     "tier": "direct",
+     "count": 1,
+     "unique": 1,
+     "examples": [
+      {
+       "masked": "•••• •••• •••• •••• •••• 00",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "handles",
+     "label": "Social handles",
+     "tier": "direct",
+     "count": 0,
+     "unique": 0,
+     "examples": []
+    },
+    {
+     "key": "places",
+     "label": "Places",
+     "tier": "context",
+     "count": 8,
+     "unique": 3,
+     "examples": [
+      {
+       "masked": "H••••••",
+       "count": 4
+      },
+      {
+       "masked": "T••••••",
+       "count": 3
+      },
+      {
+       "masked": "M•••• G••••",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "orgs",
+     "label": "Companies and organisations",
+     "tier": "context",
+     "count": 1,
+     "unique": 1,
+     "examples": [
+      {
+       "masked": "N•••••••• L••••••••",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "ages",
+     "label": "Ages",
+     "tier": "context",
+     "count": 0,
+     "unique": 0,
+     "examples": []
+    },
+    {
+     "key": "dates",
+     "label": "Dates",
+     "tier": "context",
+     "count": 1,
+     "unique": 1,
+     "examples": [
+      {
+       "masked": "••.••.2026",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "links",
+     "label": "Links",
+     "tier": "context",
+     "count": 0,
+     "unique": 0,
+     "examples": []
+    }
+   ]
+  },
+  "chatgpt-export-large.zip": {
+   "source": {
+    "format": "chatgpt_export",
+    "label": "ChatGPT export",
+    "conversations": 1322,
+    "piecesScanned": 7712,
+    "piecesWithFinds": 2158,
+    "kinds": {
+     "profile": 2,
+     "message": 7932
+    },
+    "assistantMessagesSkipped": 7932,
+    "codeBlocksSkipped": 222,
+    "charactersScanned": 986091,
+    "truncated": false,
+    "failedChunks": 0
+   },
+   "totals": {
+    "mentions": 2898,
+    "unique": 288,
+    "directUnique": 279,
+    "contextUnique": 9
+   },
+   "score": 100,
+   "level": "biography",
+   "categories": [
+    {
+     "key": "names",
+     "label": "Names",
+     "tier": "direct",
+     "count": 966,
+     "unique": 65,
+     "examples": [
+      {
+       "masked": "A•••••",
+       "count": 139
+      },
+      {
+       "masked": "D•••••",
+       "count": 129
+      },
+      {
+       "masked": "E•••• M•••••",
+       "count": 46
+      }
+     ]
+    },
+    {
+     "key": "emails",
+     "label": "Email addresses",
+     "tier": "direct",
+     "count": 399,
+     "unique": 114,
+     "examples": [
+      {
+       "masked": "p••••.••••••@e••••••.com",
+       "count": 10
+      },
+      {
+       "masked": "l•••.•••••@e••••••.com",
+       "count": 9
+      },
+      {
+       "masked": "t••.••••••@e••••••.com",
+       "count": 8
+      }
+     ]
+    },
+    {
+     "key": "phones",
+     "label": "Phone numbers",
+     "tier": "direct",
+     "count": 564,
+     "unique": 100,
+     "examples": [
+      {
+       "masked": "+• ••• ••• ••43",
+       "count": 12
+      },
+      {
+       "masked": "+• ••• ••• ••83",
+       "count": 12
+      },
+      {
+       "masked": "+• ••• ••• ••23",
+       "count": 12
+      }
+     ]
+    },
+    {
+     "key": "birthdays",
+     "label": "Birth dates",
+     "tier": "direct",
+     "count": 0,
+     "unique": 0,
+     "examples": []
+    },
+    {
+     "key": "bank",
+     "label": "Bank accounts",
+     "tier": "direct",
+     "count": 0,
+     "unique": 0,
+     "examples": []
+    },
+    {
+     "key": "handles",
+     "label": "Social handles",
+     "tier": "direct",
+     "count": 0,
+     "unique": 0,
+     "examples": []
+    },
+    {
+     "key": "places",
+     "label": "Places",
+     "tier": "context",
+     "count": 969,
+     "unique": 9,
+     "examples": [
+      {
+       "masked": "N••••••",
+       "count": 182
+      },
+      {
+       "masked": "L••••",
+       "count": 167
+      },
+      {
+       "masked": "L•••••",
+       "count": 148
+      }
+     ]
+    },
+    {
+     "key": "orgs",
+     "label": "Companies and organisations",
+     "tier": "context",
+     "count": 0,
+     "unique": 0,
+     "examples": []
+    },
+    {
+     "key": "ages",
+     "label": "Ages",
+     "tier": "context",
+     "count": 0,
+     "unique": 0,
+     "examples": []
+    },
+    {
+     "key": "dates",
+     "label": "Dates",
+     "tier": "context",
+     "count": 0,
+     "unique": 0,
+     "examples": []
+    },
+    {
+     "key": "links",
+     "label": "Links",
+     "tier": "context",
+     "count": 0,
+     "unique": 0,
+     "examples": []
+    }
+   ]
+  }
+ }
+}

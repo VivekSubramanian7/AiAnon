@@ -29,7 +29,7 @@ const TOKEN_TO_CATEGORY = {
 const BIRTH_CONTEXT_RE = new RegExp(
   `(?<!${W})born(?!${W})|(?<!${W})birth|(?<!${W})dob(?!${W})|(?<!${W})b-day(?!${W})`, "iu");
 // The phone rule runs before the date rule, so "03.05.2026" can come back as PHONE.
-const DATE_LIKE_RE =
+export const DATE_LIKE_RE =
   /^\s*(?:\p{Nd}{1,2}[./-]\p{Nd}{1,2}[./-](?:\p{Nd}{2}|\p{Nd}{4})|\p{Nd}{4}[./-]\p{Nd}{1,2}[./-]\p{Nd}{1,2})\s*(?=\n?$)/u;
 const BIRTH_CONTEXT_CHARS = 24;
 
@@ -131,14 +131,75 @@ export function mask(category, raw) {
   return pythonSplit(value).map((w) => maskWord(w)).join(" ");
 }
 
+const KIND_TO_CATEGORY = {
+  email: "emails",
+  phone: "phones",
+  iban: "bank",
+  profile_url: "links",
+  url: "links",
+  handle: "handles",
+  name: "names",
+  self_name: "names",
+  child_name: "names",
+  place: "places",
+  org: "orgs",
+  age: "ages",
+  date: "dates",
+  date_of_birth: "birthdays",
+  account_email: "emails",
+  account_phone: "phones",
+};
+
+const SECRET_PREFIX_LEN = {
+  AKIA: 4,
+  "sk-": 3,
+  ghp_: 4,
+  github_pat_: 11,
+  eyJ: 3,
+};
+
+function maskSecret(value) {
+  value = value.trim();
+  for (const [prefix, keep] of Object.entries(SECRET_PREFIX_LEN)) {
+    if (value.startsWith(prefix)) {
+      const rest = value.slice(prefix.length);
+      return prefix + MASK.repeat(Math.max(4, Math.min(rest.length, 12)));
+    }
+  }
+  if (value) return value[0] + MASK.repeat(Math.min(value.length - 1, 12));
+  return MASK.repeat(4);
+}
+
+export function maskKind(kind, value) {
+  if (KIND_TO_CATEGORY[kind]) return mask(KIND_TO_CATEGORY[kind], value);
+  if (["private_key", "aws_access_key", "api_token", "jwt", "password_cue", "tokenized_url"].includes(kind)) {
+    if (kind === "aws_access_key") return maskSecret(value);
+    if (kind === "jwt" && value.startsWith("eyJ")) return maskSecret(value);
+    if (kind === "api_token" || kind === "password_cue") return maskSecret(value);
+    if (kind === "private_key") return "-----BEGIN PRIVATE KEY-----";
+    if (kind === "tokenized_url") return mask("links", value);
+    return maskSecret(value);
+  }
+  if (["health", "religion", "sexual_orientation", "children", "immigration"].includes(kind)) {
+    return pythonSplit(value).map((w) => maskWord(w)).join(" ");
+  }
+  if (["payment_card", "national_id", "gps"].includes(kind)) return maskTail(value, 2);
+  if (kind === "street_address") return pythonSplit(value).map((w) => maskWord(w)).join(" ");
+  if (kind === "os_username") return maskWord(value);
+  if (["employer", "compensation"].includes(kind)) return pythonSplit(value).map((w) => maskWord(w)).join(" ");
+  return MASK.repeat(3);
+}
+
 export class Aggregator {
   constructor() {
     this.mentions = new Map(); // category -> mentions
     this.distinct = new Map(CATEGORIES.map((c) => [c.key, new Map()])); // category -> key -> count
     this.firstSeen = new Map(CATEGORIES.map((c) => [c.key, new Map()])); // category -> key -> original
+    this.maxConfidence = new Map(CATEGORIES.map((c) => [c.key, new Map()]));
+    this.cueWindow = new Map(CATEGORIES.map((c) => [c.key, new Map()]));
   }
 
-  add(tokenType, original, context = "") {
+  add(tokenType, original, context = "", confidence = 1.0) {
     if (!original || !original.trim()) return null;
     const category = categorize(tokenType, original, context);
     if (category === null) return null;
@@ -148,6 +209,12 @@ export class Aggregator {
     counts.set(key, (counts.get(key) ?? 0) + 1);
     const seen = this.firstSeen.get(category);
     if (!seen.has(key)) seen.set(key, original);
+    const prev = this.maxConfidence.get(category).get(key) ?? 0;
+    this.maxConfidence.get(category).set(key, Math.max(prev, confidence));
+    if (context) {
+      const cues = this.cueWindow.get(category);
+      if (!cues.has(key)) cues.set(key, context.slice(-80));
+    }
     return category;
   }
 

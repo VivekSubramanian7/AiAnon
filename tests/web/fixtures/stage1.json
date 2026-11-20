@@ -10,6 +10,7 @@
  ],
  "reports": {
   "chatgpt-saved-memories.txt": {
+   "schemaVersion": 2,
    "source": {
     "format": "text",
     "label": "pasted memories",
@@ -22,6 +23,7 @@
     "assistantMessagesSkipped": 0,
     "codeBlocksSkipped": 0,
     "charactersScanned": 739,
+    "charactersSkipped": 0,
     "truncated": false,
     "failedChunks": 0
    },
@@ -187,9 +189,343 @@
      "unique": 0,
      "examples": []
     }
-   ]
+   ],
+   "findings": [
+    {
+     "harm": "H2",
+     "kind": "iban",
+     "label": "IBAN",
+     "confidence": "high",
+     "subject": "unknown",
+     "masked": "•••• •••• •••• •••• •••• 32",
+     "category": "bank",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-01"
+    },
+    {
+     "harm": "H2",
+     "kind": "date_of_birth",
+     "label": "Date of birth",
+     "confidence": "medium",
+     "subject": "unknown",
+     "masked": "••.••.••••",
+     "category": "birthdays",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-02"
+    },
+    {
+     "harm": "H3",
+     "kind": "health",
+     "label": "Health",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "a•••••",
+     "category": null,
+     "source": "detector",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-03"
+    },
+    {
+     "harm": "H4",
+     "kind": "email",
+     "label": "Email",
+     "confidence": "medium",
+     "subject": "unknown",
+     "masked": "d•••.•••••••••@e••••••.com",
+     "category": "emails",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-04"
+    },
+    {
+     "harm": "H4",
+     "kind": "handle",
+     "label": "Social handle",
+     "confidence": "medium",
+     "subject": "unknown",
+     "masked": "@d•••_••••_•••••",
+     "category": "handles",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-05"
+    },
+    {
+     "harm": "H6",
+     "kind": "age",
+     "label": "Age",
+     "confidence": "medium",
+     "subject": "unknown",
+     "masked": "30s",
+     "category": "ages",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-06"
+    },
+    {
+     "harm": "H6",
+     "kind": "name",
+     "label": "Name",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "D••• W••••••••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-07"
+    },
+    {
+     "harm": "H6",
+     "kind": "name",
+     "label": "Name",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "C•••• D••••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-08"
+    },
+    {
+     "harm": "H6",
+     "kind": "name",
+     "label": "Name",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "J••• W••••••••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-09"
+    },
+    {
+     "harm": "H6",
+     "kind": "name",
+     "label": "Name",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "P•••• S•••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-10"
+    },
+    {
+     "harm": "H6",
+     "kind": "org",
+     "label": "Organisation",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "S• M•••'• H•••••••",
+     "category": "orgs",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-11"
+    },
+    {
+     "harm": "H6",
+     "kind": "org",
+     "label": "Organisation",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "N••••••• C••• T••••",
+     "category": "orgs",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-12"
+    },
+    {
+     "harm": "H6",
+     "kind": "phone",
+     "label": "Phone number",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "+•• •••• ••••23",
+     "category": "phones",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-13"
+    },
+    {
+     "harm": "H6",
+     "kind": "place",
+     "label": "Place",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "L••••",
+     "category": "places",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 2,
+     "id": "f-14"
+    },
+    {
+     "harm": "H6",
+     "kind": "place",
+     "label": "Place",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "H•••••••••",
+     "category": "places",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-15"
+    },
+    {
+     "harm": "H6",
+     "kind": "place",
+     "label": "Place",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "M•••••••••",
+     "category": "places",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-16"
+    },
+    {
+     "harm": "H6",
+     "kind": "place",
+     "label": "Place",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "L•••••",
+     "category": "places",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-17"
+    }
+   ],
+   "bands": {
+    "H1": {
+     "unique": 0,
+     "byConfidence": {},
+     "bySubject": {}
+    },
+    "H2": {
+     "unique": 2,
+     "byConfidence": {
+      "high": 1,
+      "medium": 1
+     },
+     "bySubject": {
+      "unknown": 2
+     }
+    },
+    "H3": {
+     "unique": 1,
+     "byConfidence": {
+      "low": 1
+     },
+     "bySubject": {
+      "unknown": 1
+     }
+    },
+    "H4": {
+     "unique": 2,
+     "byConfidence": {
+      "medium": 2
+     },
+     "bySubject": {
+      "unknown": 2
+     }
+    },
+    "H5": {
+     "unique": 0,
+     "byConfidence": {},
+     "bySubject": {}
+    },
+    "H6": {
+     "unique": 12,
+     "byConfidence": {
+      "medium": 1,
+      "low": 11
+     },
+     "bySubject": {
+      "unknown": 12
+     }
+    }
+   },
+   "readouts": {
+    "credentials": {
+     "harmBand": "H1",
+     "score": 0,
+     "confidence": "low",
+     "lowerBound": false,
+     "drivers": {
+      "private_key": 0,
+      "aws_access_key": 0,
+      "api_token": 0,
+      "jwt": 0,
+      "password_cue": 0,
+      "tokenized_url": 0
+     }
+    },
+    "intimateSafety": {
+     "harmBand": "H3",
+     "score": 9,
+     "confidence": "low",
+     "lowerBound": false,
+     "note": "Keyword and pattern hits. Not a diagnosis.",
+     "drivers": {
+      "health": 1,
+      "religion": 0,
+      "sexual_orientation": 0,
+      "children": 0,
+      "precise_location": 0,
+      "immigration": 0
+     }
+    },
+    "identityBridges": {
+     "harmBand": "H4",
+     "score": 0,
+     "confidence": "low",
+     "lowerBound": false,
+     "aboutYou": 0,
+     "aboutOthers": 0,
+     "note": "Account-holder bridges only. Name-bag and unvalidated phones are corpus volume."
+    },
+    "corpusVolume": {
+     "harmBand": "H6",
+     "score": 66,
+     "confidence": "low",
+     "lowerBound": false,
+     "legacyLevel": "oversharer"
+    }
+   },
+   "coverage": {
+    "truncated": false,
+    "charactersScanned": 739,
+    "charactersSkipped": 0,
+    "truncationNote": null,
+    "codeBlocksSkipped": 0,
+    "assistantMessagesSkipped": 0,
+    "userJsonPresent": null,
+    "userJsonSkipped": null,
+    "binaryAttachments": null,
+    "unreadMembers": [],
+    "lowerBound": false
+   }
   },
   "gemini-saved-info.txt": {
+   "schemaVersion": 2,
    "source": {
     "format": "text",
     "label": "pasted memories",
@@ -202,6 +538,7 @@
     "assistantMessagesSkipped": 0,
     "codeBlocksSkipped": 0,
     "charactersScanned": 403,
+    "charactersSkipped": 0,
     "truncated": false,
     "failedChunks": 0
    },
@@ -341,9 +678,241 @@
      "unique": 0,
      "examples": []
     }
-   ]
+   ],
+   "findings": [
+    {
+     "harm": "H2",
+     "kind": "date_of_birth",
+     "label": "Date of birth",
+     "confidence": "medium",
+     "subject": "account_holder",
+     "masked": "••/••/••••",
+     "category": "birthdays",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-01"
+    },
+    {
+     "harm": "H3",
+     "kind": "health",
+     "label": "Health",
+     "confidence": "medium",
+     "subject": "account_holder",
+     "masked": "a•••••••",
+     "category": null,
+     "source": "detector",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-02"
+    },
+    {
+     "harm": "H4",
+     "kind": "phone",
+     "label": "Phone number",
+     "confidence": "high",
+     "subject": "account_holder",
+     "masked": "+••• •• ••• ••87",
+     "category": "phones",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-03"
+    },
+    {
+     "harm": "H4",
+     "kind": "email",
+     "label": "Email",
+     "confidence": "medium",
+     "subject": "unknown",
+     "masked": "k•••.••••••@e••••••.com",
+     "category": "emails",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-04"
+    },
+    {
+     "harm": "H6",
+     "kind": "age",
+     "label": "Age",
+     "confidence": "medium",
+     "subject": "account_holder",
+     "masked": "30s",
+     "category": "ages",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-05"
+    },
+    {
+     "harm": "H6",
+     "kind": "name",
+     "label": "Name",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "K••• M•••••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-06"
+    },
+    {
+     "harm": "H6",
+     "kind": "org",
+     "label": "Organisation",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "B••• R••• S••••••",
+     "category": "orgs",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-07"
+    },
+    {
+     "harm": "H6",
+     "kind": "place",
+     "label": "Place",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "A••••",
+     "category": "places",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-08"
+    },
+    {
+     "harm": "H6",
+     "kind": "place",
+     "label": "Place",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "L•••••",
+     "category": "places",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-09"
+    }
+   ],
+   "bands": {
+    "H1": {
+     "unique": 0,
+     "byConfidence": {},
+     "bySubject": {}
+    },
+    "H2": {
+     "unique": 1,
+     "byConfidence": {
+      "medium": 1
+     },
+     "bySubject": {
+      "account_holder": 1
+     }
+    },
+    "H3": {
+     "unique": 1,
+     "byConfidence": {
+      "medium": 1
+     },
+     "bySubject": {
+      "account_holder": 1
+     }
+    },
+    "H4": {
+     "unique": 2,
+     "byConfidence": {
+      "high": 1,
+      "medium": 1
+     },
+     "bySubject": {
+      "account_holder": 1,
+      "unknown": 1
+     }
+    },
+    "H5": {
+     "unique": 0,
+     "byConfidence": {},
+     "bySubject": {}
+    },
+    "H6": {
+     "unique": 5,
+     "byConfidence": {
+      "medium": 1,
+      "low": 4
+     },
+     "bySubject": {
+      "account_holder": 1,
+      "unknown": 4
+     }
+    }
+   },
+   "readouts": {
+    "credentials": {
+     "harmBand": "H1",
+     "score": 0,
+     "confidence": "low",
+     "lowerBound": false,
+     "drivers": {
+      "private_key": 0,
+      "aws_access_key": 0,
+      "api_token": 0,
+      "jwt": 0,
+      "password_cue": 0,
+      "tokenized_url": 0
+     }
+    },
+    "intimateSafety": {
+     "harmBand": "H3",
+     "score": 29,
+     "confidence": "medium",
+     "lowerBound": false,
+     "note": "Keyword and pattern hits. Not a diagnosis.",
+     "drivers": {
+      "health": 1,
+      "religion": 0,
+      "sexual_orientation": 0,
+      "children": 0,
+      "precise_location": 0,
+      "immigration": 0
+     }
+    },
+    "identityBridges": {
+     "harmBand": "H4",
+     "score": 49,
+     "confidence": "high",
+     "lowerBound": false,
+     "aboutYou": 1,
+     "aboutOthers": 0,
+     "note": "Account-holder bridges only. Name-bag and unvalidated phones are corpus volume."
+    },
+    "corpusVolume": {
+     "harmBand": "H6",
+     "score": 39,
+     "confidence": "low",
+     "lowerBound": false,
+     "legacyLevel": "chatty"
+    }
+   },
+   "coverage": {
+    "truncated": false,
+    "charactersScanned": 403,
+    "charactersSkipped": 0,
+    "truncationNote": null,
+    "codeBlocksSkipped": 0,
+    "assistantMessagesSkipped": 0,
+    "userJsonPresent": null,
+    "userJsonSkipped": null,
+    "binaryAttachments": null,
+    "unreadMembers": [],
+    "lowerBound": false
+   }
   },
   "bot-answer-what-do-you-remember.txt": {
+   "schemaVersion": 2,
    "source": {
     "format": "text",
     "label": "pasted memories",
@@ -356,6 +925,7 @@
     "assistantMessagesSkipped": 0,
     "codeBlocksSkipped": 0,
     "charactersScanned": 714,
+    "charactersSkipped": 0,
     "truncated": false,
     "failedChunks": 0
    },
@@ -502,9 +1072,247 @@
      "unique": 0,
      "examples": []
     }
-   ]
+   ],
+   "findings": [
+    {
+     "harm": "H2",
+     "kind": "date_of_birth",
+     "label": "Date of birth",
+     "confidence": "medium",
+     "subject": "unknown",
+     "masked": "••/••/••••",
+     "category": "birthdays",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-01"
+    },
+    {
+     "harm": "H4",
+     "kind": "phone",
+     "label": "Phone number",
+     "confidence": "high",
+     "subject": "unknown",
+     "masked": "+• ••• ••• ••19",
+     "category": "phones",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-02"
+    },
+    {
+     "harm": "H4",
+     "kind": "email",
+     "label": "Email",
+     "confidence": "medium",
+     "subject": "unknown",
+     "masked": "s••••••••@e••••••.org",
+     "category": "emails",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-03"
+    },
+    {
+     "harm": "H4",
+     "kind": "email",
+     "label": "Email",
+     "confidence": "medium",
+     "subject": "unknown",
+     "masked": "s.••••••@l••••••••••.•••••••.edu",
+     "category": "emails",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-04"
+    },
+    {
+     "harm": "H6",
+     "kind": "name",
+     "label": "Name",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "S•• R•••••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-05"
+    },
+    {
+     "harm": "H6",
+     "kind": "name",
+     "label": "Name",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "J••••• L••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-06"
+    },
+    {
+     "harm": "H6",
+     "kind": "org",
+     "label": "Organisation",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "L•••••• P••• H••• S•••••",
+     "category": "orgs",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-07"
+    },
+    {
+     "harm": "H6",
+     "kind": "org",
+     "label": "Organisation",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "F•••• S••••• B•••",
+     "category": "orgs",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-08"
+    },
+    {
+     "harm": "H6",
+     "kind": "place",
+     "label": "Place",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "D•••••",
+     "category": "places",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-09"
+    },
+    {
+     "harm": "H6",
+     "kind": "place",
+     "label": "Place",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "C•••••••",
+     "category": "places",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-10"
+    }
+   ],
+   "bands": {
+    "H1": {
+     "unique": 0,
+     "byConfidence": {},
+     "bySubject": {}
+    },
+    "H2": {
+     "unique": 1,
+     "byConfidence": {
+      "medium": 1
+     },
+     "bySubject": {
+      "unknown": 1
+     }
+    },
+    "H3": {
+     "unique": 0,
+     "byConfidence": {},
+     "bySubject": {}
+    },
+    "H4": {
+     "unique": 3,
+     "byConfidence": {
+      "high": 1,
+      "medium": 2
+     },
+     "bySubject": {
+      "unknown": 3
+     }
+    },
+    "H5": {
+     "unique": 0,
+     "byConfidence": {},
+     "bySubject": {}
+    },
+    "H6": {
+     "unique": 6,
+     "byConfidence": {
+      "low": 6
+     },
+     "bySubject": {
+      "unknown": 6
+     }
+    }
+   },
+   "readouts": {
+    "credentials": {
+     "harmBand": "H1",
+     "score": 0,
+     "confidence": "low",
+     "lowerBound": false,
+     "drivers": {
+      "private_key": 0,
+      "aws_access_key": 0,
+      "api_token": 0,
+      "jwt": 0,
+      "password_cue": 0,
+      "tokenized_url": 0
+     }
+    },
+    "intimateSafety": {
+     "harmBand": "H3",
+     "score": 0,
+     "confidence": "low",
+     "lowerBound": false,
+     "note": "Keyword and pattern hits. Not a diagnosis.",
+     "drivers": {
+      "health": 0,
+      "religion": 0,
+      "sexual_orientation": 0,
+      "children": 0,
+      "precise_location": 0,
+      "immigration": 0
+     }
+    },
+    "identityBridges": {
+     "harmBand": "H4",
+     "score": 0,
+     "confidence": "low",
+     "lowerBound": false,
+     "aboutYou": 0,
+     "aboutOthers": 0,
+     "note": "Account-holder bridges only. Name-bag and unvalidated phones are corpus volume."
+    },
+    "corpusVolume": {
+     "harmBand": "H6",
+     "score": 50,
+     "confidence": "low",
+     "lowerBound": false,
+     "legacyLevel": "oversharer"
+    }
+   },
+   "coverage": {
+    "truncated": false,
+    "charactersScanned": 714,
+    "charactersSkipped": 0,
+    "truncationNote": null,
+    "codeBlocksSkipped": 0,
+    "assistantMessagesSkipped": 0,
+    "userJsonPresent": null,
+    "userJsonSkipped": null,
+    "binaryAttachments": null,
+    "unreadMembers": [],
+    "lowerBound": false
+   }
   },
   "clean-memory.txt": {
+   "schemaVersion": 2,
    "source": {
     "format": "text",
     "label": "pasted memories",
@@ -517,6 +1325,7 @@
     "assistantMessagesSkipped": 0,
     "codeBlocksSkipped": 0,
     "charactersScanned": 258,
+    "charactersSkipped": 0,
     "truncated": false,
     "failedChunks": 0
    },
@@ -617,9 +1426,103 @@
      "unique": 0,
      "examples": []
     }
-   ]
+   ],
+   "findings": [],
+   "bands": {
+    "H1": {
+     "unique": 0,
+     "byConfidence": {},
+     "bySubject": {}
+    },
+    "H2": {
+     "unique": 0,
+     "byConfidence": {},
+     "bySubject": {}
+    },
+    "H3": {
+     "unique": 0,
+     "byConfidence": {},
+     "bySubject": {}
+    },
+    "H4": {
+     "unique": 0,
+     "byConfidence": {},
+     "bySubject": {}
+    },
+    "H5": {
+     "unique": 0,
+     "byConfidence": {},
+     "bySubject": {}
+    },
+    "H6": {
+     "unique": 0,
+     "byConfidence": {},
+     "bySubject": {}
+    }
+   },
+   "readouts": {
+    "credentials": {
+     "harmBand": "H1",
+     "score": 0,
+     "confidence": "low",
+     "lowerBound": false,
+     "drivers": {
+      "private_key": 0,
+      "aws_access_key": 0,
+      "api_token": 0,
+      "jwt": 0,
+      "password_cue": 0,
+      "tokenized_url": 0
+     }
+    },
+    "intimateSafety": {
+     "harmBand": "H3",
+     "score": 0,
+     "confidence": "low",
+     "lowerBound": false,
+     "note": "Keyword and pattern hits. Not a diagnosis.",
+     "drivers": {
+      "health": 0,
+      "religion": 0,
+      "sexual_orientation": 0,
+      "children": 0,
+      "precise_location": 0,
+      "immigration": 0
+     }
+    },
+    "identityBridges": {
+     "harmBand": "H4",
+     "score": 0,
+     "confidence": "low",
+     "lowerBound": false,
+     "aboutYou": 0,
+     "aboutOthers": 0,
+     "note": "Account-holder bridges only. Name-bag and unvalidated phones are corpus volume."
+    },
+    "corpusVolume": {
+     "harmBand": "H6",
+     "score": 0,
+     "confidence": "low",
+     "lowerBound": false,
+     "legacyLevel": "clean"
+    }
+   },
+   "coverage": {
+    "truncated": false,
+    "charactersScanned": 258,
+    "charactersSkipped": 0,
+    "truncationNote": null,
+    "codeBlocksSkipped": 0,
+    "assistantMessagesSkipped": 0,
+    "userJsonPresent": null,
+    "userJsonSkipped": null,
+    "binaryAttachments": null,
+    "unreadMembers": [],
+    "lowerBound": false
+   }
   },
   "chatgpt-export.zip": {
+   "schemaVersion": 2,
    "source": {
     "format": "chatgpt_export",
     "label": "ChatGPT export",
@@ -633,6 +1536,7 @@
     "assistantMessagesSkipped": 7,
     "codeBlocksSkipped": 1,
     "charactersScanned": 1027,
+    "charactersSkipped": 0,
     "truncated": false,
     "failedChunks": 0
    },
@@ -798,9 +1702,385 @@
       }
      ]
     }
-   ]
+   ],
+   "findings": [
+    {
+     "harm": "H2",
+     "kind": "account_email",
+     "label": "Account email",
+     "confidence": "confirmed",
+     "subject": "account_holder",
+     "masked": "p••••.•@e••••••.org",
+     "category": null,
+     "inCodeBlock": false,
+     "count": 1,
+     "source": "envelope",
+     "id": "f-01"
+    },
+    {
+     "harm": "H2",
+     "kind": "account_phone",
+     "label": "Account phone",
+     "confidence": "confirmed",
+     "subject": "account_holder",
+     "masked": "+•••••••••47",
+     "category": null,
+     "inCodeBlock": false,
+     "count": 1,
+     "source": "envelope",
+     "id": "f-02"
+    },
+    {
+     "harm": "H2",
+     "kind": "date_of_birth",
+     "label": "Date of birth",
+     "confidence": "medium",
+     "subject": "account_holder",
+     "masked": "••/••/••••",
+     "category": "birthdays",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-03"
+    },
+    {
+     "harm": "H3",
+     "kind": "street_address",
+     "label": "Street address",
+     "confidence": "medium",
+     "subject": "account_holder",
+     "masked": "1• E•• G••••",
+     "category": null,
+     "source": "detector",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-04"
+    },
+    {
+     "harm": "H4",
+     "kind": "phone",
+     "label": "Phone number",
+     "confidence": "high",
+     "subject": "account_holder",
+     "masked": "+• ••• ••• ••47",
+     "category": "phones",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-05"
+    },
+    {
+     "harm": "H4",
+     "kind": "profile_url",
+     "label": "Profile URL",
+     "confidence": "medium",
+     "subject": "account_holder",
+     "masked": "github.com/•••",
+     "category": null,
+     "source": "detector",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-06"
+    },
+    {
+     "harm": "H4",
+     "kind": "email",
+     "label": "Email",
+     "confidence": "medium",
+     "subject": "unknown",
+     "masked": "p••••.•@e••••••.org",
+     "category": "emails",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-07"
+    },
+    {
+     "harm": "H4",
+     "kind": "handle",
+     "label": "Social handle",
+     "confidence": "medium",
+     "subject": "unknown",
+     "masked": "@p•••••••••",
+     "category": "handles",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-08"
+    },
+    {
+     "harm": "H6",
+     "kind": "age",
+     "label": "Age",
+     "confidence": "medium",
+     "subject": "account_holder",
+     "masked": "30s",
+     "category": "ages",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-09"
+    },
+    {
+     "harm": "H6",
+     "kind": "url",
+     "label": "URL",
+     "confidence": "medium",
+     "subject": "unknown",
+     "masked": "github.com/•••",
+     "category": "links",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-10"
+    },
+    {
+     "harm": "H6",
+     "kind": "name",
+     "label": "Name",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "P••••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-11"
+    },
+    {
+     "harm": "H6",
+     "kind": "name",
+     "label": "Name",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "P••••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-12"
+    },
+    {
+     "harm": "H6",
+     "kind": "name",
+     "label": "Name",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "T•• B•••••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-13"
+    },
+    {
+     "harm": "H6",
+     "kind": "name",
+     "label": "Name",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "P•••• N••••••••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-14"
+    },
+    {
+     "harm": "H6",
+     "kind": "name",
+     "label": "Name",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "M••• C•••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-15"
+    },
+    {
+     "harm": "H6",
+     "kind": "name",
+     "label": "Name",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "L•• G•••••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-16"
+    },
+    {
+     "harm": "H6",
+     "kind": "name",
+     "label": "Name",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "L••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-17"
+    },
+    {
+     "harm": "H6",
+     "kind": "name",
+     "label": "Name",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "A••••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-18"
+    },
+    {
+     "harm": "H6",
+     "kind": "org",
+     "label": "Organisation",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "C•••••• H•••••",
+     "category": "orgs",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-19"
+    },
+    {
+     "harm": "H6",
+     "kind": "org",
+     "label": "Organisation",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "I••••••",
+     "category": "orgs",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-20"
+    }
+   ],
+   "bands": {
+    "H1": {
+     "unique": 0,
+     "byConfidence": {},
+     "bySubject": {}
+    },
+    "H2": {
+     "unique": 3,
+     "byConfidence": {
+      "confirmed": 2,
+      "medium": 1
+     },
+     "bySubject": {
+      "account_holder": 3
+     }
+    },
+    "H3": {
+     "unique": 1,
+     "byConfidence": {
+      "medium": 1
+     },
+     "bySubject": {
+      "account_holder": 1
+     }
+    },
+    "H4": {
+     "unique": 4,
+     "byConfidence": {
+      "high": 1,
+      "medium": 3
+     },
+     "bySubject": {
+      "account_holder": 2,
+      "unknown": 2
+     }
+    },
+    "H5": {
+     "unique": 0,
+     "byConfidence": {},
+     "bySubject": {}
+    },
+    "H6": {
+     "unique": 16,
+     "byConfidence": {
+      "medium": 2,
+      "low": 14
+     },
+     "bySubject": {
+      "account_holder": 1,
+      "unknown": 15
+     }
+    }
+   },
+   "readouts": {
+    "credentials": {
+     "harmBand": "H1",
+     "score": 0,
+     "confidence": "low",
+     "lowerBound": true,
+     "drivers": {
+      "private_key": 0,
+      "aws_access_key": 0,
+      "api_token": 0,
+      "jwt": 0,
+      "password_cue": 0,
+      "tokenized_url": 0
+     }
+    },
+    "intimateSafety": {
+     "harmBand": "H3",
+     "score": 29,
+     "confidence": "medium",
+     "lowerBound": true,
+     "note": "Keyword and pattern hits. Not a diagnosis.",
+     "drivers": {
+      "health": 0,
+      "religion": 0,
+      "sexual_orientation": 0,
+      "children": 0,
+      "precise_location": 1,
+      "immigration": 0
+     }
+    },
+    "identityBridges": {
+     "harmBand": "H4",
+     "score": 97,
+     "confidence": "confirmed",
+     "lowerBound": true,
+     "aboutYou": 4,
+     "aboutOthers": 0,
+     "note": "Account-holder bridges only. Name-bag and unvalidated phones are corpus volume."
+    },
+    "corpusVolume": {
+     "harmBand": "H6",
+     "score": 70,
+     "confidence": "low",
+     "lowerBound": true,
+     "legacyLevel": "oversharer"
+    }
+   },
+   "coverage": {
+    "truncated": false,
+    "charactersScanned": 1027,
+    "charactersSkipped": 0,
+    "truncationNote": null,
+    "codeBlocksSkipped": 1,
+    "assistantMessagesSkipped": 7,
+    "userJsonPresent": true,
+    "userJsonSkipped": true,
+    "binaryAttachments": 0,
+    "unreadMembers": [],
+    "lowerBound": true
+   }
   },
   "claude-export.zip": {
+   "schemaVersion": 2,
    "source": {
     "format": "claude_export",
     "label": "Claude export",
@@ -816,6 +2096,7 @@
     "assistantMessagesSkipped": 3,
     "codeBlocksSkipped": 0,
     "charactersScanned": 942,
+    "charactersSkipped": 0,
     "truncated": false,
     "failedChunks": 0
    },
@@ -980,9 +2261,328 @@
      "unique": 0,
      "examples": []
     }
-   ]
+   ],
+   "findings": [
+    {
+     "harm": "H2",
+     "kind": "iban",
+     "label": "IBAN",
+     "confidence": "high",
+     "subject": "unknown",
+     "masked": "•••• •••• •••• •••• •••• 00",
+     "category": "bank",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-01"
+    },
+    {
+     "harm": "H2",
+     "kind": "date_of_birth",
+     "label": "Date of birth",
+     "confidence": "medium",
+     "subject": "account_holder",
+     "masked": "•••• •• ••.••.••••",
+     "category": "birthdays",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-02"
+    },
+    {
+     "harm": "H4",
+     "kind": "phone",
+     "label": "Phone number",
+     "confidence": "high",
+     "subject": "unknown",
+     "masked": "+• ••• ••• ••01",
+     "category": "phones",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-03"
+    },
+    {
+     "harm": "H4",
+     "kind": "phone",
+     "label": "Phone number",
+     "confidence": "high",
+     "subject": "unknown",
+     "masked": "+•• ••• ••• ••98",
+     "category": "phones",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 2,
+     "id": "f-04"
+    },
+    {
+     "harm": "H4",
+     "kind": "email",
+     "label": "Email",
+     "confidence": "medium",
+     "subject": "unknown",
+     "masked": "i•••••.••••••@e••••••.de",
+     "category": "emails",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-05"
+    },
+    {
+     "harm": "H4",
+     "kind": "email",
+     "label": "Email",
+     "confidence": "medium",
+     "subject": "unknown",
+     "masked": "m•••••.•••••@e••••••.net",
+     "category": "emails",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 2,
+     "id": "f-06"
+    },
+    {
+     "harm": "H6",
+     "kind": "date",
+     "label": "Date",
+     "confidence": "medium",
+     "subject": "unknown",
+     "masked": "••.••.2026",
+     "category": "dates",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-07"
+    },
+    {
+     "harm": "H6",
+     "kind": "name",
+     "label": "Name",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "M•••••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 3,
+     "id": "f-08"
+    },
+    {
+     "harm": "H6",
+     "kind": "name",
+     "label": "Name",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "A•••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-09"
+    },
+    {
+     "harm": "H6",
+     "kind": "name",
+     "label": "Name",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "L•••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 3,
+     "id": "f-10"
+    },
+    {
+     "harm": "H6",
+     "kind": "name",
+     "label": "Name",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "I••••• S•••••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-11"
+    },
+    {
+     "harm": "H6",
+     "kind": "name",
+     "label": "Name",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "D••• K•••••••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-12"
+    },
+    {
+     "harm": "H6",
+     "kind": "org",
+     "label": "Organisation",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "N•••••••• L••••••••",
+     "category": "orgs",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-13"
+    },
+    {
+     "harm": "H6",
+     "kind": "place",
+     "label": "Place",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "H••••••",
+     "category": "places",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 4,
+     "id": "f-14"
+    },
+    {
+     "harm": "H6",
+     "kind": "place",
+     "label": "Place",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "T••••••",
+     "category": "places",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 3,
+     "id": "f-15"
+    },
+    {
+     "harm": "H6",
+     "kind": "place",
+     "label": "Place",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "M•••• G••••",
+     "category": "places",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-16"
+    }
+   ],
+   "bands": {
+    "H1": {
+     "unique": 0,
+     "byConfidence": {},
+     "bySubject": {}
+    },
+    "H2": {
+     "unique": 2,
+     "byConfidence": {
+      "high": 1,
+      "medium": 1
+     },
+     "bySubject": {
+      "unknown": 1,
+      "account_holder": 1
+     }
+    },
+    "H3": {
+     "unique": 0,
+     "byConfidence": {},
+     "bySubject": {}
+    },
+    "H4": {
+     "unique": 4,
+     "byConfidence": {
+      "high": 2,
+      "medium": 2
+     },
+     "bySubject": {
+      "unknown": 4
+     }
+    },
+    "H5": {
+     "unique": 0,
+     "byConfidence": {},
+     "bySubject": {}
+    },
+    "H6": {
+     "unique": 10,
+     "byConfidence": {
+      "medium": 1,
+      "low": 9
+     },
+     "bySubject": {
+      "unknown": 10
+     }
+    }
+   },
+   "readouts": {
+    "credentials": {
+     "harmBand": "H1",
+     "score": 0,
+     "confidence": "low",
+     "lowerBound": true,
+     "drivers": {
+      "private_key": 0,
+      "aws_access_key": 0,
+      "api_token": 0,
+      "jwt": 0,
+      "password_cue": 0,
+      "tokenized_url": 0
+     }
+    },
+    "intimateSafety": {
+     "harmBand": "H3",
+     "score": 0,
+     "confidence": "low",
+     "lowerBound": true,
+     "note": "Keyword and pattern hits. Not a diagnosis.",
+     "drivers": {
+      "health": 0,
+      "religion": 0,
+      "sexual_orientation": 0,
+      "children": 0,
+      "precise_location": 0,
+      "immigration": 0
+     }
+    },
+    "identityBridges": {
+     "harmBand": "H4",
+     "score": 0,
+     "confidence": "low",
+     "lowerBound": true,
+     "aboutYou": 0,
+     "aboutOthers": 0,
+     "note": "Account-holder bridges only. Name-bag and unvalidated phones are corpus volume."
+    },
+    "corpusVolume": {
+     "harmBand": "H6",
+     "score": 71,
+     "confidence": "low",
+     "lowerBound": true,
+     "legacyLevel": "oversharer"
+    }
+   },
+   "coverage": {
+    "truncated": false,
+    "charactersScanned": 942,
+    "charactersSkipped": 0,
+    "truncationNote": null,
+    "codeBlocksSkipped": 0,
+    "assistantMessagesSkipped": 3,
+    "userJsonPresent": false,
+    "userJsonSkipped": false,
+    "binaryAttachments": 0,
+    "unreadMembers": [],
+    "lowerBound": true
+   }
   },
   "chatgpt-export-large.zip": {
+   "schemaVersion": 2,
    "source": {
     "format": "chatgpt_export",
     "label": "ChatGPT export",
@@ -996,6 +2596,7 @@
     "assistantMessagesSkipped": 7932,
     "codeBlocksSkipped": 222,
     "charactersScanned": 986091,
+    "charactersSkipped": 0,
     "truncated": false,
     "failedChunks": 0
    },
@@ -1148,7 +2749,423 @@
      "unique": 0,
      "examples": []
     }
-   ]
+   ],
+   "findings": [
+    {
+     "harm": "H4",
+     "kind": "phone",
+     "label": "Phone number",
+     "confidence": "high",
+     "subject": "account_holder",
+     "masked": "+• ••• ••• ••64",
+     "category": "phones",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 7,
+     "id": "f-01"
+    },
+    {
+     "harm": "H4",
+     "kind": "phone",
+     "label": "Phone number",
+     "confidence": "high",
+     "subject": "account_holder",
+     "masked": "+• ••• ••• ••43",
+     "category": "phones",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 12,
+     "id": "f-02"
+    },
+    {
+     "harm": "H4",
+     "kind": "phone",
+     "label": "Phone number",
+     "confidence": "high",
+     "subject": "account_holder",
+     "masked": "+• ••• ••• ••26",
+     "category": "phones",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 7,
+     "id": "f-03"
+    },
+    {
+     "harm": "H4",
+     "kind": "phone",
+     "label": "Phone number",
+     "confidence": "high",
+     "subject": "account_holder",
+     "masked": "+• ••• ••• ••22",
+     "category": "phones",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 11,
+     "id": "f-04"
+    },
+    {
+     "harm": "H4",
+     "kind": "phone",
+     "label": "Phone number",
+     "confidence": "high",
+     "subject": "account_holder",
+     "masked": "+• ••• ••• ••42",
+     "category": "phones",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 5,
+     "id": "f-05"
+    },
+    {
+     "harm": "H4",
+     "kind": "phone",
+     "label": "Phone number",
+     "confidence": "high",
+     "subject": "account_holder",
+     "masked": "+• ••• ••• ••12",
+     "category": "phones",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 3,
+     "id": "f-06"
+    },
+    {
+     "harm": "H4",
+     "kind": "phone",
+     "label": "Phone number",
+     "confidence": "high",
+     "subject": "account_holder",
+     "masked": "+• ••• ••• ••83",
+     "category": "phones",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 12,
+     "id": "f-07"
+    },
+    {
+     "harm": "H4",
+     "kind": "phone",
+     "label": "Phone number",
+     "confidence": "high",
+     "subject": "account_holder",
+     "masked": "+• ••• ••• ••57",
+     "category": "phones",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 7,
+     "id": "f-08"
+    },
+    {
+     "harm": "H4",
+     "kind": "phone",
+     "label": "Phone number",
+     "confidence": "high",
+     "subject": "account_holder",
+     "masked": "+• ••• ••• ••25",
+     "category": "phones",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 2,
+     "id": "f-09"
+    },
+    {
+     "harm": "H4",
+     "kind": "phone",
+     "label": "Phone number",
+     "confidence": "high",
+     "subject": "account_holder",
+     "masked": "+• ••• ••• ••87",
+     "category": "phones",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 4,
+     "id": "f-10"
+    },
+    {
+     "harm": "H4",
+     "kind": "phone",
+     "label": "Phone number",
+     "confidence": "high",
+     "subject": "account_holder",
+     "masked": "+• ••• ••• ••05",
+     "category": "phones",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 3,
+     "id": "f-11"
+    },
+    {
+     "harm": "H4",
+     "kind": "phone",
+     "label": "Phone number",
+     "confidence": "high",
+     "subject": "account_holder",
+     "masked": "+• ••• ••• ••63",
+     "category": "phones",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 5,
+     "id": "f-12"
+    },
+    {
+     "harm": "H6",
+     "kind": "name",
+     "label": "Name",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "P••••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-13"
+    },
+    {
+     "harm": "H6",
+     "kind": "name",
+     "label": "Name",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "P••••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "id": "f-14"
+    },
+    {
+     "harm": "H6",
+     "kind": "name",
+     "label": "Name",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "E•••• M•••••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 14,
+     "id": "f-15"
+    },
+    {
+     "harm": "H6",
+     "kind": "name",
+     "label": "Name",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "A•••••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 139,
+     "id": "f-16"
+    },
+    {
+     "harm": "H6",
+     "kind": "name",
+     "label": "Name",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "Y••• L••••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 9,
+     "id": "f-17"
+    },
+    {
+     "harm": "H6",
+     "kind": "name",
+     "label": "Name",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "T•• E•••••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 8,
+     "id": "f-18"
+    },
+    {
+     "harm": "H6",
+     "kind": "name",
+     "label": "Name",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "E••••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 32,
+     "id": "f-19"
+    },
+    {
+     "harm": "H6",
+     "kind": "name",
+     "label": "Name",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "O•••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 29,
+     "id": "f-20"
+    },
+    {
+     "harm": "H6",
+     "kind": "name",
+     "label": "Name",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "D•••••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 129,
+     "id": "f-21"
+    },
+    {
+     "harm": "H6",
+     "kind": "name",
+     "label": "Name",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "M•• R••••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 11,
+     "id": "f-22"
+    },
+    {
+     "harm": "H6",
+     "kind": "name",
+     "label": "Name",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "E•••• E•••••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 13,
+     "id": "f-23"
+    },
+    {
+     "harm": "H6",
+     "kind": "name",
+     "label": "Name",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "C•••• E•••••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 18,
+     "id": "f-24"
+    }
+   ],
+   "bands": {
+    "H1": {
+     "unique": 0,
+     "byConfidence": {},
+     "bySubject": {}
+    },
+    "H2": {
+     "unique": 0,
+     "byConfidence": {},
+     "bySubject": {}
+    },
+    "H3": {
+     "unique": 0,
+     "byConfidence": {},
+     "bySubject": {}
+    },
+    "H4": {
+     "unique": 214,
+     "byConfidence": {
+      "high": 100,
+      "medium": 114
+     },
+     "bySubject": {
+      "account_holder": 100,
+      "unknown": 114
+     }
+    },
+    "H5": {
+     "unique": 0,
+     "byConfidence": {},
+     "bySubject": {}
+    },
+    "H6": {
+     "unique": 79,
+     "byConfidence": {
+      "low": 79
+     },
+     "bySubject": {
+      "unknown": 79
+     }
+    }
+   },
+   "readouts": {
+    "credentials": {
+     "harmBand": "H1",
+     "score": 0,
+     "confidence": "low",
+     "lowerBound": true,
+     "drivers": {
+      "private_key": 0,
+      "aws_access_key": 0,
+      "api_token": 0,
+      "jwt": 0,
+      "password_cue": 0,
+      "tokenized_url": 0
+     }
+    },
+    "intimateSafety": {
+     "harmBand": "H3",
+     "score": 0,
+     "confidence": "low",
+     "lowerBound": true,
+     "note": "Keyword and pattern hits. Not a diagnosis.",
+     "drivers": {
+      "health": 0,
+      "religion": 0,
+      "sexual_orientation": 0,
+      "children": 0,
+      "precise_location": 0,
+      "immigration": 0
+     }
+    },
+    "identityBridges": {
+     "harmBand": "H4",
+     "score": 100,
+     "confidence": "high",
+     "lowerBound": true,
+     "aboutYou": 100,
+     "aboutOthers": 0,
+     "note": "Account-holder bridges only. Name-bag and unvalidated phones are corpus volume."
+    },
+    "corpusVolume": {
+     "harmBand": "H6",
+     "score": 100,
+     "confidence": "low",
+     "lowerBound": true,
+     "legacyLevel": "biography"
+    }
+   },
+   "coverage": {
+    "truncated": false,
+    "charactersScanned": 986091,
+    "charactersSkipped": 0,
+    "truncationNote": null,
+    "codeBlocksSkipped": 222,
+    "assistantMessagesSkipped": 7932,
+    "userJsonPresent": false,
+    "userJsonSkipped": false,
+    "binaryAttachments": 0,
+    "unreadMembers": [],
+    "lowerBound": true
+   }
   }
  }
 }

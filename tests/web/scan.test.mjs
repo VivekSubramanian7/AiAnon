@@ -4,9 +4,10 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { createRules } from "../../web/lib/rules.js";
-import { extractFile, bytesSource } from "../../web/lib/extract.js";
+import { extractFile, bytesSource, extractText } from "../../web/lib/extract.js";
 import { scan, buildChunks, splitLinesKeepEnds } from "../../web/lib/scan.js";
 import { mask, exposureScore, levelFor } from "../../web/lib/report.js";
+import { readEnvelope, nullEnvelope } from "../../web/lib/envelope.js";
 
 const root = new URL("../../", import.meta.url);
 const lists = JSON.parse(readFileSync(new URL("web/data/lists.json", root), "utf8"));
@@ -17,7 +18,10 @@ for (const name of fixture.files) {
   test(`quick frisk report for ${name} equals Python`, async () => {
     const bytes = new Uint8Array(readFileSync(new URL(`samples/mock-memories/${name}`, root)));
     const extracted = await extractFile(bytesSource(name, bytes));
-    const { report } = await scan(extracted, findEntities);
+    const envelope = name.toLowerCase().endsWith(".zip")
+      ? await readEnvelope(name, bytes)
+      : nullEnvelope();
+    const { report } = await scan(extracted, findEntities, { envelope });
     delete report.elapsedMs;
     assert.deepEqual(report, fixture.reports[name]);
   });
@@ -31,6 +35,20 @@ test("chunks stay under the limit and keep segment spans", () => {
 
 test("splitlines keeps Python's line endings", () => {
   assert.deepEqual(splitLinesKeepEnds("a\r\nb\rc\u2028d"), ["a\r\n", "b\r", "c\u2028", "d"]);
+});
+
+test("H1–H3 detector kinds match between frisk and detective", async () => {
+  const text = readFileSync(new URL("samples/mock-memories/chatgpt-saved-memories.txt", root), "utf8");
+  const extracted = extractText(text);
+  const noNer = () => [];
+  const kinds = (report) =>
+    report.findings
+      .filter((f) => f.source === "detector" && ["H1", "H2", "H3"].includes(f.harm))
+      .map((f) => f.kind)
+      .sort();
+  const { report: a } = await scan(extracted, findEntities, { envelope: nullEnvelope() });
+  const { report: b } = await scan(extracted, noNer, { envelope: nullEnvelope() });
+  assert.deepEqual(kinds(a), kinds(b));
 });
 
 test("masks, score and levels", () => {

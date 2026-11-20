@@ -250,6 +250,19 @@ def test_score_and_levels():
 
 # ---------- full scan (real pipeline) ----------
 
+def test_scan_schema_v2_keys():
+    report = scan(extract_text("hello"))
+    for key in ("schemaVersion", "findings", "bands", "readouts", "coverage"):
+        assert key in report
+    assert report["schemaVersion"] == 2
+
+
+def test_scan_char_budget_skips_characters():
+    long_text = "word " * 100
+    report = scan(extract_text(long_text), char_budget=10)
+    assert report["source"]["charactersSkipped"] > 0
+
+
 def test_scan_finds_personal_details_in_memories():
     memories = "\n".join([
         "User's name is Dana Whitfield.",

@@ -69,6 +69,132 @@ const SOURCE_WORDS = { // exports mix messages, custom instructions, memories, a
   chatgpt_export: "things you wrote", claude_export: "things you wrote", text: "memories", json: "pieces of text",
 };
 
+const HARM_LEAD = new Set(["H1", "H2", "H3"]);
+const CONF_LEAD = new Set(["confirmed", "high", "medium"]);
+const READOUT_CARDS = [
+  ["credentials", "Credentials", "H1", "Live secrets in your chats"],
+  ["intimateSafety", "Intimate & safety", "H3", "Health, immigration, family — keyword pass, not a diagnosis"],
+  ["identityBridges", "Identity bridges", "H4", "Emails, handles, profile URLs — not name volume"],
+  ["corpusVolume", "Corpus volume", "H6", "Legacy exposure score — noisy names and phones"],
+];
+
+const isSchemaV2 = (report) => report.schemaVersion === 2 && report.readouts && report.findings;
+
+function meterSegments(score) {
+  const on = Math.max(1, Math.min(20, Math.round(score / 5)));
+  return Array.from({ length: 20 }, (_, i) => h("i", { class: i < on ? "on" : null }));
+}
+
+function coverageFootnote(coverage) {
+  if (!coverage?.lowerBound) return null;
+  let text = "These findings are a lower bound. Some of the export was not read.";
+  if (coverage.truncated) text += " Scanner stopped at 5M characters.";
+  return text;
+}
+
+function partitionFindings(findings) {
+  const lead = [];
+  const possible = [];
+  const unsure = [];
+  for (const f of findings) {
+    if (f.harm === "H3" && f.confidence === "low") {
+      possible.push(f);
+      continue;
+    }
+    if (HARM_LEAD.has(f.harm) && CONF_LEAD.has(f.confidence)) {
+      lead.push(f);
+      continue;
+    }
+    if (f.subject === "unknown" && f.harm !== "H1") unsure.push(f);
+  }
+  const aboutYou = lead.filter((f) => f.subject === "account_holder"
+    || (f.harm === "H1" && f.subject === "unknown"));
+  const aboutOthers = lead.filter((f) => f.subject === "third_party");
+  return { aboutYou, aboutOthers, possible, unsure, lead };
+}
+
+function findingRow(f) {
+  return h("li", { class: "finding-chip" },
+    h("span", { class: "finding-label" }, f.label),
+    h("code", { class: "finding-mask" }, f.masked),
+    f.count > 1 ? h("b", {}, `×${f.count.toLocaleString()}`) : null,
+    h("span", { class: "finding-meta" }, `${f.harm} · ${f.confidence}`),
+  );
+}
+
+function findingGroup(title, subtitle, rows) {
+  return h("div", { class: "finding-group" },
+    h("h3", {}, title),
+    subtitle ? h("p", { class: "finding-sub" }, subtitle) : null,
+    rows.length
+      ? h("ul", { class: "finding-list", "aria-label": title }, rows.map(findingRow))
+      : h("p", { class: "finding-empty" }, "None in this group."),
+  );
+}
+
+function readoutsSheet(readouts, coverage) {
+  const cards = READOUT_CARDS.map(([key, title, band, sub], index) => {
+    const row = readouts[key] || {};
+    const score = row.score ?? 0;
+    const isLegacy = key === "corpusVolume";
+    const hot = isLegacy ? score >= 50 : score >= 40;
+    return h("article", { class: `readout-card${isLegacy ? " legacy-score" : ""}`, style: { "--i": String(index) } },
+      h("div", { class: "readout-head" },
+        h("span", { class: "label" }, band),
+        h("span", { class: "meter-value" }, String(score), h("small", {}, " / 100")),
+      ),
+      h("h3", { class: "readout-title" }, title),
+      h("p", { class: "readout-sub" }, sub),
+      h("div", { class: `meter-bar${hot ? " is-hot" : ""}`, "aria-hidden": "true" }, meterSegments(score)),
+      h("p", { class: "readout-conf" }, `Confidence: ${row.confidence || "low"}`),
+      row.note ? h("p", { class: "readout-note" }, row.note) : null,
+    );
+  });
+  const foot = coverageFootnote(coverage);
+  return h("div", { class: "sheet readouts-sheet" },
+    h("div", { class: "sheet-head" }, h("span", {}, "Harm readouts"), h("span", {}, "Schema v2")),
+    h("div", { class: "readouts-body" },
+      h("p", { class: "kicker" }, "Three scores that matter if this file leaks — plus corpus volume."),
+      h("div", { class: "readouts-grid" }, cards),
+      foot ? h("p", { class: "coverage-footnote" }, foot) : null,
+    ),
+  );
+}
+
+function findingsSheet(report) {
+  const { aboutYou, aboutOthers, possible, unsure, lead } = partitionFindings(report.findings);
+  const kinds = new Set(report.findings.map((f) => f.kind));
+  const combo = kinds.has("employer") && kinds.has("immigration");
+  const sections = [
+    findingGroup("About you", "Account-holder spans and secrets you pasted.", aboutYou),
+    findingGroup("About others", "Third parties mentioned in your chats.", aboutOthers),
+  ];
+  if (possible.length) {
+    sections.push(h("details", { class: "finding-details" },
+      h("summary", {}, "Possible mentions (not confirmed)"),
+      h("div", { class: "finding-details-body" },
+        h("p", { class: "finding-sub" }, "Low-confidence H3 keyword hits — shown masked, not as diagnosis."),
+        h("ul", { class: "finding-list" }, possible.map(findingRow)),
+      ),
+    ));
+  }
+  if (unsure.length) {
+    sections.push(h("details", { class: "finding-details" },
+      h("summary", {}, "Not sure who"),
+      h("div", { class: "finding-details-body" },
+        h("ul", { class: "finding-list" }, unsure.map(findingRow)),
+      ),
+    ));
+  }
+  return h("div", { class: "sheet findings-sheet" },
+    h("div", { class: "sheet-head" }, h("span", {}, "What stands out"), h("span", {}, `H1–H3 · ${lead.length} lead rows`)),
+    h("div", { class: "findings-body" },
+      combo ? h("p", { class: "combo-line" }, "Employer and immigration themes both appear — a common phishing combo.") : null,
+      ...sections,
+    ),
+  );
+}
+
 // ---------- state ----------
 
 let worker = null;
@@ -323,17 +449,33 @@ function group(title, subtitle, categories, stage) {
 }
 
 function summaryText(report, stage) {
+  const level = LEVELS[report.level] || LEVELS.mild;
+  if (isSchemaV2(report)) {
+    const ro = report.readouts;
+    const { lead } = partitionFindings(report.findings);
+    const leadPhrase = lead.length === 0
+      ? "nothing critical stands out"
+      : `${plural(lead.length, "serious lead", "serious leads")} ${lead.length === 1 ? "stands" : "stand"} out`;
+    const conf = (key) => ro[key]?.confidence || "low";
+    const corpus = ro.corpusVolume?.score ?? report.score;
+    let text = `If this leaked, ${leadPhrase}. TMI: `
+      + `Credentials ${ro.credentials.score}/100 (${conf("credentials")}); `
+      + `Intimate & safety ${ro.intimateSafety.score}/100 (${conf("intimateSafety")}); `
+      + `Identity bridges ${ro.identityBridges.score}/100 (${conf("identityBridges")}); `
+      + `Corpus volume ${corpus}/100 (${level.stamp.toLowerCase()}).`;
+    const foot = coverageFootnote(report.coverage);
+    if (foot) text += ` ${foot}`;
+    return `${text} Checked in my own browser${stage === "frisk" ? " (quick frisk)" : " (detective)"}.`;
+  }
   const found = report.categories.filter((c) => c.unique > 0)
     .sort((a, b) => b.unique - a.unique)
     .map((c) => `${c.unique} ${c.label.toLowerCase()}`);
-  const level = LEVELS[report.level] || LEVELS.mild;
   return `My chatbot knows ${stage === "frisk" ? "at least " : ""}${plural(report.totals.unique, "thing", "things")} about me`
     + (found.length ? `: ${found.join(", ")}` : "")
     + `. Exposure score ${report.score}/100 (${level.stamp.toLowerCase()}). Checked in my own browser with TMI.`;
 }
 
-async function copySummary(button, report, stage) {
-  const text = summaryText(report, stage);
+async function copyText(text) {
   try {
     await navigator.clipboard.writeText(text);
   } catch {
@@ -343,6 +485,10 @@ async function copySummary(button, report, stage) {
     document.execCommand("copy");
     area.remove();
   }
+}
+
+async function copySummary(button, report, stage) {
+  await copyText(summaryText(report, stage));
   button.textContent = "Copied. Share responsibly.";
   setTimeout(() => { button.textContent = "Copy my results"; }, 2400);
 }
@@ -357,13 +503,14 @@ function revealLine(missed, dropped) {
 function renderReport(report, ctx) {
   const { stage } = ctx;
   const isFrisk = stage === "frisk";
+  const v2 = isSchemaV2(report);
   const level = LEVELS[report.level] || LEVELS.mild;
   const source = report.source;
   const n = report.totals.unique;
   const word = SOURCE_WORDS[source.format] || "pieces of text";
   const share = source.piecesScanned ? Math.round((100 * source.piecesWithFinds) / source.piecesScanned) : 0;
 
-  const segments = Array.from({ length: 20 }, (_, i) => h("i", { class: i < Math.round(report.score / 5) ? "on" : null }));
+  const segments = meterSegments(report.score);
   const facts = [
     ["Investigation", isFrisk ? "Quick frisk" : "Detective"],
     ["Source", source.label],
@@ -375,10 +522,17 @@ function renderReport(report, ctx) {
     ["Scan time", report.elapsedMs < 100 ? "under 0.1 s" : `${(report.elapsedMs / 1000).toFixed(1)} s`],
   ].filter(Boolean);
 
-  const title = isFrisk
-    ? (n === 0 ? ["The frisk found ", h("mark", {}, "nothing"), ". Yet."]
-      : ["Your AI knows at least ", h("mark", {}, plural(n, "thing", "things")), " about you."])
-    : ["Your AI knows ", h("mark", {}, n === 0 ? "nothing" : plural(n, "thing", "things")), " about you."];
+  const { lead } = v2 ? partitionFindings(report.findings) : { lead: [] };
+  let title;
+  if (v2) {
+    const headlineMark = lead.length === 0 ? "nothing critical" : plural(lead.length, "serious lead", "serious leads");
+    title = ["If this leaked, ", h("mark", {}, headlineMark), " stands out."];
+  } else if (isFrisk) {
+    title = n === 0 ? ["The frisk found ", h("mark", {}, "nothing"), ". Yet."]
+      : ["Your AI knows at least ", h("mark", {}, plural(n, "thing", "things")), " about you."];
+  } else {
+    title = ["Your AI knows ", h("mark", {}, n === 0 ? "nothing" : plural(n, "thing", "things")), " about you."];
+  }
   const stamp = isFrisk ? "Case open" : level.stamp;
 
   const direct = report.categories.filter((c) => c.tier === "direct");
@@ -397,30 +551,45 @@ function renderReport(report, ctx) {
   if (source.failedChunks) notes.push(`${source.failedChunks} chunk(s) couldn't be read and were skipped.`);
 
   detectiveUi = null;
-  const sections = [
-    h("div", { class: `sheet verdict${isFrisk ? " is-frisk" : ""}` },
-      h("div", { class: "sheet-head" }, h("span", {}, "Case file"),
-        h("span", {}, `${isFrisk ? "Quick frisk" : "Detective's report"} · ${source.label}`)),
-      h("div", { class: "verdict-body" },
-        h("div", { class: "verdict-top" },
-          h("h2", { class: "verdict-title", id: "verdict-title" }, ...title),
-          h("p", { class: `stamp${isFrisk ? " is-open" : ""}`, "aria-label": `Verdict: ${stamp}` }, stamp),
-        ),
-        isFrisk ? null : h("p", { class: "reveal" }, revealLine(ctx.missed ?? 0, ctx.dropped ?? 0)),
-        h("p", { class: "verdict-quip" }, level.quip),
-        h("div", { class: "meter" },
-          h("div", { class: "meter-head" },
-            h("span", { class: "label" }, isFrisk ? "Exposure score so far" : "Exposure score"),
-            h("span", { class: "meter-value" }, String(report.score), h("small", {}, " / 100")),
-          ),
-          h("div", { class: `meter-bar${report.score >= 50 ? " is-hot" : ""}`, "aria-hidden": "true" }, segments),
-        ),
-        h("dl", { class: "facts" }, facts.map(([k, v]) => h("div", {}, h("dt", {}, k), h("dd", {}, v)))),
+
+  const verdictSheet = h("div", { class: `sheet verdict${isFrisk ? " is-frisk" : ""}${v2 ? " is-v2" : ""}` },
+    h("div", { class: "sheet-head" }, h("span", {}, "Case file"),
+      h("span", {}, `${isFrisk ? "Quick frisk" : "Detective's report"} · ${source.label}`)),
+    h("div", { class: "verdict-body" },
+      h("div", { class: "verdict-top" },
+        h("h2", { class: "verdict-title", id: "verdict-title" }, ...title),
+        h("p", { class: `stamp${isFrisk ? " is-open" : ""}`, "aria-label": `Verdict: ${stamp}` }, stamp),
       ),
+      isFrisk ? null : h("p", { class: "reveal" }, revealLine(ctx.missed ?? 0, ctx.dropped ?? 0)),
+      h("p", { class: "verdict-quip" }, level.quip),
+      v2 ? null : h("div", { class: "meter" },
+        h("div", { class: "meter-head" },
+          h("span", { class: "label" }, isFrisk ? "Exposure score so far" : "Exposure score"),
+          h("span", { class: "meter-value" }, String(report.score), h("small", {}, " / 100")),
+        ),
+        h("div", { class: `meter-bar${report.score >= 50 ? " is-hot" : ""}`, "aria-hidden": "true" }, segments),
+      ),
+      h("dl", { class: "facts" }, facts.map(([k, v]) => h("div", {}, h("dt", {}, k), h("dd", {}, v)))),
     ),
+  );
+
+  const corpusGroups = v2
+    ? h("details", { class: "sheet corpus-detail" },
+      h("summary", { class: "corpus-summary" }, h("span", {}, "Corpus detail"), h("span", { class: "corpus-hint" }, "Legacy 11 categories · volume, not headline")),
+      h("div", { class: "corpus-detail-body" },
+        group("Points straight at you", "Any one of these identifies you on its own.", direct, stage),
+        group("Points at you in a crowd", "Harmless alone. Together they narrow it down to you.", context, stage),
+      ),
+    )
+    : null;
+
+  const sections = [
+    v2 ? readoutsSheet(report.readouts, report.coverage) : null,
+    v2 ? findingsSheet(report) : null,
+    verdictSheet,
     isFrisk ? detectivePanel(ctx.cached) : null,
-    group("Points straight at you", "Any one of these identifies you on its own.", direct, stage),
-    group("Points at you in a crowd", "Harmless alone. Together they narrow it down to you.", context, stage),
+    v2 ? corpusGroups : group("Points straight at you", "Any one of these identifies you on its own.", direct, stage),
+    v2 ? null : group("Points at you in a crowd", "Harmless alone. Together they narrow it down to you.", context, stage),
     h("div", { class: "sheet next" },
       h("div", { class: "sheet-head" }, h("span", {}, "Now what"), h("span", {}, "Damage control")),
       h("div", { class: "next-body" },
@@ -437,11 +606,15 @@ function renderReport(report, ctx) {
       h("span", { class: "note" }, "The copy is numbers only. No names, no digits, nothing to doxx.")),
     notes.length ? h("p", { class: "caveat" }, notes.join(" ")) : null,
     h("p", { class: "caveat" },
-      "Counts are distinct values, so ten mentions of your mum is still one name. "
-      + (isFrisk
-        ? "The quick frisk only knows names on its list (mostly English-speaking ones) and companies that end in Inc, Ltd and friends. "
-        : "")
-      + "We're good, not perfect: we miss most street addresses and health details, and sometimes call a band a company. English only."),
+      v2
+        ? "Counts are distinct values. Harm readouts use masked findings; corpus detail is the legacy category roll-up. "
+          + (isFrisk ? "The quick frisk only knows names on its list until you call the detective. " : "")
+          + "English only."
+        : "Counts are distinct values, so ten mentions of your mum is still one name. "
+          + (isFrisk
+            ? "The quick frisk only knows names on its list (mostly English-speaking ones) and companies that end in Inc, Ltd and friends. "
+            : "")
+          + "We're good, not perfect: we miss most street addresses and health details, and sometimes call a band a company. English only."),
   ];
   els.results.replaceChildren(...sections.filter(Boolean));
   els.results.hidden = false;
@@ -505,3 +678,19 @@ els.forget.addEventListener("click", async () => {
 
 spawnWorker();
 detectiveIsCached().then((cached) => { els.forget.hidden = !cached; });
+
+document.querySelectorAll(".copy-prompt").forEach((button) => {
+  const hint = button.querySelector(".copy-prompt-hint");
+  const defaultHint = hint?.textContent ?? "Copy";
+  button.addEventListener("click", async () => {
+    const text = button.dataset.copy ?? button.querySelector("q")?.textContent ?? "";
+    if (!text) return;
+    await copyText(text);
+    button.classList.add("is-copied");
+    if (hint) hint.textContent = "Copied";
+    setTimeout(() => {
+      button.classList.remove("is-copied");
+      if (hint) hint.textContent = defaultHint;
+    }, 2400);
+  });
+});

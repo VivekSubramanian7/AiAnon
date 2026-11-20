@@ -17,6 +17,7 @@ from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
+from lib.scanner.envelope import prepare_upload
 from lib.scanner.extract import extract_file, extract_text
 from lib.scanner.jobs import JobRunner, QueueFull
 
@@ -62,6 +63,11 @@ def home():
     return FileResponse(os.path.join(SITE_DIR, "index.html"))
 
 
+@app.get("/mirror-mock")
+def mirror_mock():
+    return FileResponse(os.path.join(SITE_DIR, "mirror-mock.html"))
+
+
 app.mount("/static", StaticFiles(directory=SITE_DIR), name="static")
 
 
@@ -84,7 +90,10 @@ async def start_scan(file: Optional[UploadFile] = File(None), text: Optional[str
     if file is not None and file.filename:
         raw = await _read_capped(file)
         name = file.filename
-        read = lambda: extract_file(name, raw)  # noqa: E731
+        if name.lower().endswith(".zip"):
+            read = lambda: prepare_upload(name, raw)  # noqa: E731
+        else:
+            read = lambda: extract_file(name, raw)  # noqa: E731
     elif text and text.strip():
         if len(text) > MAX_PASTE_CHARS:
             raise HTTPException(413, "That's a lot of pasting. Upload it as a file instead.")
@@ -107,5 +116,10 @@ def scan_status(job_id: str):
         return JSONResponse({"status": "error", "message": job.error}, status_code=422)
     body = {"status": job.status, "done": job.done, "total": job.total}
     if job.status == "done":
-        body["report"] = job.report
+        report = dict(job.report)
+        # Delete TMI_LEGACY_REPORT after the web UI ships; do not extend the strip list without a failing API test.
+        if os.getenv("TMI_LEGACY_REPORT") == "1":
+            for key in ("schemaVersion", "findings", "bands", "readouts", "coverage"):
+                report.pop(key, None)
+        body["report"] = report
     return body

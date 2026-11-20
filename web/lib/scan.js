@@ -5,6 +5,15 @@
 import { stripPatterns } from "./patterns.js";
 import { nameTokens } from "./entities.js";
 import { Aggregator, contextBefore, dropNestedDates, exposureScore, levelFor } from "./report.js";
+import { detect, fenceSlices } from "./detectors.js";
+import {
+  assemble,
+  bandCounts,
+  buildCoverage,
+  buildReadouts,
+  capFindings,
+  promote,
+} from "./sensitivity.js";
 
 export const MAX_CHUNK_CHARS = 7500;
 export const MAX_SCAN_CHARS = 5_000_000; // beyond this the rest is skipped and the report says so
@@ -83,30 +92,39 @@ function segmentsContaining(chunk, value, found) {
   }
 }
 
-/** Code blocks out, whitespace trimmed, 5 million character cap: one entry per segment. */
-export function prepareTexts(extracted) {
+/** Original segment text before blanking, blanked texts, coverage counters (port of scan.py loop). */
+export function prepareTexts(extracted, charBudget = MAX_SCAN_CHARS) {
   let codeBlocks = 0;
-  let budget = MAX_SCAN_CHARS;
+  let budget = charBudget;
   let truncated = false;
+  let charsSkipped = 0;
+  const originalPieces = [];
   const texts = [];
+  let totalPrepared = 0;
+
   for (const segment of extracted.segments) {
+    const raw = segment.text;
+    totalPrepared += raw.length;
     if (budget <= 0) {
-      truncated = true; // segments left over that we won't scan
-      break;
+      truncated = true;
+      charsSkipped += raw.length;
+      continue;
     }
-    let text = segment.text.replace(CODE_BLOCK_RE, () => {
+    let piece = raw;
+    if (piece.length > budget) {
+      truncated = true;
+      charsSkipped += piece.length - budget;
+      piece = piece.slice(0, budget);
+    }
+    budget -= piece.length;
+    originalPieces.push(piece);
+    const blanked = piece.replace(CODE_BLOCK_RE, () => {
       codeBlocks += 1;
       return " ";
     });
-    text = pyStrip(text);
-    if (text.length > budget) {
-      truncated = true;
-      text = text.slice(0, budget);
-    }
-    budget -= text.length;
-    texts.push(text);
+    texts.push(pyStrip(blanked));
   }
-  return { texts, codeBlocks, truncated };
+  return { texts, originalPieces, codeBlocks, truncated, charsSkipped };
 }
 
 /**
@@ -114,9 +132,9 @@ export function prepareTexts(extracted) {
  * onProgress(done, total) after each chunk. shouldStop() lets the caller cancel between chunks.
  * Returns { report, keys }: keys are the distinct finds, for comparing stages inside the worker only.
  */
-export async function scan(extracted, findEntities, { onProgress, shouldStop } = {}) {
+export async function scan(extracted, findEntities, { onProgress, shouldStop, envelope = null, charBudget = MAX_SCAN_CHARS } = {}) {
   const started = performance.now();
-  const { texts, codeBlocks, truncated } = prepareTexts(extracted);
+  const { texts, originalPieces, codeBlocks, truncated, charsSkipped } = prepareTexts(extracted, charBudget);
   const chunks = buildChunks(texts);
   const agg = new Aggregator();
   const withFinds = new Set();
@@ -131,7 +149,8 @@ export async function scan(extracted, findEntities, { onProgress, shouldStop } =
       for (const token of dropNestedDates([...stripped.tokens, ...names])) {
         const original = token.original || "";
         const context = token.type === "DOB" || token.type === "PHONE" ? contextBefore(chunk.text, original) : "";
-        if (agg.add(token.type, original, context)) segmentsContaining(chunk, original, withFinds);
+        const conf = token.confidence ?? 1.0;
+        if (agg.add(token.type, original, context, conf)) segmentsContaining(chunk, original, withFinds);
       }
     } catch (err) {
       if (err?.message === "cancelled") throw err;
@@ -140,28 +159,54 @@ export async function scan(extracted, findEntities, { onProgress, shouldStop } =
     onProgress?.(i + 1, chunks.length);
   }
 
+  const detectorHits = [];
+  for (const piece of originalPieces) {
+    for (const sliceText of fenceSlices(piece)) detectorHits.push(...detect(sliceText, { inCodeBlock: true }));
+  }
+  for (const piece of texts) {
+    if (piece) detectorHits.push(...detect(piece, { inCodeBlock: false }));
+  }
+
+  const env = envelope ?? {};
+  const promoted = promote(agg);
+  const allFindings = assemble(promoted, detectorHits, env.findings);
+  const bands = bandCounts(allFindings);
+  const findings = capFindings(allFindings);
+  for (let i = 0; i < findings.length; i++) findings[i].id = `f-${String(i + 1).padStart(2, "0")}`;
+
   const totals = agg.totals();
   const score = exposureScore(totals.directUnique, totals.contextUnique);
   const kinds = {};
   for (const s of extracted.segments) kinds[s.source] = (kinds[s.source] ?? 0) + 1;
+  const charactersScanned = texts.reduce((n, t) => n + t.length, 0);
+  const source = {
+    format: extracted.format,
+    label: FORMAT_LABELS[extracted.format] ?? extracted.format,
+    conversations: extracted.conversations,
+    piecesScanned: texts.filter((t) => t).length,
+    piecesWithFinds: withFinds.size,
+    kinds,
+    assistantMessagesSkipped: extracted.assistantMessagesSkipped,
+    codeBlocksSkipped: codeBlocks,
+    charactersScanned,
+    charactersSkipped: charsSkipped,
+    truncated,
+    failedChunks,
+  };
+  const coverage = buildCoverage(source, env);
+  const readouts = buildReadouts(allFindings, score, levelFor(score), coverage.lowerBound);
+
   const report = {
-    source: {
-      format: extracted.format,
-      label: FORMAT_LABELS[extracted.format] ?? extracted.format,
-      conversations: extracted.conversations,
-      piecesScanned: texts.filter((t) => t).length,
-      piecesWithFinds: withFinds.size,
-      kinds,
-      assistantMessagesSkipped: extracted.assistantMessagesSkipped,
-      codeBlocksSkipped: codeBlocks,
-      charactersScanned: texts.reduce((n, t) => n + t.length, 0),
-      truncated,
-      failedChunks,
-    },
+    schemaVersion: 2,
+    source,
     totals,
     score,
     level: levelFor(score),
     categories: agg.categories(),
+    findings,
+    bands,
+    readouts,
+    coverage,
     elapsedMs: Math.round(performance.now() - started),
   };
   return { report, keys: agg.keys() };

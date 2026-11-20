@@ -14,6 +14,7 @@ from dataclasses import dataclass, field
 from typing import Callable, Dict, Optional
 
 from lib.scanner.extract import ExtractError, Extracted
+from lib.scanner.envelope import null_envelope
 from lib.scanner.scan import scan
 
 JOB_TTL_SECONDS = 15 * 60
@@ -63,14 +64,18 @@ class JobRunner:
     def _run(self, job: Job, read: Callable[[], Extracted]) -> None:
         try:
             job.status = "reading"
-            extracted = read()
+            payload = read()
             read = None  # let the upload bytes go
+            if isinstance(payload, tuple):
+                extracted, envelope = payload
+            else:
+                extracted, envelope = payload, null_envelope()
             job.status = "scanning"
 
             def progress(done: int, total: int) -> None:
                 job.done, job.total = done, total
 
-            job.report = scan(extracted, progress)
+            job.report = scan(extracted, progress, envelope=envelope)
             job.status = "done"
         except ExtractError as exc:
             job.error, job.status = str(exc), "error"

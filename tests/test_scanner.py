@@ -250,6 +250,37 @@ def test_score_and_levels():
 
 # ---------- full scan (real pipeline) ----------
 
+def test_scan_schema_v2_keys():
+    report = scan(extract_text("hello"))
+    for key in ("schemaVersion", "findings", "bands", "readouts", "coverage", "domainMatrix"):
+        assert key in report
+    assert report["schemaVersion"] == 2
+
+
+def test_scan_domain_matrix_does_not_equal_unique_totals():
+    report = scan(extract_text("I have asthma. Email me at dana@example.com."))
+    matrix = report["domainMatrix"]
+    assert matrix["domains"][0] == "financial"
+    assert "health" in matrix["uniqueByDomain"]
+    assert "kindsByCell" in matrix
+    cell_sum = sum(n for band in matrix["cells"].values() for n in band.values())
+    assert cell_sum != report["totals"]["unique"] or matrix["multiDomain"] == 0
+    domain_sum = sum(matrix["uniqueByDomain"].values())
+    finding_n = sum(report["bands"][h]["unique"] for h in report["bands"])
+    if matrix["multiDomain"] > 0:
+        assert domain_sum > finding_n
+    else:
+        assert domain_sum == finding_n
+    health_kinds = matrix["kindsByCell"]["health"]["H3"]
+    assert health_kinds.get("health", 0) >= 1
+
+
+def test_scan_char_budget_skips_characters():
+    long_text = "word " * 100
+    report = scan(extract_text(long_text), char_budget=10)
+    assert report["source"]["charactersSkipped"] > 0
+
+
 def test_scan_finds_personal_details_in_memories():
     memories = "\n".join([
         "User's name is Dana Whitfield.",

@@ -1,0 +1,30 @@
+{
+  "userJsonPresent": true,
+  "userJsonSkipped": true,
+  "binaryAttachments": 1,
+  "unreadMembers": [
+    "ads.json"
+  ],
+  "findings": [
+    {
+      "harm": "H2",
+      "kind": "account_email",
+      "confidence": "confirmed",
+      "subject": "account_holder",
+      "masked": "a@e\u2022\u2022\u2022\u2022\u2022\u2022.com",
+      "category": null,
+      "inCodeBlock": false,
+      "count": 1
+    },
+    {
+      "harm": "H2",
+      "kind": "account_phone",
+      "confidence": "confirmed",
+      "subject": "account_holder",
+      "masked": "+\u2022 \u2022\u2022\u2022 \u2022\u2022\u2022 \u2022\u202247",
+      "category": null,
+      "inCodeBlock": false,
+      "count": 1
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+.copy-prompt {
+  display: inline;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+  text-align: inherit;
+  cursor: copy;
+  border-bottom: 1px dashed currentColor;
+}
+.copy-prompt:hover,
+.copy-prompt:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+.copy-prompt q { quotes: "“" "”" "‘" "’"; }
+.copy-prompt q::before { content: open-quote; }
+.copy-prompt q::after { content: close-quote; }
+.copy-prompt-hint {
+  margin-inline-start: 6px;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+.copy-prompt.is-copied .copy-prompt-hint { opacity: 1; }

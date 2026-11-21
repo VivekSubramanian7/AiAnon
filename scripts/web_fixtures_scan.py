@@ -49,6 +49,7 @@ def main() -> None:
     logging.disable(logging.WARNING)
     from web_reference_rules import ReferenceRules
     from lib.pipeline import ner_engine as ner_module
+    from lib.scanner.envelope import null_envelope, read_envelope
     from lib.scanner.extract import extract_file
     from lib.scanner.scan import scan
 
@@ -57,9 +58,12 @@ def main() -> None:
     # Corpus for the rules: every segment of every mock file, plus hand-written edge cases.
     extracted = {}
     corpus = []
+    envelopes = {}
     for name in MOCK_FILES:
         with open(os.path.join(MOCKS, name), "rb") as f:
-            extracted[name] = extract_file(name, f.read())
+            raw = f.read()
+            extracted[name] = extract_file(name, raw)
+            envelopes[name] = read_envelope(name, raw) if name.lower().endswith(".zip") else null_envelope()
         if name != "chatgpt-export-large.zip":
             corpus += [s.text for s in extracted[name].segments]
     corpus += EXTRA_TEXTS
@@ -71,7 +75,7 @@ def main() -> None:
     ner_module.ner_engine.run_spacy = rules    # same contract as run_spacy
     reports = {}
     for name in MOCK_FILES:
-        report = scan(extracted[name])
+        report = scan(extracted[name], envelope=envelopes[name])
         report.pop("elapsedMs")
         reports[name] = report
         print(f"{name}: {report['totals']['unique']} things, score {report['score']}")

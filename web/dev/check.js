@@ -35,8 +35,12 @@ try {
     const t0 = performance.now();
     const { report } = await scan(extracted, rules);
     const same = JSON.stringify(strip(report)) === JSON.stringify(fixture.reports[name]);
-    out.frisk[name] = { things: report.totals.unique, python: fixture.reports[name].totals.unique, identical: same, ms: Math.round(performance.now() - t0) };
-    log(`frisk ${name}: ${report.totals.unique} things (Python ${fixture.reports[name].totals.unique}) ${same ? "identical" : "DIFFERENT"} in ${out.frisk[name].ms} ms`);
+    const bands = report.bands
+      ? Object.fromEntries(Object.entries(report.bands).map(([h, b]) => [h, b.unique]))
+      : null;
+    out.frisk[name] = { things: report.totals.unique, python: fixture.reports[name].totals.unique, identical: same, ms: Math.round(performance.now() - t0), bands };
+    log(`frisk ${name}: ${report.totals.unique} things (Python ${fixture.reports[name].totals.unique}) ${same ? "identical" : "DIFFERENT"} in ${out.frisk[name].ms} ms`
+      + (bands ? ` · bands H1=${bands.H1 ?? 0} H3=${bands.H3 ?? 0}` : ""));
   }
 
   if (params.get("detective")) {

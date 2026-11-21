@@ -22,6 +22,10 @@ share/python-wheels/
 *.egg
 MANIFEST
 
+# Local mirror prototype (user's export scan — do not commit)
+public/scanner/mirror-report-data.json
+public/scanner/mirror-sensitivity.json
+
 # Virtual Environment
 venv/
 ENV/

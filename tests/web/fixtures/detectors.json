@@ -1,0 +1,407 @@
+{
+  "cases": [
+    {
+      "name": "pem",
+      "text": "-----BEGIN RSA PRIVATE KEY-----",
+      "inCodeBlock": false,
+      "findings": [
+        {
+          "harm": "H1",
+          "kind": "private_key",
+          "confidence": "high",
+          "subject": "account_holder",
+          "masked": "-----BEGIN PRIVATE KEY-----",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "digital"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "aws",
+      "text": "key: AKIAIOSFODNN7EXAMPLE here",
+      "inCodeBlock": false,
+      "findings": [
+        {
+          "harm": "H1",
+          "kind": "aws_access_key",
+          "confidence": "high",
+          "subject": "account_holder",
+          "masked": "AKIA\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "digital"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ghp",
+      "text": "ghp_abcdefghijklmnopqrst",
+      "inCodeBlock": false,
+      "findings": [
+        {
+          "harm": "H1",
+          "kind": "api_token",
+          "confidence": "high",
+          "subject": "account_holder",
+          "masked": "ghp_\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "digital"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "token_url",
+      "text": "https://s3.amazonaws.com/x?X-Amz-Signature=abc123def456ghi789jkl012mno345",
+      "inCodeBlock": false,
+      "findings": [
+        {
+          "harm": "H1",
+          "kind": "tokenized_url",
+          "confidence": "high",
+          "subject": "account_holder",
+          "masked": "s3.amazonaws.com/\u2022\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "digital"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "jwt",
+      "text": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U",
+      "inCodeBlock": false,
+      "findings": [
+        {
+          "harm": "H1",
+          "kind": "jwt",
+          "confidence": "medium",
+          "subject": "account_holder",
+          "masked": "eyJ\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "digital"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "health_cue",
+      "text": "I have asthma",
+      "inCodeBlock": false,
+      "findings": [
+        {
+          "harm": "H3",
+          "kind": "health",
+          "confidence": "medium",
+          "subject": "account_holder",
+          "masked": "a\u2022\u2022\u2022\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "health"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "health_low",
+      "text": "asthma",
+      "inCodeBlock": false,
+      "findings": [
+        {
+          "harm": "H3",
+          "kind": "health",
+          "confidence": "low",
+          "subject": "unknown",
+          "masked": "a\u2022\u2022\u2022\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "health"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "religion",
+      "text": "I'm Christian",
+      "inCodeBlock": false,
+      "findings": [
+        {
+          "harm": "H3",
+          "kind": "religion",
+          "confidence": "medium",
+          "subject": "account_holder",
+          "masked": "C\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "identity"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "children",
+      "text": "my daughter Zo\u00eb",
+      "inCodeBlock": false,
+      "findings": [
+        {
+          "harm": "H3",
+          "kind": "children",
+          "confidence": "medium",
+          "subject": "unknown",
+          "masked": "m\u2022 d\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "relationships"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "street",
+      "text": "flat 4B at 18 Elm Grove",
+      "inCodeBlock": false,
+      "findings": [
+        {
+          "harm": "H3",
+          "kind": "street_address",
+          "confidence": "medium",
+          "subject": "unknown",
+          "masked": "1\u2022 E\u2022\u2022 G\u2022\u2022\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "location"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "payment_card",
+      "text": "card: 4242 4242 4242 4242",
+      "inCodeBlock": false,
+      "findings": [
+        {
+          "harm": "H2",
+          "kind": "payment_card",
+          "confidence": "high",
+          "subject": "unknown",
+          "masked": "\u2022\u2022\u2022\u2022 \u2022\u2022\u2022\u2022 \u2022\u2022\u2022\u2022 \u2022\u202242",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "financial"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ssn",
+      "text": "SSN 123-45-6789",
+      "inCodeBlock": false,
+      "findings": [
+        {
+          "harm": "H2",
+          "kind": "national_id",
+          "confidence": "medium",
+          "subject": "unknown",
+          "masked": "\u2022\u2022\u2022-\u2022\u2022-\u2022\u202289",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "identity"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "linkedin",
+      "text": "https://www.linkedin.com/in/priya-n",
+      "inCodeBlock": false,
+      "findings": [
+        {
+          "harm": "H4",
+          "kind": "profile_url",
+          "confidence": "medium",
+          "subject": "unknown",
+          "masked": "www.linkedin.com/\u2022\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "identity"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "github",
+      "text": "https://github.com/octocat",
+      "inCodeBlock": false,
+      "findings": [
+        {
+          "harm": "H4",
+          "kind": "profile_url",
+          "confidence": "medium",
+          "subject": "unknown",
+          "masked": "github.com/\u2022\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "identity"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "github_deny",
+      "text": "https://github.com/features",
+      "inCodeBlock": false,
+      "findings": []
+    },
+    {
+      "name": "fence_pem",
+      "text": "-----BEGIN OPENSSH PRIVATE KEY-----",
+      "inCodeBlock": true,
+      "findings": [
+        {
+          "harm": "H1",
+          "kind": "private_key",
+          "confidence": "high",
+          "subject": "account_holder",
+          "masked": "-----BEGIN PRIVATE KEY-----",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": true,
+          "count": 1,
+          "domains": [
+            "digital"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "fence_no_health",
+      "text": "I have asthma",
+      "inCodeBlock": true,
+      "findings": []
+    },
+    {
+      "name": "gps",
+      "text": "coords 37.77490, -122.41940",
+      "inCodeBlock": false,
+      "findings": [
+        {
+          "harm": "H3",
+          "kind": "gps",
+          "confidence": "high",
+          "subject": "unknown",
+          "masked": "\u2022\u2022.\u2022\u2022\u2022\u2022\u2022, -\u2022\u2022\u2022.\u2022\u2022\u202240",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "location"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "employer",
+      "text": "I work at Acme",
+      "inCodeBlock": false,
+      "findings": [
+        {
+          "harm": "H5",
+          "kind": "employer",
+          "confidence": "medium",
+          "subject": "unknown",
+          "masked": "A\u2022\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "professional"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "join_prose",
+      "text": "Please join the standup at noon",
+      "inCodeBlock": false,
+      "findings": []
+    },
+    {
+      "name": "compensation",
+      "text": "salary is $120,000",
+      "inCodeBlock": false,
+      "findings": [
+        {
+          "harm": "H5",
+          "kind": "compensation",
+          "confidence": "medium",
+          "subject": "unknown",
+          "masked": "$1\u2022\u2022,\u2022\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "financial",
+            "professional"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "currency_only",
+      "text": "The laptop costs $120,000",
+      "inCodeBlock": false,
+      "findings": []
+    }
+  ]
+}

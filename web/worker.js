@@ -11,11 +11,12 @@
 import { extractFile, extractText, fileSource, ExtractError } from "./lib/extract.js";
 import { createRules } from "./lib/rules.js";
 import { scan, prepareTexts, buildChunks } from "./lib/scan.js";
+import { readEnvelope, nullEnvelope } from "./lib/envelope.js";
 import { loadDetective } from "./lib/detective.js";
 
 let rulesPromise = null;
 let detectivePromise = null;
-let current = null; // { input, extracted, friskKeys }
+let current = null; // { input, extracted, envelope, friskKeys }
 
 const post = (message) => self.postMessage(message);
 
@@ -36,8 +37,15 @@ function rules() {
 async function read(input) {
   if (current && current.input.id === input.id) return current.extracted;
   post({ type: "progress", phase: "reading", done: 0, total: 0 });
-  const extracted = input.file ? await extractFile(fileSource(input.file)) : extractText(input.text ?? "");
-  current = { input, extracted, friskKeys: null };
+  let envelope = nullEnvelope();
+  const extracted = input.file
+    ? await extractFile(fileSource(input.file))
+    : extractText(input.text ?? "");
+  if (input.file) {
+    const raw = new Uint8Array(await input.file.arrayBuffer());
+    envelope = await readEnvelope(input.file.name, raw);
+  }
+  current = { input, extracted, envelope, friskKeys: null };
   return extracted;
 }
 
@@ -56,7 +64,10 @@ async function frisk(input, { silent = false } = {}) {
   const extracted = await read(input);
   const findEntities = await rules();
   const progress = throttled((done, total) => post({ type: "progress", phase: "frisk", done, total }));
-  const { report, keys } = await scan(extracted, findEntities, { onProgress: silent ? undefined : progress });
+  const { report, keys } = await scan(extracted, findEntities, {
+    onProgress: silent ? undefined : progress,
+    envelope: current.envelope,
+  });
   current.friskKeys = keys;
   return report;
 }
@@ -82,7 +93,7 @@ async function detective(input) {
   const { report, keys } = await scan(extracted, (text) => find(text, (chars) => {
     done += chars;
     progress();
-  }));
+  }), { envelope: current.envelope });
   let missed = 0; // found by the detective, not by the frisk
   let dropped = 0; // found by the frisk, not by the detective (the frisk's false alarms, mostly)
   for (const key of keys) if (!current.friskKeys.has(key)) missed += 1;

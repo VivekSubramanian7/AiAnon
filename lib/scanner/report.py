@@ -136,6 +136,81 @@ def _mask_tail(value: str, visible: int) -> str:
     return "".join(ch if (i in show or not ch.isalnum()) else MASK for i, ch in enumerate(value))
 
 
+KIND_TO_CATEGORY = {
+    "email": "emails",
+    "phone": "phones",
+    "iban": "bank",
+    "profile_url": "links",
+    "url": "links",
+    "handle": "handles",
+    "name": "names",
+    "self_name": "names",
+    "child_name": "names",
+    "place": "places",
+    "org": "orgs",
+    "age": "ages",
+    "date": "dates",
+    "date_of_birth": "birthdays",
+    "account_email": "emails",
+    "account_phone": "phones",
+}
+
+SECRET_PREFIX_LEN = {
+    "AKIA": 4,
+    "sk-": 3,
+    "ghp_": 4,
+    "github_pat_": 11,
+    "eyJ": 3,
+}
+
+
+def _mask_secret(value: str) -> str:
+    value = value.strip()
+    for prefix, keep in SECRET_PREFIX_LEN.items():
+        if value.startswith(prefix):
+            rest = value[len(prefix):]
+            return prefix + MASK * max(4, min(len(rest), 12))
+    if value:
+        return value[0] + MASK * min(len(value) - 1, 12)
+    return MASK * 4
+
+
+def mask_kind(kind: str, value: str) -> str:
+    """Masked span for detector-only kinds; promoted kinds use category via KIND_TO_CATEGORY."""
+    if kind in KIND_TO_CATEGORY:
+        return mask(KIND_TO_CATEGORY[kind], value)
+    if kind in (
+        "private_key",
+        "aws_access_key",
+        "api_token",
+        "jwt",
+        "password_cue",
+        "tokenized_url",
+    ):
+        if kind == "aws_access_key":
+            return _mask_secret(value)
+        if kind == "jwt" and value.startswith("eyJ"):
+            return _mask_secret(value)
+        if kind in ("api_token", "password_cue"):
+            return _mask_secret(value)
+        if kind == "private_key":
+            return "-----BEGIN PRIVATE KEY-----"
+        if kind == "tokenized_url":
+            return mask("links", value)
+        return _mask_secret(value)
+    if kind in ("health", "religion", "sexual_orientation", "children", "immigration"):
+        return " ".join(_mask_word(w) for w in value.split())
+    if kind in ("payment_card", "national_id", "street_address", "gps"):
+        return _mask_tail(value, 2) if kind != "street_address" else " ".join(
+            _mask_word(w) for w in value.split()
+        )
+    if kind == "os_username":
+        return _mask_word(value)
+    if kind in ("employer", "compensation"):
+        return " ".join(_mask_word(w) for w in value.split())
+    return MASK * 3
+
+
 def mask(category: str, value: str) -> str:
     value = value.strip()
     if category == "emails" and "@" in value:
@@ -162,8 +237,16 @@ class Aggregator:
         self.mentions: Counter = Counter()                       # category -> mentions
         self.distinct: Dict[str, Counter] = {c.key: Counter() for c in CATEGORIES}
         self.first_seen: Dict[str, Dict[str, str]] = {c.key: {} for c in CATEGORIES}
+        self.max_confidence: Dict[str, Dict[str, float]] = {c.key: {} for c in CATEGORIES}
+        self.cue_window: Dict[str, Dict[str, str]] = {c.key: {} for c in CATEGORIES}
 
-    def add(self, token_type: str, original: str, context: str = "") -> Optional[str]:
+    def add(
+        self,
+        token_type: str,
+        original: str,
+        context: str = "",
+        confidence: float = 1.0,
+    ) -> Optional[str]:
         if not original or not original.strip():
             return None
         category = categorize(token_type, original, context)
@@ -173,6 +256,10 @@ class Aggregator:
         self.mentions[category] += 1
         self.distinct[category][key] += 1
         self.first_seen[category].setdefault(key, original)
+        prev = self.max_confidence[category].get(key, 0.0)
+        self.max_confidence[category][key] = max(prev, confidence)
+        if context:
+            self.cue_window[category].setdefault(key, context[-80:])
         return category
 
     def _merge_first_names(self) -> None:

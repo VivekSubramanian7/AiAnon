@@ -8,6 +8,7 @@ import os
 
 import pytest
 
+from lib.scanner.envelope import prepare_upload
 from lib.scanner.extract import ExtractError, extract_file
 from lib.scanner.scan import scan
 
@@ -20,7 +21,12 @@ def load(name):
 
 
 def run(name):
-    report = scan(extract_file(name, load(name)))
+    raw = load(name)
+    if name.endswith(".zip"):
+        extracted, envelope = prepare_upload(name, raw)
+        report = scan(extracted, envelope=envelope)
+    else:
+        report = scan(extract_file(name, raw))
     return report, {r["key"]: r["unique"] for r in report["categories"]}
 
 
@@ -42,6 +48,22 @@ def test_clean_memory_is_suspiciously_clean():
     report, _ = run("clean-memory.txt")
     assert report["totals"]["unique"] == 0
     assert report["level"] == "clean"
+    assert report["readouts"]["credentials"]["score"] == 0
+    assert all(report["bands"][h]["unique"] == 0 for h in report["bands"])
+
+
+def test_chatgpt_saved_memories_health_finding():
+    report, _ = run("chatgpt-saved-memories.txt")
+    health = [f for f in report["findings"] if f["kind"] == "health"]
+    assert health
+    assert health[0]["label"] == "Health"
+    assert "asthma" not in json.dumps(report)
+
+
+def test_gemini_saved_info_allergy_health():
+    report, _ = run("gemini-saved-info.txt")
+    assert any(f["kind"] == "health" for f in report["findings"])
+    assert "peanut" not in json.dumps(report)
 
 
 def test_chatgpt_export():
@@ -57,6 +79,9 @@ def test_chatgpt_export():
     serialized = json.dumps(report)
     for real in ("Priya Natarajan", "priya.n@example.org", "0147", "12/09/1993", "Tom Becker"):
         assert real not in serialized
+    assert any(f["kind"] == "street_address" for f in report["findings"])
+    assert any(f["source"] == "envelope" for f in report["findings"])
+    assert found["emails"] == 1
 
 
 def test_claude_export():

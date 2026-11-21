@@ -82,3 +82,25 @@ def test_missing_input_and_oversized_upload(client, monkeypatch):
 
 def test_unknown_job(client):
     assert client.get("/api/scan/does-not-exist").status_code == 404
+
+
+def test_schema_v2_and_secrets_masked(client):
+    text = "I have asthma. Key AKIAIOSFODNN7EXAMPLE"
+    body = wait_for(client, client.post("/api/scan", data={"text": text}).json()["jobId"]).json()
+    report = body["report"]
+    assert report["schemaVersion"] == 2
+    assert "findings" in report
+    blob = json.dumps(report)
+    assert "AKIAIOSFODNN7EXAMPLE" not in blob
+    assert "asthma" not in blob
+    kinds = {f["kind"] for f in report["findings"]}
+    assert "aws_access_key" in kinds
+    assert "health" in kinds
+
+
+def test_legacy_report_strip(client, monkeypatch):
+    monkeypatch.setenv("TMI_LEGACY_REPORT", "1")
+    body = wait_for(client, client.post("/api/scan", data={"text": "hello"}).json()["jobId"]).json()
+    report = body["report"]
+    assert "score" in report and "categories" in report
+    assert "findings" not in report

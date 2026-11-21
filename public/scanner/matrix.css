@@ -1,0 +1,217 @@
+/* Sensitivity × life-domain matrix — uses TMI sheet tokens from styles.css */
+
+.matrix-sheet .matrix-body { padding: 24px 28px 28px; display: grid; gap: 18px; }
+.matrix-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.domain-matrix {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 4px;
+  font-variant-numeric: tabular-nums;
+  min-width: 720px;
+}
+.domain-matrix th,
+.domain-matrix td { padding: 0; text-align: center; vertical-align: middle; }
+.domain-matrix th:first-child,
+.domain-matrix td:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: var(--sheet);
+  text-align: left;
+}
+.matrix-corner { min-width: 7.5rem; }
+.matrix-axis {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.matrix-axis-x { display: block; font-size: 11px; font-weight: 700; }
+.matrix-head,
+.matrix-row-label,
+.matrix-cell,
+.matrix-clear {
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+.matrix-head,
+.matrix-row-label {
+  display: grid;
+  gap: 2px;
+  width: 100%;
+  padding: 8px 6px;
+  border-radius: 4px;
+  text-align: inherit;
+}
+.matrix-head { font-size: 12px; font-weight: 700; }
+.matrix-row-label b { font-family: var(--mono); font-size: 12px; }
+.matrix-row-label span { font-size: 11px; color: var(--ink-2); }
+.matrix-head[aria-pressed="true"],
+.matrix-row-label[aria-pressed="true"] { background: var(--marker-soft); }
+.matrix-empty { min-width: 2.6rem; height: 2.6rem; }
+.matrix-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-width: 2.6rem;
+  min-height: 2.6rem;
+  border-radius: 4px;
+  font-weight: 800;
+  border: 1.5px solid transparent;
+}
+.matrix-cell.is-h12.is-n1 { background: color-mix(in srgb, var(--stamp) 22%, var(--sheet)); }
+.matrix-cell.is-h12.is-n2 { background: color-mix(in srgb, var(--stamp) 40%, var(--sheet)); }
+.matrix-cell.is-h12.is-n3 { background: color-mix(in srgb, var(--stamp) 58%, var(--sheet)); }
+.matrix-cell.is-h34.is-n1 { background: color-mix(in srgb, #c47a12 22%, var(--sheet)); }
+.matrix-cell.is-h34.is-n2 { background: color-mix(in srgb, #c47a12 40%, var(--sheet)); }
+.matrix-cell.is-h34.is-n3 { background: color-mix(in srgb, #c47a12 58%, var(--sheet)); }
+.matrix-cell.is-h56.is-n1 { background: color-mix(in srgb, var(--clean) 22%, var(--sheet)); }
+.matrix-cell.is-h56.is-n2 { background: color-mix(in srgb, var(--clean) 40%, var(--sheet)); }
+.matrix-cell.is-h56.is-n3 { background: color-mix(in srgb, var(--clean) 58%, var(--sheet)); }
+.matrix-cell[aria-pressed="true"] {
+  border-color: var(--ink);
+  outline: 2px solid var(--ink);
+  outline-offset: 1px;
+}
+.matrix-caption { margin: 0; font-size: 14px; color: var(--ink-2); }
+.matrix-detail {
+  border: 1.5px solid var(--rule-strong);
+  border-radius: 6px;
+  padding: 14px 16px;
+  display: grid;
+  gap: 8px;
+  background: var(--sheet);
+}
+.matrix-detail-kicker {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.matrix-detail-count {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+}
+.matrix-detail-hint {
+  margin: 0;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+.matrix-kinds {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.matrix-kinds li {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  border: 1.5px solid var(--rule-strong);
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 14px;
+  font-weight: 700;
+}
+.matrix-kinds b {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink-2);
+}
+.matrix-peek-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+.matrix-detail[data-peek]:not([data-peek="idle"]) { display: none; }
+.matrix-sheet:has(.matrix-peek-input:checked) .matrix-detail[data-peek="idle"] { display: none; }
+td:has(.matrix-peek-input:checked) .matrix-cell {
+  border-color: var(--ink);
+  outline: 2px solid var(--ink);
+  outline-offset: 1px;
+}
+.matrix-sheet:has(#cell-financial-H1:checked) .matrix-detail[data-peek="financial-H1"],
+.matrix-sheet:has(#cell-financial-H2:checked) .matrix-detail[data-peek="financial-H2"],
+.matrix-sheet:has(#cell-financial-H3:checked) .matrix-detail[data-peek="financial-H3"],
+.matrix-sheet:has(#cell-financial-H4:checked) .matrix-detail[data-peek="financial-H4"],
+.matrix-sheet:has(#cell-financial-H5:checked) .matrix-detail[data-peek="financial-H5"],
+.matrix-sheet:has(#cell-financial-H6:checked) .matrix-detail[data-peek="financial-H6"],
+.matrix-sheet:has(#cell-identity-H1:checked) .matrix-detail[data-peek="identity-H1"],
+.matrix-sheet:has(#cell-identity-H2:checked) .matrix-detail[data-peek="identity-H2"],
+.matrix-sheet:has(#cell-identity-H3:checked) .matrix-detail[data-peek="identity-H3"],
+.matrix-sheet:has(#cell-identity-H4:checked) .matrix-detail[data-peek="identity-H4"],
+.matrix-sheet:has(#cell-identity-H5:checked) .matrix-detail[data-peek="identity-H5"],
+.matrix-sheet:has(#cell-identity-H6:checked) .matrix-detail[data-peek="identity-H6"],
+.matrix-sheet:has(#cell-health-H1:checked) .matrix-detail[data-peek="health-H1"],
+.matrix-sheet:has(#cell-health-H2:checked) .matrix-detail[data-peek="health-H2"],
+.matrix-sheet:has(#cell-health-H3:checked) .matrix-detail[data-peek="health-H3"],
+.matrix-sheet:has(#cell-health-H4:checked) .matrix-detail[data-peek="health-H4"],
+.matrix-sheet:has(#cell-health-H5:checked) .matrix-detail[data-peek="health-H5"],
+.matrix-sheet:has(#cell-health-H6:checked) .matrix-detail[data-peek="health-H6"],
+.matrix-sheet:has(#cell-professional-H1:checked) .matrix-detail[data-peek="professional-H1"],
+.matrix-sheet:has(#cell-professional-H2:checked) .matrix-detail[data-peek="professional-H2"],
+.matrix-sheet:has(#cell-professional-H3:checked) .matrix-detail[data-peek="professional-H3"],
+.matrix-sheet:has(#cell-professional-H4:checked) .matrix-detail[data-peek="professional-H4"],
+.matrix-sheet:has(#cell-professional-H5:checked) .matrix-detail[data-peek="professional-H5"],
+.matrix-sheet:has(#cell-professional-H6:checked) .matrix-detail[data-peek="professional-H6"],
+.matrix-sheet:has(#cell-relationships-H1:checked) .matrix-detail[data-peek="relationships-H1"],
+.matrix-sheet:has(#cell-relationships-H2:checked) .matrix-detail[data-peek="relationships-H2"],
+.matrix-sheet:has(#cell-relationships-H3:checked) .matrix-detail[data-peek="relationships-H3"],
+.matrix-sheet:has(#cell-relationships-H4:checked) .matrix-detail[data-peek="relationships-H4"],
+.matrix-sheet:has(#cell-relationships-H5:checked) .matrix-detail[data-peek="relationships-H5"],
+.matrix-sheet:has(#cell-relationships-H6:checked) .matrix-detail[data-peek="relationships-H6"],
+.matrix-sheet:has(#cell-location-H1:checked) .matrix-detail[data-peek="location-H1"],
+.matrix-sheet:has(#cell-location-H2:checked) .matrix-detail[data-peek="location-H2"],
+.matrix-sheet:has(#cell-location-H3:checked) .matrix-detail[data-peek="location-H3"],
+.matrix-sheet:has(#cell-location-H4:checked) .matrix-detail[data-peek="location-H4"],
+.matrix-sheet:has(#cell-location-H5:checked) .matrix-detail[data-peek="location-H5"],
+.matrix-sheet:has(#cell-location-H6:checked) .matrix-detail[data-peek="location-H6"],
+.matrix-sheet:has(#cell-digital-H1:checked) .matrix-detail[data-peek="digital-H1"],
+.matrix-sheet:has(#cell-digital-H2:checked) .matrix-detail[data-peek="digital-H2"],
+.matrix-sheet:has(#cell-digital-H3:checked) .matrix-detail[data-peek="digital-H3"],
+.matrix-sheet:has(#cell-digital-H4:checked) .matrix-detail[data-peek="digital-H4"],
+.matrix-sheet:has(#cell-digital-H5:checked) .matrix-detail[data-peek="digital-H5"],
+.matrix-sheet:has(#cell-digital-H6:checked) .matrix-detail[data-peek="digital-H6"],
+.matrix-sheet:has(#cell-interests-H1:checked) .matrix-detail[data-peek="interests-H1"],
+.matrix-sheet:has(#cell-interests-H2:checked) .matrix-detail[data-peek="interests-H2"],
+.matrix-sheet:has(#cell-interests-H3:checked) .matrix-detail[data-peek="interests-H3"],
+.matrix-sheet:has(#cell-interests-H4:checked) .matrix-detail[data-peek="interests-H4"],
+.matrix-sheet:has(#cell-interests-H5:checked) .matrix-detail[data-peek="interests-H5"],
+.matrix-sheet:has(#cell-interests-H6:checked) .matrix-detail[data-peek="interests-H6"],
+.matrix-sheet:has(#cell-other-H1:checked) .matrix-detail[data-peek="other-H1"],
+.matrix-sheet:has(#cell-other-H2:checked) .matrix-detail[data-peek="other-H2"],
+.matrix-sheet:has(#cell-other-H3:checked) .matrix-detail[data-peek="other-H3"],
+.matrix-sheet:has(#cell-other-H4:checked) .matrix-detail[data-peek="other-H4"],
+.matrix-sheet:has(#cell-other-H5:checked) .matrix-detail[data-peek="other-H5"],
+.matrix-sheet:has(#cell-other-H6:checked) .matrix-detail[data-peek="other-H6"] { display: grid; }
+.matrix-clear {
+  display: inline;
+  padding: 0;
+  margin-left: 8px;
+  text-decoration: underline;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+@media (prefers-color-scheme: dark) {
+  .matrix-cell.is-h34.is-n1 { background: color-mix(in srgb, #e0a04a 22%, var(--sheet)); }
+  .matrix-cell.is-h34.is-n2 { background: color-mix(in srgb, #e0a04a 40%, var(--sheet)); }
+  .matrix-cell.is-h34.is-n3 { background: color-mix(in srgb, #e0a04a 58%, var(--sheet)); }
+}
+
+@media (max-width: 560px) {
+  .matrix-sheet .matrix-body { padding: 18px 14px 22px; }
+}

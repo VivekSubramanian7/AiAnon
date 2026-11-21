@@ -84,7 +84,10 @@ KIND_LABELS = {
     "account_phone": "Account phone",
 }
 
-SELF_NAME_RE = re.compile(r"\b(?:my name is|I am)\b", re.I)
+# "My name is X", "Name is X" (saved-memory style), "I am X", "I'm X", "call me X": the cue ends right before X.
+SELF_NAME_RE = re.compile(
+    r"(?:\bmy name is|(?<![A-Za-z'’] )\bname is|\bI am|\bI'm|\bcall me)\s*[:,]?\s*$", re.I
+)
 
 THIRD_PARTY_RE = re.compile(
     r"\b(?:his|her|their|colleague's|friend's)\b|"
@@ -178,15 +181,22 @@ def band_counts(rows: List[dict]) -> Dict[str, dict]:
     return result
 
 
+# Another person's name stays "unknown" next to "I" or "my" ("I met Tom" is not about Tom being you).
+NOT_SELF_KINDS = frozenset({"name"})
+
+
 def classify_subject(window: str, *, kind: str) -> str:
-    if kind in H1_KINDS or kind == "private_key":
-        if not window.strip():
-            return "account_holder"
+    if kind in H1_KINDS and not window.strip():
+        return "account_holder"
+    if kind == "self_name":
+        return "account_holder"
     if kind == "child_name":
         return "third_party"
-    if THIRD_PARTY_RE.search(window):
+    if THIRD_PARTY_RE.search(window) or SELF_NEGATIVE_RE.search(window):
         return "third_party"
-    if SELF_CUE_RE.search(window) and not SELF_NEGATIVE_RE.search(window):
+    if kind in NOT_SELF_KINDS:
+        return "unknown"
+    if SELF_CUE_RE.search(window):
         return "account_holder"
     if kind in H1_KINDS:
         return "account_holder"
@@ -222,7 +232,7 @@ def promote(aggregator: Aggregator) -> List[dict]:
                 "inCodeBlock": False,
                 "count": count,
                 "_norm": (cat, norm_key),
-                "_window": (window + " " + original)[-80:],
+                "_window": window,  # text before the value only: "My Chemical Romance" is not about you
                 "_original": original,
             })
     return rows
@@ -246,8 +256,7 @@ def _promote_one(
     if cat == "links":
         return "H6", "url", "medium"
     if cat == "names":
-        full_window = (window + " " + original)[-80:]
-        if SELF_NAME_RE.search(full_window):
+        if SELF_NAME_RE.search(window):
             return "H4", "self_name", "medium"
         return "H6", "name", "low"
     if cat == "places":

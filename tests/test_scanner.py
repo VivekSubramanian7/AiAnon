@@ -311,3 +311,12 @@ def test_scan_handles_text_longer_than_one_chunk():
     assert report["source"]["failedChunks"] == 0
     rows = {r["key"]: r for r in report["categories"]}
     assert rows["phones"]["count"] >= 400
+
+
+def test_scan_recognises_your_name_and_your_contacts():
+    """The cue before each finding ("My name is", "My email is") decides who it is about."""
+    report = scan(extract_text("My name is Priya Shah.\nMy email is priya@shah.dev and my Instagram is @priyashah."))
+    found = {(f["kind"], f["subject"]) for f in report["findings"]}
+    assert ("self_name", "account_holder") in found
+    assert ("email", "account_holder") in found
+    assert report["readouts"]["identityBridges"]["score"] > 0

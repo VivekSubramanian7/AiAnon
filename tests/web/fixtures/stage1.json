@@ -241,6 +241,22 @@
     },
     {
      "harm": "H4",
+     "kind": "self_name",
+     "label": "Your name",
+     "confidence": "medium",
+     "subject": "account_holder",
+     "masked": "D••• W••••••••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "domains": [
+      "identity"
+     ],
+     "id": "f-04"
+    },
+    {
+     "harm": "H4",
      "kind": "email",
      "label": "Email",
      "confidence": "medium",
@@ -253,7 +269,7 @@
      "domains": [
       "identity"
      ],
-     "id": "f-04"
+     "id": "f-05"
     },
     {
      "harm": "H4",
@@ -269,7 +285,7 @@
      "domains": [
       "identity"
      ],
-     "id": "f-05"
+     "id": "f-06"
     },
     {
      "harm": "H6",
@@ -279,22 +295,6 @@
      "subject": "unknown",
      "masked": "30s",
      "category": "ages",
-     "source": "promoted",
-     "inCodeBlock": false,
-     "count": 1,
-     "domains": [
-      "identity"
-     ],
-     "id": "f-06"
-    },
-    {
-     "harm": "H6",
-     "kind": "name",
-     "label": "Name",
-     "confidence": "low",
-     "subject": "unknown",
-     "masked": "D••• W••••••••",
-     "category": "names",
      "source": "promoted",
      "inCodeBlock": false,
      "count": 1,
@@ -490,11 +490,12 @@
      }
     },
     "H4": {
-     "unique": 2,
+     "unique": 3,
      "byConfidence": {
-      "medium": 2
+      "medium": 3
      },
      "bySubject": {
+      "account_holder": 1,
       "unknown": 2
      }
     },
@@ -504,13 +505,13 @@
      "bySubject": {}
     },
     "H6": {
-     "unique": 12,
+     "unique": 11,
      "byConfidence": {
       "medium": 1,
-      "low": 11
+      "low": 10
      },
      "bySubject": {
-      "unknown": 12
+      "unknown": 11
      }
     }
    },
@@ -539,9 +540,9 @@
       "H1": 0,
       "H2": 1,
       "H3": 0,
-      "H4": 2,
+      "H4": 3,
       "H5": 0,
-      "H6": 6
+      "H6": 5
      },
      "health": {
       "H1": 0,
@@ -618,13 +619,14 @@
       },
       "H3": {},
       "H4": {
+       "self_name": 1,
        "email": 1,
        "handle": 1
       },
       "H5": {},
       "H6": {
        "age": 1,
-       "name": 4,
+       "name": 3,
        "phone": 1
       }
      },
@@ -736,10 +738,10 @@
     },
     "identityBridges": {
      "harmBand": "H4",
-     "score": 0,
-     "confidence": "low",
+     "score": 31,
+     "confidence": "medium",
      "lowerBound": false,
-     "aboutYou": 0,
+     "aboutYou": 1,
      "aboutOthers": 0,
      "note": "Account-holder bridges only. Name-bag and unvalidated phones are corpus volume."
     },
@@ -974,7 +976,7 @@
      "kind": "email",
      "label": "Email",
      "confidence": "medium",
-     "subject": "unknown",
+     "subject": "account_holder",
      "masked": "k•••.••••••@e••••••.com",
      "category": "emails",
      "source": "promoted",
@@ -986,13 +988,13 @@
      "id": "f-04"
     },
     {
-     "harm": "H6",
-     "kind": "age",
-     "label": "Age",
+     "harm": "H4",
+     "kind": "self_name",
+     "label": "Your name",
      "confidence": "medium",
      "subject": "account_holder",
-     "masked": "30s",
-     "category": "ages",
+     "masked": "K••• M•••••",
+     "category": "names",
      "source": "promoted",
      "inCodeBlock": false,
      "count": 1,
@@ -1003,12 +1005,12 @@
     },
     {
      "harm": "H6",
-     "kind": "name",
-     "label": "Name",
-     "confidence": "low",
+     "kind": "age",
+     "label": "Age",
+     "confidence": "medium",
      "subject": "unknown",
-     "masked": "K••• M•••••",
-     "category": "names",
+     "masked": "30s",
+     "category": "ages",
      "source": "promoted",
      "inCodeBlock": false,
      "count": 1,
@@ -1022,7 +1024,7 @@
      "kind": "org",
      "label": "Organisation",
      "confidence": "low",
-     "subject": "unknown",
+     "subject": "account_holder",
      "masked": "B••• R••• S••••••",
      "category": "orgs",
      "source": "promoted",
@@ -1038,7 +1040,7 @@
      "kind": "place",
      "label": "Place",
      "confidence": "low",
-     "subject": "unknown",
+     "subject": "account_holder",
      "masked": "A••••",
      "category": "places",
      "source": "promoted",
@@ -1054,7 +1056,7 @@
      "kind": "place",
      "label": "Place",
      "confidence": "low",
-     "subject": "unknown",
+     "subject": "account_holder",
      "masked": "L•••••",
      "category": "places",
      "source": "promoted",
@@ -1091,14 +1093,13 @@
      }
     },
     "H4": {
-     "unique": 2,
+     "unique": 3,
      "byConfidence": {
       "high": 1,
-      "medium": 1
+      "medium": 2
      },
      "bySubject": {
-      "account_holder": 1,
-      "unknown": 1
+      "account_holder": 3
      }
     },
     "H5": {
@@ -1107,14 +1108,14 @@
      "bySubject": {}
     },
     "H6": {
-     "unique": 5,
+     "unique": 4,
      "byConfidence": {
       "medium": 1,
-      "low": 4
+      "low": 3
      },
      "bySubject": {
-      "account_holder": 1,
-      "unknown": 4
+      "unknown": 1,
+      "account_holder": 3
      }
     }
    },
@@ -1143,9 +1144,9 @@
       "H1": 0,
       "H2": 1,
       "H3": 0,
-      "H4": 2,
+      "H4": 3,
       "H5": 0,
-      "H6": 2
+      "H6": 1
      },
      "health": {
       "H1": 0,
@@ -1221,12 +1222,12 @@
       "H3": {},
       "H4": {
        "phone": 1,
-       "email": 1
+       "email": 1,
+       "self_name": 1
       },
       "H5": {},
       "H6": {
-       "age": 1,
-       "name": 1
+       "age": 1
       }
      },
      "health": {
@@ -1337,10 +1338,10 @@
     },
     "identityBridges": {
      "harmBand": "H4",
-     "score": 49,
+     "score": 75,
      "confidence": "high",
      "lowerBound": false,
-     "aboutYou": 1,
+     "aboutYou": 3,
      "aboutOthers": 0,
      "note": "Account-holder bridges only. Name-bag and unvalidated phones are corpus volume."
     },
@@ -1595,6 +1596,22 @@
     },
     {
      "harm": "H6",
+     "kind": "org",
+     "label": "Organisation",
+     "confidence": "low",
+     "subject": "account_holder",
+     "masked": "F•••• S••••• B•••",
+     "category": "orgs",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "domains": [
+      "professional"
+     ],
+     "id": "f-05"
+    },
+    {
+     "harm": "H6",
      "kind": "name",
      "label": "Name",
      "confidence": "low",
@@ -1607,7 +1624,7 @@
      "domains": [
       "identity"
      ],
-     "id": "f-05"
+     "id": "f-06"
     },
     {
      "harm": "H6",
@@ -1623,22 +1640,6 @@
      "domains": [
       "identity"
      ],
-     "id": "f-06"
-    },
-    {
-     "harm": "H6",
-     "kind": "org",
-     "label": "Organisation",
-     "confidence": "low",
-     "subject": "unknown",
-     "masked": "L•••••• P••• H••• S•••••",
-     "category": "orgs",
-     "source": "promoted",
-     "inCodeBlock": false,
-     "count": 1,
-     "domains": [
-      "professional"
-     ],
      "id": "f-07"
     },
     {
@@ -1647,7 +1648,7 @@
      "label": "Organisation",
      "confidence": "low",
      "subject": "unknown",
-     "masked": "F•••• S••••• B•••",
+     "masked": "L•••••• P••• H••• S•••••",
      "category": "orgs",
      "source": "promoted",
      "inCodeBlock": false,
@@ -1731,7 +1732,8 @@
       "low": 6
      },
      "bySubject": {
-      "unknown": 6
+      "account_holder": 1,
+      "unknown": 5
      }
     }
    },
@@ -2628,6 +2630,38 @@
     },
     {
      "harm": "H4",
+     "kind": "email",
+     "label": "Email",
+     "confidence": "medium",
+     "subject": "account_holder",
+     "masked": "p••••.•@e••••••.org",
+     "category": "emails",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "domains": [
+      "identity"
+     ],
+     "id": "f-06"
+    },
+    {
+     "harm": "H4",
+     "kind": "handle",
+     "label": "Social handle",
+     "confidence": "medium",
+     "subject": "account_holder",
+     "masked": "@p•••••••••",
+     "category": "handles",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "domains": [
+      "identity"
+     ],
+     "id": "f-07"
+    },
+    {
+     "harm": "H4",
      "kind": "profile_url",
      "label": "Profile URL",
      "confidence": "medium",
@@ -2640,48 +2674,16 @@
      "domains": [
       "identity"
      ],
-     "id": "f-06"
-    },
-    {
-     "harm": "H4",
-     "kind": "email",
-     "label": "Email",
-     "confidence": "medium",
-     "subject": "unknown",
-     "masked": "p••••.•@e••••••.org",
-     "category": "emails",
-     "source": "promoted",
-     "inCodeBlock": false,
-     "count": 1,
-     "domains": [
-      "identity"
-     ],
-     "id": "f-07"
-    },
-    {
-     "harm": "H4",
-     "kind": "handle",
-     "label": "Social handle",
-     "confidence": "medium",
-     "subject": "unknown",
-     "masked": "@p•••••••••",
-     "category": "handles",
-     "source": "promoted",
-     "inCodeBlock": false,
-     "count": 1,
-     "domains": [
-      "identity"
-     ],
      "id": "f-08"
     },
     {
-     "harm": "H6",
-     "kind": "age",
-     "label": "Age",
+     "harm": "H4",
+     "kind": "self_name",
+     "label": "Your name",
      "confidence": "medium",
      "subject": "account_holder",
-     "masked": "30s",
-     "category": "ages",
+     "masked": "P••••",
+     "category": "names",
      "source": "promoted",
      "inCodeBlock": false,
      "count": 1,
@@ -2691,11 +2693,27 @@
      "id": "f-09"
     },
     {
+     "harm": "H4",
+     "kind": "self_name",
+     "label": "Your name",
+     "confidence": "medium",
+     "subject": "account_holder",
+     "masked": "P•••• N••••••••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "domains": [
+      "identity"
+     ],
+     "id": "f-10"
+    },
+    {
      "harm": "H6",
      "kind": "url",
      "label": "URL",
      "confidence": "medium",
-     "subject": "unknown",
+     "subject": "account_holder",
      "masked": "github.com/•••",
      "category": "links",
      "source": "promoted",
@@ -2704,32 +2722,16 @@
      "domains": [
       "digital"
      ],
-     "id": "f-10"
-    },
-    {
-     "harm": "H6",
-     "kind": "name",
-     "label": "Name",
-     "confidence": "low",
-     "subject": "unknown",
-     "masked": "P••••",
-     "category": "names",
-     "source": "promoted",
-     "inCodeBlock": false,
-     "count": 1,
-     "domains": [
-      "identity"
-     ],
      "id": "f-11"
     },
     {
      "harm": "H6",
-     "kind": "name",
-     "label": "Name",
-     "confidence": "low",
+     "kind": "age",
+     "label": "Age",
+     "confidence": "medium",
      "subject": "unknown",
-     "masked": "P••••",
-     "category": "names",
+     "masked": "30s",
+     "category": "ages",
      "source": "promoted",
      "inCodeBlock": false,
      "count": 1,
@@ -2737,6 +2739,86 @@
       "identity"
      ],
      "id": "f-12"
+    },
+    {
+     "harm": "H6",
+     "kind": "org",
+     "label": "Organisation",
+     "confidence": "low",
+     "subject": "account_holder",
+     "masked": "I••••••",
+     "category": "orgs",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "domains": [
+      "professional"
+     ],
+     "id": "f-13"
+    },
+    {
+     "harm": "H6",
+     "kind": "place",
+     "label": "Place",
+     "confidence": "low",
+     "subject": "account_holder",
+     "masked": "A•••••",
+     "category": "places",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 4,
+     "domains": [
+      "location"
+     ],
+     "id": "f-14"
+    },
+    {
+     "harm": "H6",
+     "kind": "place",
+     "label": "Place",
+     "confidence": "low",
+     "subject": "account_holder",
+     "masked": "T••••",
+     "category": "places",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "domains": [
+      "location"
+     ],
+     "id": "f-15"
+    },
+    {
+     "harm": "H6",
+     "kind": "place",
+     "label": "Place",
+     "confidence": "low",
+     "subject": "account_holder",
+     "masked": "1• E•• G••••",
+     "category": "places",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "domains": [
+      "location"
+     ],
+     "id": "f-16"
+    },
+    {
+     "harm": "H6",
+     "kind": "name",
+     "label": "Name",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "P••••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "domains": [
+      "identity"
+     ],
+     "id": "f-17"
     },
     {
      "harm": "H6",
@@ -2752,7 +2834,7 @@
      "domains": [
       "identity"
      ],
-     "id": "f-13"
+     "id": "f-18"
     },
     {
      "harm": "H6",
@@ -2760,7 +2842,7 @@
      "label": "Name",
      "confidence": "low",
      "subject": "unknown",
-     "masked": "P•••• N••••••••",
+     "masked": "M••• C•••",
      "category": "names",
      "source": "promoted",
      "inCodeBlock": false,
@@ -2768,7 +2850,23 @@
      "domains": [
       "identity"
      ],
-     "id": "f-14"
+     "id": "f-19"
+    },
+    {
+     "harm": "H6",
+     "kind": "name",
+     "label": "Name",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "L•• G•••••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "domains": [
+      "identity"
+     ],
+     "id": "f-20"
     },
     {
      "harm": "H6",
@@ -2784,71 +2882,7 @@
      "domains": [
       "professional"
      ],
-     "id": "f-15"
-    },
-    {
-     "harm": "H6",
-     "kind": "org",
-     "label": "Organisation",
-     "confidence": "low",
-     "subject": "unknown",
-     "masked": "I••••••",
-     "category": "orgs",
-     "source": "promoted",
-     "inCodeBlock": false,
-     "count": 1,
-     "domains": [
-      "professional"
-     ],
-     "id": "f-16"
-    },
-    {
-     "harm": "H6",
-     "kind": "place",
-     "label": "Place",
-     "confidence": "low",
-     "subject": "unknown",
-     "masked": "A•••••",
-     "category": "places",
-     "source": "promoted",
-     "inCodeBlock": false,
-     "count": 4,
-     "domains": [
-      "location"
-     ],
-     "id": "f-17"
-    },
-    {
-     "harm": "H6",
-     "kind": "place",
-     "label": "Place",
-     "confidence": "low",
-     "subject": "unknown",
-     "masked": "T••••",
-     "category": "places",
-     "source": "promoted",
-     "inCodeBlock": false,
-     "count": 1,
-     "domains": [
-      "location"
-     ],
-     "id": "f-18"
-    },
-    {
-     "harm": "H6",
-     "kind": "place",
-     "label": "Place",
-     "confidence": "low",
-     "subject": "unknown",
-     "masked": "1• E•• G••••",
-     "category": "places",
-     "source": "promoted",
-     "inCodeBlock": false,
-     "count": 1,
-     "domains": [
-      "location"
-     ],
-     "id": "f-19"
+     "id": "f-21"
     },
     {
      "harm": "H6",
@@ -2864,7 +2898,7 @@
      "domains": [
       "location"
      ],
-     "id": "f-20"
+     "id": "f-22"
     }
    ],
    "bands": {
@@ -2893,14 +2927,13 @@
      }
     },
     "H4": {
-     "unique": 4,
+     "unique": 6,
      "byConfidence": {
       "high": 1,
-      "medium": 3
+      "medium": 5
      },
      "bySubject": {
-      "account_holder": 2,
-      "unknown": 2
+      "account_holder": 6
      }
     },
     "H5": {
@@ -2909,14 +2942,14 @@
      "bySubject": {}
     },
     "H6": {
-     "unique": 16,
+     "unique": 14,
      "byConfidence": {
       "medium": 2,
-      "low": 14
+      "low": 12
      },
      "bySubject": {
-      "account_holder": 1,
-      "unknown": 15
+      "account_holder": 5,
+      "unknown": 9
      }
     }
    },
@@ -2945,9 +2978,9 @@
       "H1": 0,
       "H2": 3,
       "H3": 0,
-      "H4": 4,
+      "H4": 6,
       "H5": 0,
-      "H6": 9
+      "H6": 7
      },
      "health": {
       "H1": 0,
@@ -3025,14 +3058,15 @@
       "H3": {},
       "H4": {
        "phone": 1,
-       "profile_url": 1,
        "email": 1,
-       "handle": 1
+       "handle": 1,
+       "profile_url": 1,
+       "self_name": 2
       },
       "H5": {},
       "H6": {
        "age": 1,
-       "name": 8
+       "name": 6
       }
      },
      "health": {
@@ -3145,10 +3179,10 @@
     },
     "identityBridges": {
      "harmBand": "H4",
-     "score": 97,
+     "score": 99,
      "confidence": "confirmed",
      "lowerBound": true,
-     "aboutYou": 4,
+     "aboutYou": 8,
      "aboutOthers": 0,
      "note": "Account-holder bridges only. Name-bag and unvalidated phones are corpus volume."
     },
@@ -3363,7 +3397,7 @@
      "kind": "iban",
      "label": "IBAN",
      "confidence": "high",
-     "subject": "unknown",
+     "subject": "account_holder",
      "masked": "•••• •••• •••• •••• •••• 00",
      "category": "bank",
      "source": "promoted",
@@ -3395,12 +3429,12 @@
      "kind": "phone",
      "label": "Phone number",
      "confidence": "high",
-     "subject": "unknown",
-     "masked": "+• ••• ••• ••01",
+     "subject": "account_holder",
+     "masked": "+•• ••• ••• ••98",
      "category": "phones",
      "source": "promoted",
      "inCodeBlock": false,
-     "count": 1,
+     "count": 2,
      "domains": [
       "identity"
      ],
@@ -3412,15 +3446,31 @@
      "label": "Phone number",
      "confidence": "high",
      "subject": "unknown",
-     "masked": "+•• ••• ••• ••98",
+     "masked": "+• ••• ••• ••01",
      "category": "phones",
      "source": "promoted",
      "inCodeBlock": false,
-     "count": 2,
+     "count": 1,
      "domains": [
       "identity"
      ],
      "id": "f-04"
+    },
+    {
+     "harm": "H4",
+     "kind": "self_name",
+     "label": "Your name",
+     "confidence": "medium",
+     "subject": "account_holder",
+     "masked": "M•••••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 3,
+     "domains": [
+      "identity"
+     ],
+     "id": "f-05"
     },
     {
      "harm": "H4",
@@ -3436,14 +3486,14 @@
      "domains": [
       "identity"
      ],
-     "id": "f-05"
+     "id": "f-06"
     },
     {
      "harm": "H4",
      "kind": "email",
      "label": "Email",
      "confidence": "medium",
-     "subject": "unknown",
+     "subject": "third_party",
      "masked": "m•••••.•••••@e••••••.net",
      "category": "emails",
      "source": "promoted",
@@ -3452,7 +3502,7 @@
      "domains": [
       "identity"
      ],
-     "id": "f-06"
+     "id": "f-07"
     },
     {
      "harm": "H6",
@@ -3468,55 +3518,55 @@
      "domains": [
       "other"
      ],
-     "id": "f-07"
-    },
-    {
-     "harm": "H6",
-     "kind": "name",
-     "label": "Name",
-     "confidence": "low",
-     "subject": "unknown",
-     "masked": "M•••••",
-     "category": "names",
-     "source": "promoted",
-     "inCodeBlock": false,
-     "count": 3,
-     "domains": [
-      "identity"
-     ],
      "id": "f-08"
     },
     {
      "harm": "H6",
-     "kind": "name",
-     "label": "Name",
+     "kind": "org",
+     "label": "Organisation",
      "confidence": "low",
-     "subject": "unknown",
-     "masked": "A•••",
-     "category": "names",
+     "subject": "account_holder",
+     "masked": "N•••••••• L••••••••",
+     "category": "orgs",
      "source": "promoted",
      "inCodeBlock": false,
      "count": 1,
      "domains": [
-      "identity"
+      "professional"
      ],
      "id": "f-09"
     },
     {
      "harm": "H6",
-     "kind": "name",
-     "label": "Name",
+     "kind": "place",
+     "label": "Place",
      "confidence": "low",
-     "subject": "unknown",
-     "masked": "L•••",
-     "category": "names",
+     "subject": "account_holder",
+     "masked": "H••••••",
+     "category": "places",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 4,
+     "domains": [
+      "location"
+     ],
+     "id": "f-10"
+    },
+    {
+     "harm": "H6",
+     "kind": "place",
+     "label": "Place",
+     "confidence": "low",
+     "subject": "account_holder",
+     "masked": "T••••••",
+     "category": "places",
      "source": "promoted",
      "inCodeBlock": false,
      "count": 3,
      "domains": [
-      "identity"
+      "location"
      ],
-     "id": "f-10"
+     "id": "f-11"
     },
     {
      "harm": "H6",
@@ -3532,7 +3582,7 @@
      "domains": [
       "identity"
      ],
-     "id": "f-11"
+     "id": "f-12"
     },
     {
      "harm": "H6",
@@ -3548,53 +3598,37 @@
      "domains": [
       "identity"
      ],
-     "id": "f-12"
-    },
-    {
-     "harm": "H6",
-     "kind": "org",
-     "label": "Organisation",
-     "confidence": "low",
-     "subject": "unknown",
-     "masked": "N•••••••• L••••••••",
-     "category": "orgs",
-     "source": "promoted",
-     "inCodeBlock": false,
-     "count": 1,
-     "domains": [
-      "professional"
-     ],
      "id": "f-13"
     },
     {
      "harm": "H6",
-     "kind": "place",
-     "label": "Place",
+     "kind": "name",
+     "label": "Name",
      "confidence": "low",
-     "subject": "unknown",
-     "masked": "H••••••",
-     "category": "places",
+     "subject": "third_party",
+     "masked": "A•••",
+     "category": "names",
      "source": "promoted",
      "inCodeBlock": false,
-     "count": 4,
+     "count": 1,
      "domains": [
-      "location"
+      "identity"
      ],
      "id": "f-14"
     },
     {
      "harm": "H6",
-     "kind": "place",
-     "label": "Place",
+     "kind": "name",
+     "label": "Name",
      "confidence": "low",
-     "subject": "unknown",
-     "masked": "T••••••",
-     "category": "places",
+     "subject": "third_party",
+     "masked": "L•••",
+     "category": "names",
      "source": "promoted",
      "inCodeBlock": false,
      "count": 3,
      "domains": [
-      "location"
+      "identity"
      ],
      "id": "f-15"
     },
@@ -3603,7 +3637,7 @@
      "kind": "place",
      "label": "Place",
      "confidence": "low",
-     "subject": "unknown",
+     "subject": "third_party",
      "masked": "M•••• G••••",
      "category": "places",
      "source": "promoted",
@@ -3628,8 +3662,7 @@
       "medium": 1
      },
      "bySubject": {
-      "unknown": 1,
-      "account_holder": 1
+      "account_holder": 2
      }
     },
     "H3": {
@@ -3638,13 +3671,15 @@
      "bySubject": {}
     },
     "H4": {
-     "unique": 4,
+     "unique": 5,
      "byConfidence": {
       "high": 2,
-      "medium": 2
+      "medium": 3
      },
      "bySubject": {
-      "unknown": 4
+      "account_holder": 2,
+      "unknown": 2,
+      "third_party": 1
      }
     },
     "H5": {
@@ -3653,13 +3688,15 @@
      "bySubject": {}
     },
     "H6": {
-     "unique": 10,
+     "unique": 9,
      "byConfidence": {
       "medium": 1,
-      "low": 9
+      "low": 8
      },
      "bySubject": {
-      "unknown": 10
+      "unknown": 3,
+      "account_holder": 3,
+      "third_party": 3
      }
     }
    },
@@ -3688,9 +3725,9 @@
       "H1": 0,
       "H2": 1,
       "H3": 0,
-      "H4": 4,
+      "H4": 5,
       "H5": 0,
-      "H6": 5
+      "H6": 4
      },
      "health": {
       "H1": 0,
@@ -3768,11 +3805,12 @@
       "H3": {},
       "H4": {
        "phone": 2,
+       "self_name": 1,
        "email": 2
       },
       "H5": {},
       "H6": {
-       "name": 5
+       "name": 4
       }
      },
      "health": {
@@ -3883,11 +3921,11 @@
     },
     "identityBridges": {
      "harmBand": "H4",
-     "score": 0,
-     "confidence": "low",
+     "score": 64,
+     "confidence": "high",
      "lowerBound": true,
-     "aboutYou": 0,
-     "aboutOthers": 0,
+     "aboutYou": 2,
+     "aboutOthers": 1,
      "note": "Account-holder bridges only. Name-bag and unvalidated phones are corpus volume."
     },
     "corpusVolume": {
@@ -4276,19 +4314,35 @@
     },
     {
      "harm": "H6",
-     "kind": "name",
-     "label": "Name",
+     "kind": "place",
+     "label": "Place",
      "confidence": "low",
-     "subject": "unknown",
-     "masked": "P••••",
-     "category": "names",
+     "subject": "account_holder",
+     "masked": "A•••••",
+     "category": "places",
      "source": "promoted",
      "inCodeBlock": false,
      "count": 1,
      "domains": [
-      "identity"
+      "location"
      ],
      "id": "f-13"
+    },
+    {
+     "harm": "H6",
+     "kind": "place",
+     "label": "Place",
+     "confidence": "low",
+     "subject": "account_holder",
+     "masked": "T••••",
+     "category": "places",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "domains": [
+      "location"
+     ],
+     "id": "f-14"
     },
     {
      "harm": "H6",
@@ -4304,7 +4358,7 @@
      "domains": [
       "identity"
      ],
-     "id": "f-14"
+     "id": "f-15"
     },
     {
      "harm": "H6",
@@ -4320,7 +4374,7 @@
      "domains": [
       "identity"
      ],
-     "id": "f-15"
+     "id": "f-16"
     },
     {
      "harm": "H6",
@@ -4336,7 +4390,7 @@
      "domains": [
       "identity"
      ],
-     "id": "f-16"
+     "id": "f-17"
     },
     {
      "harm": "H6",
@@ -4352,7 +4406,7 @@
      "domains": [
       "identity"
      ],
-     "id": "f-17"
+     "id": "f-18"
     },
     {
      "harm": "H6",
@@ -4368,37 +4422,21 @@
      "domains": [
       "identity"
      ],
-     "id": "f-18"
-    },
-    {
-     "harm": "H6",
-     "kind": "place",
-     "label": "Place",
-     "confidence": "low",
-     "subject": "unknown",
-     "masked": "A•••••",
-     "category": "places",
-     "source": "promoted",
-     "inCodeBlock": false,
-     "count": 1,
-     "domains": [
-      "location"
-     ],
      "id": "f-19"
     },
     {
      "harm": "H6",
-     "kind": "place",
-     "label": "Place",
+     "kind": "name",
+     "label": "Name",
      "confidence": "low",
      "subject": "unknown",
-     "masked": "T••••",
-     "category": "places",
+     "masked": "E••••",
+     "category": "names",
      "source": "promoted",
      "inCodeBlock": false,
-     "count": 1,
+     "count": 32,
      "domains": [
-      "location"
+      "identity"
      ],
      "id": "f-20"
     },
@@ -4484,13 +4522,13 @@
      "bySubject": {}
     },
     "H4": {
-     "unique": 214,
+     "unique": 215,
      "byConfidence": {
       "high": 100,
-      "medium": 114
+      "medium": 115
      },
      "bySubject": {
-      "account_holder": 100,
+      "account_holder": 101,
       "unknown": 114
      }
     },
@@ -4500,12 +4538,13 @@
      "bySubject": {}
     },
     "H6": {
-     "unique": 79,
+     "unique": 78,
      "byConfidence": {
-      "low": 79
+      "low": 78
      },
      "bySubject": {
-      "unknown": 79
+      "account_holder": 2,
+      "unknown": 76
      }
     }
    },
@@ -4534,9 +4573,9 @@
       "H1": 0,
       "H2": 0,
       "H3": 0,
-      "H4": 214,
+      "H4": 215,
       "H5": 0,
-      "H6": 70
+      "H6": 69
      },
      "health": {
       "H1": 0,
@@ -4610,11 +4649,12 @@
       "H3": {},
       "H4": {
        "phone": 100,
+       "self_name": 1,
        "email": 114
       },
       "H5": {},
       "H6": {
-       "name": 70
+       "name": 69
       }
      },
      "health": {
@@ -4724,7 +4764,7 @@
      "score": 100,
      "confidence": "high",
      "lowerBound": true,
-     "aboutYou": 100,
+     "aboutYou": 101,
      "aboutOthers": 0,
      "note": "Account-holder bridges only. Name-bag and unvalidated phones are corpus volume."
     },

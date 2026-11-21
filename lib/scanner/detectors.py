@@ -8,22 +8,25 @@ from typing import List, Optional, Tuple
 
 from lib.scanner.report import DATE_LIKE_RE
 
-CODE_BLOCK_RE = re.compile(r"```(.*?)```", re.S)
-
-H1_ONLY_WHEN_FENCED = True
+# Closed fences, or an unclosed one running to the end of the text (as scan.py blanks it).
+CODE_BLOCK_RE = re.compile(r"```(.*?)(?:```|\Z)", re.S)
 
 PRIVATE_KEY_RE = re.compile(r"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----")
 AWS_KEY_RE = re.compile(r"\bAKIA[0-9A-Z]{16}\b")
 API_TOKEN_RE = re.compile(
-    r"\b(?:sk-[A-Za-z0-9]{20,}|ghp_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|"
+    r"\b(?:sk-(?:proj-|svcacct-|admin-|ant-[a-z]+\d*-)?[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9]{20,}|"
+    r"github_pat_[A-Za-z0-9_]{20,}|"
     r"xox[baprs]-[A-Za-z0-9-]{10,})\b"
 )
 JWT_RE = re.compile(r"\beyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\b")
+# "password: x", "password = x" or "my password is x"; word-bounded so "Topspin:" is not a cue.
 PASSWORD_CUE_RE = re.compile(
-    r"(?i)(?:password|passcode|pin|recovery code)\s*[:=]\s*(\S{6,})"
+    r"(?i)\b(?:password|passcode|pin|recovery code)\b(\s+is\b\s*:?|\s*[:=])\s*(\S{6,})"
 )
+# A signing or token query parameter with a long value; a bare "reset" or "presets" in a path is not one.
 TOKEN_URL_RE = re.compile(
-    r"https?://[^\s]+(?:X-Amz-Signature=|token=|sig=|reset)[^\s]{20,}",
+    r"https?://[^\s?#]+\?[^\s]*?\b(?:X-Amz-Signature|X-Goog-Signature|sig|signature|token|access_token|"
+    r"reset_token|code)=[^\s&#]{20,}",
     re.I,
 )
 
@@ -31,7 +34,6 @@ PAN_RE = re.compile(r"\b(?:\d[ -]*?){13,19}\b")
 SSN_RE = re.compile(r"\b(?!000|666|9\d{2})\d{3}-(?!00)\d{2}-(?!0000)\d{4}\b")
 NINO_RE = re.compile(r"\b[A-CEGHJ-PR-TW-Z]{2}\d{6}[A-D]\b", re.I)
 AADHAAR_RE = re.compile(r"\b\d{4}\s\d{4}\s\d{4}\b")
-PASSPORT_RE = re.compile(r"\b[A-Z0-9]{8,9}\b")
 
 HEALTH_RE = re.compile(
     r"(?i)\b(?:diabetes|asthma|allerg(?:y|ic)|anxiety|depression|adhd|therapy|"
@@ -43,8 +45,10 @@ IMMIGRATION_RE = re.compile(
 RELIGION_RE = re.compile(r"(?i)\b(?:hindu|muslim|christian|sikh|jewish|buddhist)\b")
 CHILDREN_RE = re.compile(r"(?i)\b(?:my (?:son|daughter|kid|child)|(?:son|daughter)'s name)\b")
 ORIENTATION_RE = re.compile(r"(?i)\b(?:gay|lesbian|bisexual|lgbtq)\b")
+# House number, a capitalised street name, a street word: "18 Elm Grove", "221B Baker Street".
 STREET_RE = re.compile(
-    r"(?i)\b\d+\s+\w+(?:\s+\w+){0,3}\s+(?:street|st|road|rd|grove|avenue|flat|apt)\b"
+    r"\b\d{1,5}[A-Za-z]?\s+(?:[A-Z][a-z'’-]+\s+){1,3}(?:Street|St|Road|Rd|Grove|Avenue|Ave|Lane|Ln|Drive|Dr|"
+    r"Boulevard|Blvd|Way|Close|Crescent|Place|Terrace|Court|Gardens|Row|Square)\b"
 )
 UK_POSTCODE_RE = re.compile(r"\b[A-Z]{1,2}\d[A-Z\d]?\s*\d[A-Z]{2}\b")
 GPS_RE = re.compile(r"\b(-?\d+\.\d{5,}),\s*(-?\d+\.\d{5,})\b")
@@ -72,10 +76,10 @@ GOV_CUE_RE = re.compile(
     r"(?i)(?:ssn|social security|aadhaar|nino|national insurance|passport|tax id|pan card).{0,32}$"
 )
 CARD_CUE_RE = re.compile(r"(?i)(?:card|visa|mastercard|cvv|pan).{0,24}$")
-EMPLOYER_CUE_RE = re.compile(r"(?i)\b(?:I work at|I joined|my employer|join)\b.{0,40}$")
+# The organisation must be capitalised: "I work at Acme" yes, "I joined a gym" / "I work at home" no.
 EMPLOYER_RE = re.compile(
-    r"(?i)\b(?:I work at|I joined|my employer(?:\s+is)?)\s*:?\s+"
-    r"([A-Za-z][\w&.\-]*(?:\s+[A-Za-z][\w&.\-]*){0,5})"
+    r"\b(?:[Ii] work (?:at|for)|[Ii] joined|[Mm]y employer(?:\s+is)?)\s*:?\s+"
+    r"([A-Z][\w&.\-]*(?:\s+[A-Z][\w&.\-]*){0,5})"
 )
 COMPENSATION_RE = re.compile(
     r"(?i)\b(?:salary|ctc|compensation|i make|i earn)\b[^\n]{0,40}?"
@@ -169,7 +173,10 @@ def detect_secrets(text: str, in_code_block: bool) -> List[Hit]:
     ):
         for m in pattern.finditer(text):
             val = m.group(0)
-            if kind == "api_token" and (EXAMPLE_WORDS.search(val) or len(val) < 24):
+            # "sk-" also starts hyphenated words ("sk-learn-model-selection"): real keys always carry digits
+            if kind == "api_token" and (
+                EXAMPLE_WORDS.search(val) or len(val) < 24 or (val.startswith("sk-") and not re.search(r"\d", val))
+            ):
                 continue
             if kind == "jwt" and EXAMPLE_WORDS.search(text[max(0, m.start() - 40):m.end() + 40]):
                 continue
@@ -177,11 +184,17 @@ def detect_secrets(text: str, in_code_block: bool) -> List[Hit]:
                 continue
             out.append(Hit(kind, val, m.start(), m.end(), conf, in_code_block, "H1", _window(text, m.start())))
     for m in PASSWORD_CUE_RE.finditer(text):
-        secret = m.group(1)
+        secret = m.group(2).rstrip(".,;)")
+        if len(secret) < 6:
+            continue
         if secret.lower() in ("password", "secret", "123456") or len(secret) < 8 and secret.isalpha():
             continue
+        # "my password is incorrect": after "is", only something that looks like a password counts
+        if m.group(1).strip().startswith("is") and not re.search(r"[^a-z]", secret):
+            continue
         out.append(Hit(
-            "password_cue", secret, m.start(1), m.end(1), "medium", in_code_block, "H1", _window(text, m.start()),
+            "password_cue", secret, m.start(2), m.start(2) + len(secret), "medium", in_code_block, "H1",
+            _window(text, m.start()),
         ))
     return out
 

@@ -5,6 +5,7 @@ import { readFileSync } from "node:fs";
 import { detect } from "../../web/lib/detectors.js";
 import { assemble } from "../../web/lib/sensitivity.js";
 import { readEnvelope, nullEnvelope } from "../../web/lib/envelope.js";
+import { bytesSource } from "../../web/lib/extract.js";
 
 const root = new URL("../../", import.meta.url);
 const fixture = JSON.parse(readFileSync(new URL("tests/web/fixtures/detectors.json", root), "utf8"));
@@ -23,7 +24,7 @@ for (const { name, text, inCodeBlock, findings } of fixture.cases) {
 
 test("readEnvelope matches Python fixture", async () => {
   const bytes = new Uint8Array(readFileSync(new URL("tests/web/fixtures/zips/envelope.zip", root)));
-  const env = await readEnvelope("export.zip", bytes);
+  const env = await readEnvelope(bytesSource("export.zip", bytes));
   const rows = env.findings.map(({ label, ...rest }) => rest);
   const expected = { ...envelopeExpected, findings: envelopeExpected.findings };
   assert.deepEqual({ ...env, findings: rows }, expected);

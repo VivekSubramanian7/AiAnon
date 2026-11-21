@@ -103,4 +103,20 @@ def test_legacy_report_strip(client, monkeypatch):
     body = wait_for(client, client.post("/api/scan", data={"text": "hello"}).json()["jobId"]).json()
     report = body["report"]
     assert "score" in report and "categories" in report
-    assert "findings" not in report
+    for key in ("schemaVersion", "findings", "bands", "domainMatrix", "readouts", "coverage"):
+        assert key not in report, key
+
+
+def test_local_app_serves_the_shared_report_view(client):
+    """The v2 report view and its stylesheets exist once, in web/; the local app serves them from there."""
+    for path, kind in [
+        ("/static/lib/report-view.js", "javascript"),
+        ("/static/lib/analysis-prompt.js", "javascript"),
+        ("/static/matrix.css", "text/css"),
+        ("/static/howto-extras.css", "text/css"),
+        ("/static/styles.css", "text/css"),
+        ("/static/app.js", "javascript"),
+    ]:
+        response = client.get(path)
+        assert response.status_code == 200, path
+        assert kind in response.headers["content-type"], path

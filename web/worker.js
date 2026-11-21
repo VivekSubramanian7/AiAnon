@@ -41,10 +41,8 @@ async function read(input) {
   const extracted = input.file
     ? await extractFile(fileSource(input.file))
     : extractText(input.text ?? "");
-  if (input.file) {
-    const raw = new Uint8Array(await input.file.arrayBuffer());
-    envelope = await readEnvelope(input.file.name, raw);
-  }
+  // Reads only the zip directory and user.json through File.slice: multi-GB exports never load whole.
+  if (input.file) envelope = await readEnvelope(fileSource(input.file));
   current = { input, extracted, envelope, friskKeys: null };
   return extracted;
 }

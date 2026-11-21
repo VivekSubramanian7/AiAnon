@@ -96,6 +96,27 @@ def test_classify_subject_cues():
     assert classify_subject("", kind="private_key") == "account_holder"
 
 
+def test_classify_subject_uses_the_text_before_the_value():
+    assert classify_subject("I met ", kind="name") == "unknown"            # someone else's name
+    assert classify_subject("My email is ", kind="email") == "account_holder"
+    assert classify_subject("my wife's number is ", kind="phone") == "third_party"
+    assert classify_subject("", kind="self_name") == "account_holder"
+
+
+def test_password_mask_hides_first_character_and_length():
+    assert mask_kind("password_cue", "Hunter2-Summer!") == "•" * 8
+    assert mask_kind("password_cue", "abc12345") == "•" * 8
+
+
+def test_credentials_score_caps_near_100_for_three_live_secrets():
+    rows = [
+        {"harm": "H1", "kind": "private_key", "confidence": "high", "subject": "account_holder", "masked": "a", "id": "f-01"},
+        {"harm": "H1", "kind": "aws_access_key", "confidence": "high", "subject": "account_holder", "masked": "b", "id": "f-02"},
+        {"harm": "H1", "kind": "api_token", "confidence": "high", "subject": "account_holder", "masked": "c", "id": "f-03"},
+    ]
+    assert build_readouts(rows, 0, "clean", False)["credentials"]["score"] >= 99
+
+
 def test_build_readouts_floors_and_bridges():
     aws = _row("H1", "high", "account_holder", kind="aws_access_key")
     ro = build_readouts([aws], legacy_score=66, legacy_level="oversharer", lower_bound=True)

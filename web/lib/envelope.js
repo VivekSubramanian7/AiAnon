@@ -51,30 +51,24 @@ function contactFindings(email, phone) {
   return out;
 }
 
-function bytesSource(name, bytes) {
-  return {
-    name,
-    size: bytes.length,
-    read: (offset, length) => Promise.resolve(bytes.subarray(offset, offset + length)),
-  };
-}
-
 /**
- * @param {string} filename
- * @param {Uint8Array} raw
+ * Zip metadata and the masked account contacts in user.json.
+ * @param {{ name: string, size: number, read(offset: number, length: number): Promise<Uint8Array> }} source
+ *   a random-access source (fileSource / bytesSource from extract.js): only the zip's directory and
+ *   user.json are read, never the whole file.
  */
-export async function readEnvelope(filename, raw) {
-  if (!filename.toLowerCase().endsWith(".zip")) return nullEnvelope();
+export async function readEnvelope(source) {
+  if (!source.name.toLowerCase().endsWith(".zip")) return nullEnvelope();
   try {
-    const source = bytesSource(filename, raw);
-    const names = (await listZip(source)).map((e) => e.name);
+    const entries = await listZip(source);
+    const names = entries.map((e) => e.name);
     const userPresent = names.some((n) => USER_JSON_RE.test(n));
     const unread = names.filter((n) => UNREAD_RE.test(n)).slice(0, 20);
     const binaries = names.filter((n) => n.toLowerCase().includes(".dat") || n.split("/").pop().startsWith("file-")).length;
     let findings = [];
     if (userPresent) {
       const userMember = names.find((n) => USER_JSON_RE.test(n));
-      const entry = (await listZip(source)).find((e) => e.name === userMember);
+      const entry = entries.find((e) => e.name === userMember);
       try {
         const data = await readZipEntry(source, entry, MAX_MEMBER_BYTES);
         if (data.length <= MAX_MEMBER_BYTES) {

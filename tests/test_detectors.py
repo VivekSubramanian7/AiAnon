@@ -80,6 +80,37 @@ def test_employer_and_compensation():
     assert "compensation" not in kinds("The laptop costs $120,000")
 
 
+def test_current_key_shapes_and_password_phrasing():
+    assert "api_token" in kinds("my key is sk-proj-Ab3dEf6hIj9kLm2nOp5qRs8tUv1wXy4zAb7cDe0fGh3iJk6")
+    assert "api_token" in kinds("token sk-ant-api03-Ab3dEf6hIj9kLm2nOp5qRs8tUv1wXy4zAb7cDe0fGh3iJk6-xyz")
+    assert "api_token" not in kinds("see the sk-learn-model-selection-guide-pages")
+    found = [h for h in detect("My password is Hunter2-Summer!") if h.kind == "password_cue"]
+    assert found and found[0].value == "Hunter2-Summer!"
+    assert "password_cue" not in kinds("my password is incorrect.")
+    assert "password_cue" not in kinds("Topspin: forehand drills today")
+
+
+def test_signed_urls_need_a_signing_parameter():
+    assert "tokenized_url" not in kinds("Try https://lightroom.adobe.com/presets/cinematic-film-look-collection")
+    assert "tokenized_url" not in kinds(
+        "See https://support.google.com/accounts/answer/41078?topic=reset_password_and_recovery")
+    assert "tokenized_url" in kinds("https://accounts.example.net/reset?token=AbC123dEf456GhI789jKl012")
+
+
+def test_streets_and_employers_need_proper_names():
+    assert "street_address" not in kinds("We drove 5 hours down the coast road")
+    assert "street_address" not in kinds("Looking for a 2 bedroom flat")
+    assert "street_address" in kinds("I live at 221B Baker Street, London NW1 6XE")
+    assert "employer" not in kinds("I joined a gym last week")
+    assert "employer" not in kinds("I work at home on Fridays")
+    assert "employer" in kinds("I joined Contoso Health in May")
+
+
+def test_unclosed_fence_is_still_scanned_for_secrets():
+    slices = fence_slices("Here is my config:\n```\nOPENAI=sk-Ab3dEf6hIj9kLm2nOp5qRs8tUv1wXy4z\n")
+    assert slices and "api_token" in kinds(slices[0], in_code_block=True)
+
+
 def test_profile_and_os_paths():
     assert "profile_url" in kinds("https://www.linkedin.com/in/priya-n")
     assert "profile_url" not in kinds("linkedin.com/company/acme")

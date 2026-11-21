@@ -2,21 +2,24 @@
 
 import { DATE_LIKE_RE } from "./report.js";
 
-export const CODE_BLOCK_RE = /```([\s\S]*?)```/g;
+// Closed fences, or an unclosed one running to the end of the text (as scan.js blanks it).
+export const CODE_BLOCK_RE = /```([\s\S]*?)(?:```|$(?![\s\S]))/g;
 
 const PRIVATE_KEY_RE = /-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/;
 const AWS_KEY_RE = /\bAKIA[0-9A-Z]{16}\b/;
 const API_TOKEN_RE =
-  /\b(?:sk-[A-Za-z0-9]{20,}|ghp_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|xox[baprs]-[A-Za-z0-9-]{10,})\b/;
+  /\b(?:sk-(?:proj-|svcacct-|admin-|ant-[a-z]+\d*-)?[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|xox[baprs]-[A-Za-z0-9-]{10,})\b/;
 const JWT_RE = /\beyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\b/;
-const PASSWORD_CUE_RE = /(?:password|passcode|pin|recovery code)\s*[:=]\s*(\S{6,})/i;
-const TOKEN_URL_RE = /https?:\/\/[^\s]+(?:X-Amz-Signature=|token=|sig=|reset)[^\s]{20,}/i;
+// "password: x", "password = x" or "my password is x"; word-bounded so "Topspin:" is not a cue.
+const PASSWORD_CUE_RE = /\b(?:password|passcode|pin|recovery code)\b(\s+is\b\s*:?|\s*[:=])\s*(\S{6,})/i;
+// A signing or token query parameter with a long value; a bare "reset" or "presets" in a path is not one.
+const TOKEN_URL_RE =
+  /https?:\/\/[^\s?#]+\?[^\s]*?\b(?:X-Amz-Signature|X-Goog-Signature|sig|signature|token|access_token|reset_token|code)=[^\s&#]{20,}/i;
 
 const PAN_RE = /\b(?:\d[ -]*?){13,19}\b/;
 const SSN_RE = /\b(?!000|666|9\d{2})\d{3}-(?!00)\d{2}-(?!0000)\d{4}\b/;
 const NINO_RE = /\b[A-CEGHJ-PR-TW-Z]{2}\d{6}[A-D]\b/i;
 const AADHAAR_RE = /\b\d{4}\s\d{4}\s\d{4}\b/;
-const PASSPORT_RE = /\b[A-Z0-9]{8,9}\b/;
 
 const HEALTH_RE =
   /\b(?:diabetes|asthma|allerg(?:y|ic)|anxiety|depression|adhd|therapy|medication|prescription|pregnant|disability)\w*\b/i;
@@ -24,7 +27,9 @@ const IMMIGRATION_RE = /\b(?:work permit|blue card|aufenthaltstitel|residence pe
 const RELIGION_RE = /\b(?:hindu|muslim|christian|sikh|jewish|buddhist)\b/i;
 const CHILDREN_RE = /\b(?:my (?:son|daughter|kid|child)|(?:son|daughter)'s name)\b/i;
 const ORIENTATION_RE = /\b(?:gay|lesbian|bisexual|lgbtq)\b/i;
-const STREET_RE = /\b\d+\s+\w+(?:\s+\w+){0,3}\s+(?:street|st|road|rd|grove|avenue|flat|apt)\b/i;
+// House number, a capitalised street name, a street word: "18 Elm Grove", "221B Baker Street".
+const STREET_RE =
+  /\b\d{1,5}[A-Za-z]?\s+(?:[A-Z][a-z'’-]+\s+){1,3}(?:Street|St|Road|Rd|Grove|Avenue|Ave|Lane|Ln|Drive|Dr|Boulevard|Blvd|Way|Close|Crescent|Place|Terrace|Court|Gardens|Row|Square)\b/;
 const UK_POSTCODE_RE = /\b[A-Z]{1,2}\d[A-Z\d]?\s*\d[A-Z]{2}\b/;
 const GPS_RE = /\b(-?\d+\.\d{5,}),\s*(-?\d+\.\d{5,})\b/;
 
@@ -46,8 +51,9 @@ const SELF_CUE_MEDIUM = /\b(?:I have|I'm|I've been|my therapist|diagnosed)\b/i;
 const GOV_CUE_RE = /(?:ssn|social security|aadhaar|nino|national insurance|passport|tax id|pan card).{0,32}$/i;
 const CARD_CUE_RE = /(?:card|visa|mastercard|cvv|pan).{0,24}$/i;
 
+// The organisation must be capitalised: "I work at Acme" yes, "I joined a gym" / "I work at home" no.
 const EMPLOYER_RE =
-  /\b(?:I work at|I joined|my employer(?:\s+is)?)\s*:?\s+([A-Za-z][\w&.\-]*(?:\s+[A-Za-z][\w&.\-]*){0,5})/gi;
+  /\b(?:[Ii] work (?:at|for)|[Ii] joined|[Mm]y employer(?:\s+is)?)\s*:?\s+([A-Z][\w&.\-]*(?:\s+[A-Z][\w&.\-]*){0,5})/g;
 const COMPENSATION_RE =
   /\b(?:salary|ctc|compensation|i make|i earn)\b[^\n]{0,40}?((?:[$€£]\s*[\d,]+(?:\.\d{2})?)|(?:[\d,]+(?:\.\d{2})?\s*(?:usd|eur|gbp)\b))/gi;
 
@@ -122,7 +128,8 @@ function detectSecrets(text, inCodeBlock) {
   for (const [pattern, kind, conf] of secretPatterns) {
     for (const m of text.matchAll(new RegExp(pattern.source, pattern.flags + (pattern.global ? "" : "g")))) {
       const val = m[0];
-      if (kind === "api_token" && (EXAMPLE_WORDS.test(val) || val.length < 24)) continue;
+      // "sk-" also starts hyphenated words ("sk-learn-model-selection"): real keys always carry digits
+      if (kind === "api_token" && (EXAMPLE_WORDS.test(val) || val.length < 24 || (val.startsWith("sk-") && !/\d/.test(val)))) continue;
       if (kind === "jwt" && EXAMPLE_WORDS.test(text.slice(Math.max(0, m.index - 40), m.index + m[0].length + 40))) continue;
       if (kind === "tokenized_url" && FAKE_HOSTS.test(val)) continue;
       out.push(hit(kind, val, m.index, m.index + m[0].length, conf, inCodeBlock, "H1", windowBefore(text, m.index)));
@@ -130,10 +137,13 @@ function detectSecrets(text, inCodeBlock) {
   }
   const passRe = new RegExp(PASSWORD_CUE_RE.source, PASSWORD_CUE_RE.flags.includes("g") ? PASSWORD_CUE_RE.flags : PASSWORD_CUE_RE.flags + "g");
   for (const m of text.matchAll(passRe)) {
-    const secret = m[1];
-    const start = m.indices?.[1] ?? m.index + m[0].indexOf(secret);
+    const secret = m[2].replace(/[.,;)]+$/, "");
+    if (secret.length < 6) continue;
+    const start = m.index + m[0].length - m[2].length;
     const end = start + secret.length;
     if (["password", "secret", "123456"].includes(secret.toLowerCase()) || (secret.length < 8 && /^[a-z]+$/i.test(secret))) continue;
+    // "my password is incorrect": after "is", only something that looks like a password counts
+    if (m[1].trim().startsWith("is") && !/[^a-z]/.test(secret)) continue;
     out.push(hit("password_cue", secret, start, end, "medium", inCodeBlock, "H1", windowBefore(text, m.index)));
   }
   return out;

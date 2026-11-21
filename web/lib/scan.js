@@ -4,7 +4,7 @@
 
 import { stripPatterns } from "./patterns.js";
 import { nameTokens } from "./entities.js";
-import { Aggregator, contextBefore, dropNestedDates, exposureScore, levelFor } from "./report.js";
+import { Aggregator, contextBefore, cueBefore, dropNestedDates, exposureScore, levelFor } from "./report.js";
 import { detect, fenceSlices } from "./detectors.js";
 import { buildDomainMatrix } from "./domains.js";
 import {
@@ -151,7 +151,8 @@ export async function scan(extracted, findEntities, { onProgress, shouldStop, en
         const original = token.original || "";
         const context = token.type === "DOB" || token.type === "PHONE" ? contextBefore(chunk.text, original) : "";
         const conf = token.confidence ?? 1.0;
-        if (agg.add(token.type, original, context, conf)) segmentsContaining(chunk, original, withFinds);
+        const cue = cueBefore(chunk.text, original);
+        if (agg.add(token.type, original, context, conf, cue)) segmentsContaining(chunk, original, withFinds);
       }
     } catch (err) {
       if (err?.message === "cancelled") throw err;

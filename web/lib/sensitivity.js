@@ -51,7 +51,8 @@ export const KIND_LABELS = {
   account_phone: "Account phone",
 };
 
-const SELF_NAME_RE = /\b(?:my name is|I am)\b/i;
+// "My name is X", "Name is X" (saved-memory style), "I am X", "I'm X", "call me X": the cue ends right before X.
+const SELF_NAME_RE = /(?:\bmy name is|(?<![A-Za-z'’] )\bname is|\bI am|\bI'm|\bcall me)\s*[:,]?\s*$/i;
 const THIRD_PARTY_RE =
   /\b(?:his|her|their|colleague's|friend's)\b|\bmy (?:colleague|friend|boss|manager|client)\b/i;
 const SELF_CUE_RE = /\b(?:I|I'm|I've|my|me|mine)\b/i;
@@ -141,13 +142,16 @@ export function bandCounts(rows) {
   return result;
 }
 
+// Another person's name stays "unknown" next to "I" or "my" ("I met Tom" is not about Tom being you).
+const NOT_SELF_KINDS = new Set(["name"]);
+
 export function classifySubject(window, { kind }) {
-  if (H1_KINDS.has(kind) || kind === "private_key") {
-    if (!window.trim()) return "account_holder";
-  }
+  if (H1_KINDS.has(kind) && !window.trim()) return "account_holder";
+  if (kind === "self_name") return "account_holder";
   if (kind === "child_name") return "third_party";
-  if (THIRD_PARTY_RE.test(window)) return "third_party";
-  if (SELF_CUE_RE.test(window) && !SELF_NEGATIVE_RE.test(window)) return "account_holder";
+  if (THIRD_PARTY_RE.test(window) || SELF_NEGATIVE_RE.test(window)) return "third_party";
+  if (NOT_SELF_KINDS.has(kind)) return "unknown";
+  if (SELF_CUE_RE.test(window)) return "account_holder";
   if (H1_KINDS.has(kind)) return "account_holder";
   return "unknown";
 }
@@ -167,8 +171,7 @@ function promoteOne(cat, original, window, maxConf) {
   if (cat === "handles") return { harm: "H4", kind: "handle", confidence: "medium" };
   if (cat === "links") return { harm: "H6", kind: "url", confidence: "medium" };
   if (cat === "names") {
-    const fullWindow = (window + " " + original).slice(-80);
-    if (SELF_NAME_RE.test(fullWindow)) return { harm: "H4", kind: "self_name", confidence: "medium" };
+    if (SELF_NAME_RE.test(window)) return { harm: "H4", kind: "self_name", confidence: "medium" };
     return { harm: "H6", kind: "name", confidence: "low" };
   }
   if (cat === "places") return { harm: "H6", kind: "place", confidence: "low" };
@@ -201,7 +204,7 @@ export function promote(aggregator) {
         inCodeBlock: false,
         count,
         _norm: [c, normKey],
-        _window: (window + " " + original).slice(-80),
+        _window: window, // text before the value only: "My Chemical Romance" is not about you
         _original: original,
       });
     }

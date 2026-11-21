@@ -64,11 +64,17 @@ export function categorize(tokenType, original, context = "") {
 }
 
 /** The few characters before the first occurrence of value, on the same line. */
-export function contextBefore(text, value) {
+export function contextBefore(text, value, chars = BIRTH_CONTEXT_CHARS) {
   const index = value ? text.indexOf(value) : -1;
   if (index < 0) return "";
-  const before = text.slice(Math.max(0, index - BIRTH_CONTEXT_CHARS), index);
+  const before = text.slice(Math.max(0, index - chars), index);
   return before.slice(before.lastIndexOf("\n") + 1);
+}
+
+export const CUE_CHARS = 80; // how much text before a finding decides who it is about ("my email is", "his number")
+
+export function cueBefore(text, value) {
+  return contextBefore(text, value, CUE_CHARS);
 }
 
 /** The DOB rules match both '14.02.1991' and 'born on 14.02.1991'. Keep only the birth-date match. */
@@ -170,12 +176,15 @@ function maskSecret(value) {
   return MASK.repeat(4);
 }
 
+const PASSWORD_MASK = MASK.repeat(8);
+
 export function maskKind(kind, value) {
   if (KIND_TO_CATEGORY[kind]) return mask(KIND_TO_CATEGORY[kind], value);
   if (["private_key", "aws_access_key", "api_token", "jwt", "password_cue", "tokenized_url"].includes(kind)) {
     if (kind === "aws_access_key") return maskSecret(value);
     if (kind === "jwt" && value.startsWith("eyJ")) return maskSecret(value);
-    if (kind === "api_token" || kind === "password_cue") return maskSecret(value);
+    if (kind === "password_cue") return PASSWORD_MASK; // no first character, no length
+    if (kind === "api_token") return maskSecret(value);
     if (kind === "private_key") return "-----BEGIN PRIVATE KEY-----";
     if (kind === "tokenized_url") return mask("links", value);
     return maskSecret(value);
@@ -199,7 +208,7 @@ export class Aggregator {
     this.cueWindow = new Map(CATEGORIES.map((c) => [c.key, new Map()]));
   }
 
-  add(tokenType, original, context = "", confidence = 1.0) {
+  add(tokenType, original, context = "", confidence = 1.0, cue = "") {
     if (!original || !original.trim()) return null;
     const category = categorize(tokenType, original, context);
     if (category === null) return null;
@@ -211,9 +220,10 @@ export class Aggregator {
     if (!seen.has(key)) seen.set(key, original);
     const prev = this.maxConfidence.get(category).get(key) ?? 0;
     this.maxConfidence.get(category).set(key, Math.max(prev, confidence));
-    if (context) {
+    const window = cue || context;
+    if (window) {
       const cues = this.cueWindow.get(category);
-      if (!cues.has(key)) cues.set(key, context.slice(-80));
+      if (!cues.has(key)) cues.set(key, window.slice(-CUE_CHARS));
     }
     return category;
   }

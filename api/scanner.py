@@ -26,9 +26,9 @@ MAX_UPLOAD_BYTES = MAX_UPLOAD_MB * 2**20
 MAX_PASTE_CHARS = 2_000_000
 
 SITE_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "public", "scanner")
-ANALYSIS_PROMPT_JS = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "web", "lib", "analysis-prompt.js"
-)
+# The schema v2 report view, its modules and its stylesheets live once, in web/ (the browser TMI),
+# and the local app serves them from there.
+WEB_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "web")
 
 CSP = (
     "default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; "
@@ -66,11 +66,17 @@ def home():
     return FileResponse(os.path.join(SITE_DIR, "index.html"))
 
 
-@app.get("/static/analysis-prompt.js")
-def analysis_prompt_js():
-    return FileResponse(ANALYSIS_PROMPT_JS, media_type="application/javascript")
+@app.get("/static/matrix.css")
+def matrix_css():
+    return FileResponse(os.path.join(WEB_DIR, "matrix.css"), media_type="text/css")
 
 
+@app.get("/static/howto-extras.css")
+def howto_extras_css():
+    return FileResponse(os.path.join(WEB_DIR, "howto-extras.css"), media_type="text/css")
+
+
+app.mount("/static/lib", StaticFiles(directory=os.path.join(WEB_DIR, "lib")), name="shared-lib")
 app.mount("/static", StaticFiles(directory=SITE_DIR), name="static")
 
 
@@ -122,7 +128,7 @@ def scan_status(job_id: str):
         report = dict(job.report)
         # Delete TMI_LEGACY_REPORT after the web UI ships; do not extend the strip list without a failing API test.
         if os.getenv("TMI_LEGACY_REPORT") == "1":
-            for key in ("schemaVersion", "findings", "bands", "readouts", "coverage"):
+            for key in ("schemaVersion", "findings", "bands", "domainMatrix", "readouts", "coverage"):
                 report.pop(key, None)
         body["report"] = report
     return body

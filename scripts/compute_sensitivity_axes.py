@@ -18,7 +18,6 @@ sys.path.insert(0, ROOT)
 
 from lib.scanner.envelope import prepare_upload  # noqa: E402
 from lib.scanner.scan import scan  # noqa: E402
-from lib.scanner.sensitivity_axes import build_axes_payload  # noqa: E402
 
 SCANNER = os.path.join(ROOT, "public", "scanner")
 REPORT_PATH = os.path.join(SCANNER, "mirror-report-data.json")
@@ -41,7 +40,9 @@ def main() -> None:
             wrapped = json.load(f)
         report = wrapped.get("report", wrapped)
 
-    payload = build_axes_payload(report)
+    if not report.get("readouts"):
+        sys.exit("That report has no readouts: rescan it (schema v2) with --zip.")
+    payload = {"modelVersion": "2026-11-19-findings", "readouts": report["readouts"], "coverage": report.get("coverage", {})}
     os.makedirs(os.path.dirname(args.out), exist_ok=True)
     with open(args.out, "w", encoding="utf-8") as f:
         json.dump(payload, f, indent=2)

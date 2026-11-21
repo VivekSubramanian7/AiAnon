@@ -24,7 +24,7 @@ from lib.scanner.findings import (
     cap_findings,
     promote,
 )
-from lib.scanner.report import Aggregator, context_before, drop_nested_dates, exposure_score, level_for
+from lib.scanner.report import Aggregator, context_before, cue_before, drop_nested_dates, exposure_score, level_for
 from lib.types import PipelineInput
 
 MAX_CHUNK_CHARS = 7500
@@ -153,7 +153,8 @@ def scan(
             for token in drop_nested_dates(result.tokens):
                 original = token.original or ""
                 context = context_before(chunk.text, original) if token.type in ("DOB", "PHONE") else ""
-                if agg.add(token.type, original, context, confidence=token.confidence):
+                cue = cue_before(chunk.text, original)
+                if agg.add(token.type, original, context, confidence=token.confidence, cue=cue):
                     segments_with_finds |= _segments_containing(chunk, original)
         if progress:
             progress(i + 1, len(chunks))

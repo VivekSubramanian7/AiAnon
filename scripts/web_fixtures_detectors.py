@@ -46,11 +46,14 @@ def finding_rows(text: str, in_code_block: bool) -> list:
 def build_envelope_zip() -> bytes:
     conv = json.dumps([{"mapping": {"a": {"message": {"author": {"role": "user"}, "content": {"parts": ["hi"]}}}}}])
     buf = io.BytesIO()
+    def member(name: str) -> zipfile.ZipInfo:
+        return zipfile.ZipInfo(name, date_time=(2026, 1, 1, 0, 0, 0))  # fixed date: reruns are byte-identical
+
     with zipfile.ZipFile(buf, "w") as zf:
-        zf.writestr("conversations.json", conv)
-        zf.writestr("user.json", json.dumps({"email": "a@example.com", "phone_number": "+1 202 555 0147"}))
-        zf.writestr("ads.json", "{}")
-        zf.writestr("file-abc.dat", b"bin")
+        zf.writestr(member("conversations.json"), conv)
+        zf.writestr(member("user.json"), json.dumps({"email": "a@example.com", "phone_number": "+1 202 555 0147"}))
+        zf.writestr(member("ads.json"), "{}")
+        zf.writestr(member("file-abc.dat"), b"bin")
     return buf.getvalue()
 
 

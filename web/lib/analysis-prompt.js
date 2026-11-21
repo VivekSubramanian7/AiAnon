@@ -306,9 +306,3 @@ export function buildAnalysisPrompt(report, options = {}) {
 
   return parts.join("\n");
 }
-
-if (typeof globalThis !== "undefined") {
-  globalThis.buildAnalysisPrompt = buildAnalysisPrompt;
-  globalThis.EXPORT_SCHEMA = EXPORT_SCHEMA;
-  globalThis.EXPORT_MODES = EXPORT_MODES;
-}

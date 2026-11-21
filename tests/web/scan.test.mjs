@@ -19,7 +19,7 @@ for (const name of fixture.files) {
     const bytes = new Uint8Array(readFileSync(new URL(`samples/mock-memories/${name}`, root)));
     const extracted = await extractFile(bytesSource(name, bytes));
     const envelope = name.toLowerCase().endsWith(".zip")
-      ? await readEnvelope(name, bytes)
+      ? await readEnvelope(bytesSource(name, bytes))
       : nullEnvelope();
     const { report } = await scan(extracted, findEntities, { envelope });
     delete report.elapsedMs;

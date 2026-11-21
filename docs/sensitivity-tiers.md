@@ -1,8 +1,8 @@
 # Sensitivity tiers and multi-axis scoring (TMI / mirror)
 
-**Status:** **Schema v2** is on both scan paths — Python (`lib/scanner/scan.py`) and browser (`web/lib/scan.js`) — with `findings`, `bands`, `domainMatrix`, `readouts`, and `coverage`. Findings carry `harm`, `confidence`, `subject`, and `domains[]` (`lib/scanner/findings.py` + `lib/scanner/domains.py`, ported in `web/lib/sensitivity.js` and `web/lib/domains.js`). Local scanner (`public/scanner/app.js`) and browser UI (`web/app.js`) lead with a sensitivity × life-domain matrix, then harm readouts and H1–H3 findings. `scripts/compute_sensitivity_axes.py` is a thin wrapper over report readouts (not a second regex pass).
+**Status:** **Schema v2** is on both scan paths — Python (`lib/scanner/scan.py`) and browser (`web/lib/scan.js`) — with `findings`, `bands`, `domainMatrix`, `readouts`, and `coverage`. Findings carry `harm`, `confidence`, `subject`, and `domains[]` (`lib/scanner/findings.py` + `lib/scanner/domains.py`, ported in `web/lib/sensitivity.js` and `web/lib/domains.js`). Local scanner (`public/scanner/app.js`) and browser UI (`web/app.js`) lead with a sensitivity × life-domain matrix, then harm readouts and H1–H3 findings. `scripts/compute_sensitivity_axes.py` dumps a report's readouts (not a second regex pass).
 
-**Influences:** Gap analysis on a real ChatGPT export; [Grok 4.7 review](1a9886fe-719f-462e-b93f-0e58dac73143) (harm vs identifiability, confidence, third parties).
+**Influences:** Gap analysis on a real ChatGPT export; an external model review (harm vs identifiability, confidence, third parties).
 
 ---
 
@@ -156,7 +156,7 @@ Copy: *“Score is a lower bound; N chars and M attachments were not read.”*
 
 ## Three mirror readouts (+ corpus volume)
 
-Scoring lives in `lib/scanner/findings.py` → `build_readouts()`. `lib/scanner/sensitivity_axes.py` re-exports report readouts for `scripts/compute_sensitivity_axes.py` (optional `mirror-sensitivity.json` debug dump).
+Scoring lives in `lib/scanner/findings.py` → `build_readouts()`. `scripts/compute_sensitivity_axes.py` writes a report's readouts to `mirror-sensitivity.json` (optional debug dump).
 
 | Readout | Intent | Fed by |
 |---------|--------|--------|

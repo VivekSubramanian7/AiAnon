@@ -402,6 +402,207 @@
       "text": "The laptop costs $120,000",
       "inCodeBlock": false,
       "findings": []
+    },
+    {
+      "name": "openai_project_key",
+      "text": "my key is sk-proj-Ab3dEf6hIj9kLm2nOp5qRs8tUv1wXy4zAb7cDe0fGh3iJk6",
+      "inCodeBlock": false,
+      "findings": [
+        {
+          "harm": "H1",
+          "kind": "api_token",
+          "confidence": "high",
+          "subject": "account_holder",
+          "masked": "sk-\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "digital"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "anthropic_key",
+      "text": "token sk-ant-api03-Ab3dEf6hIj9kLm2nOp5qRs8tUv1wXy4zAb7cDe0fGh3iJk6-xyz",
+      "inCodeBlock": false,
+      "findings": [
+        {
+          "harm": "H1",
+          "kind": "api_token",
+          "confidence": "high",
+          "subject": "account_holder",
+          "masked": "sk-\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "digital"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "sk_hyphen_words",
+      "text": "see the sk-learn-model-selection-guide-pages",
+      "inCodeBlock": false,
+      "findings": []
+    },
+    {
+      "name": "password_is",
+      "text": "My password is Hunter2-Summer!",
+      "inCodeBlock": false,
+      "findings": [
+        {
+          "harm": "H1",
+          "kind": "password_cue",
+          "confidence": "medium",
+          "subject": "account_holder",
+          "masked": "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "digital"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "password_is_word",
+      "text": "my password is incorrect.",
+      "inCodeBlock": false,
+      "findings": []
+    },
+    {
+      "name": "topspin",
+      "text": "Topspin: forehand drills today",
+      "inCodeBlock": false,
+      "findings": []
+    },
+    {
+      "name": "presets_url",
+      "text": "Try https://lightroom.adobe.com/presets/cinematic-film-look-collection",
+      "inCodeBlock": false,
+      "findings": []
+    },
+    {
+      "name": "help_reset_url",
+      "text": "See https://support.google.com/accounts/answer/41078?topic=reset_password_and_recovery",
+      "inCodeBlock": false,
+      "findings": []
+    },
+    {
+      "name": "token_param_url",
+      "text": "https://accounts.example.net/reset?token=AbC123dEf456GhI789jKl012",
+      "inCodeBlock": false,
+      "findings": [
+        {
+          "harm": "H1",
+          "kind": "tokenized_url",
+          "confidence": "high",
+          "subject": "account_holder",
+          "masked": "accounts.example.net/\u2022\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "digital"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "road_trip",
+      "text": "We drove 5 hours down the coast road",
+      "inCodeBlock": false,
+      "findings": []
+    },
+    {
+      "name": "bedroom_flat",
+      "text": "Looking for a 2 bedroom flat",
+      "inCodeBlock": false,
+      "findings": []
+    },
+    {
+      "name": "baker_street",
+      "text": "I live at 221B Baker Street, London NW1 6XE",
+      "inCodeBlock": false,
+      "findings": [
+        {
+          "harm": "H3",
+          "kind": "street_address",
+          "confidence": "high",
+          "subject": "account_holder",
+          "masked": "2\u2022\u2022\u2022 B\u2022\u2022\u2022\u2022 S\u2022\u2022\u2022\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "location"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "joined_gym",
+      "text": "I joined a gym last week",
+      "inCodeBlock": false,
+      "findings": []
+    },
+    {
+      "name": "work_from_home",
+      "text": "I work at home on Fridays",
+      "inCodeBlock": false,
+      "findings": []
+    },
+    {
+      "name": "joined_company",
+      "text": "I joined Contoso Health in May",
+      "inCodeBlock": false,
+      "findings": [
+        {
+          "harm": "H5",
+          "kind": "employer",
+          "confidence": "medium",
+          "subject": "unknown",
+          "masked": "C\u2022\u2022\u2022\u2022\u2022\u2022 H\u2022\u2022\u2022\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "professional"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "unclosed_fence_key",
+      "text": "OPENAI=sk-Ab3dEf6hIj9kLm2nOp5qRs8tUv1wXy4z\n",
+      "inCodeBlock": true,
+      "findings": [
+        {
+          "harm": "H1",
+          "kind": "api_token",
+          "confidence": "high",
+          "subject": "account_holder",
+          "masked": "sk-\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": true,
+          "count": 1,
+          "domains": [
+            "digital"
+          ]
+        }
+      ]
     }
   ]
 }

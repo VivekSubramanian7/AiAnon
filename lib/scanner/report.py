@@ -99,12 +99,19 @@ def categorize(token_type: str, original: str, context: str = "") -> Optional[st
     return TOKEN_TO_CATEGORY.get(token_type)
 
 
-def context_before(text: str, value: str) -> str:
+def context_before(text: str, value: str, chars: int = BIRTH_CONTEXT_CHARS) -> str:
     """The few characters before the first occurrence of value, on the same line."""
     index = text.find(value) if value else -1
     if index < 0:
         return ""
-    return text[max(0, index - BIRTH_CONTEXT_CHARS):index].rsplit("\n", 1)[-1]
+    return text[max(0, index - chars):index].rsplit("\n", 1)[-1]
+
+
+CUE_CHARS = 80  # how much text before a finding decides who it is about ("my email is", "his number")
+
+
+def cue_before(text: str, value: str) -> str:
+    return context_before(text, value, CUE_CHARS)
 
 
 def drop_nested_dates(tokens: list) -> list:
@@ -175,6 +182,9 @@ def _mask_secret(value: str) -> str:
     return MASK * 4
 
 
+PASSWORD_MASK = MASK * 8
+
+
 def mask_kind(kind: str, value: str) -> str:
     """Masked span for detector-only kinds; promoted kinds use category via KIND_TO_CATEGORY."""
     if kind in KIND_TO_CATEGORY:
@@ -191,7 +201,9 @@ def mask_kind(kind: str, value: str) -> str:
             return _mask_secret(value)
         if kind == "jwt" and value.startswith("eyJ"):
             return _mask_secret(value)
-        if kind in ("api_token", "password_cue"):
+        if kind == "password_cue":
+            return PASSWORD_MASK  # no first character, no length
+        if kind == "api_token":
             return _mask_secret(value)
         if kind == "private_key":
             return "-----BEGIN PRIVATE KEY-----"
@@ -246,6 +258,7 @@ class Aggregator:
         original: str,
         context: str = "",
         confidence: float = 1.0,
+        cue: str = "",
     ) -> Optional[str]:
         if not original or not original.strip():
             return None
@@ -258,8 +271,9 @@ class Aggregator:
         self.first_seen[category].setdefault(key, original)
         prev = self.max_confidence[category].get(key, 0.0)
         self.max_confidence[category][key] = max(prev, confidence)
-        if context:
-            self.cue_window[category].setdefault(key, context[-80:])
+        window = cue or context
+        if window:
+            self.cue_window[category].setdefault(key, window[-CUE_CHARS:])
         return category
 
     def _merge_first_names(self) -> None:

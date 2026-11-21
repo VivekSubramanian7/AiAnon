@@ -26,6 +26,9 @@ MAX_UPLOAD_BYTES = MAX_UPLOAD_MB * 2**20
 MAX_PASTE_CHARS = 2_000_000
 
 SITE_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "public", "scanner")
+ANALYSIS_PROMPT_JS = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "web", "lib", "analysis-prompt.js"
+)
 
 CSP = (
     "default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; "
@@ -61,6 +64,11 @@ def _is_local(request: Request) -> bool:
 @app.get("/")
 def home():
     return FileResponse(os.path.join(SITE_DIR, "index.html"))
+
+
+@app.get("/static/analysis-prompt.js")
+def analysis_prompt_js():
+    return FileResponse(ANALYSIS_PROMPT_JS, media_type="application/javascript")
 
 
 app.mount("/static", StaticFiles(directory=SITE_DIR), name="static")

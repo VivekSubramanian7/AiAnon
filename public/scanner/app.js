@@ -545,6 +545,71 @@
     setTimeout(() => { button.textContent = "Copy my results"; }, 2400);
   }
 
+  async function copyWithButtonFeedback(button, text, originalLabel) {
+    let ok = false;
+    try {
+      await navigator.clipboard.writeText(text);
+      ok = true;
+    } catch {
+      try {
+        const area = h("textarea", { class: "visually-hidden" }, text);
+        document.body.append(area);
+        area.select();
+        ok = document.execCommand("copy");
+        area.remove();
+      } catch {
+        ok = false;
+      }
+    }
+    button.textContent = ok ? "Copied" : "Copy failed";
+    setTimeout(() => { button.textContent = originalLabel; }, 2400);
+    return ok;
+  }
+
+  function analysisPromptBlock(report) {
+    const build = globalThis.buildAnalysisPrompt;
+    if (typeof build !== "function") return null;
+    const label = "Copy AI Analysis Prompt";
+    const lede = h("p", { class: "analysis-prompt-lede" },
+      "Take your privacy report to ChatGPT, Claude, or Gemini for deeper cross-domain threat analysis.");
+    const button = h("button", { class: "btn btn-ghost", type: "button" }, label);
+    const choice = h("div", { class: "analysis-prompt-choice", hidden: true });
+    const warning = h("p", { class: "analysis-prompt-warning" },
+      "Pasting this into an external AI sends that text to the provider. Their privacy policy applies. AiAnon does not receive it.");
+    const fieldset = h("fieldset", { class: "analysis-prompt-modes" });
+    fieldset.append(h("legend", {}, "Export mode"));
+    const modes = [["aggregate", "Aggregate"], ["redacted", "Redacted"], ["detailed", "Detailed"]];
+    const group = `analysis-mode-${Math.random().toString(36).slice(2, 9)}`;
+    let selected = "redacted";
+    for (const [value, text] of modes) {
+      const id = `${group}-${value}`;
+      const input = h("input", { type: "radio", name: group, value, id });
+      if (value === "redacted") input.checked = true;
+      input.addEventListener("change", () => { if (input.checked) selected = value; });
+      fieldset.append(h("label", { for: id }, input, ` ${text}`));
+    }
+    const confirm = h("button", { class: "btn btn-primary", type: "button" }, "Copy prompt");
+    const dismiss = h("button", { class: "btn btn-ghost", type: "button" }, "Dismiss");
+    const actions = h("div", { class: "analysis-prompt-choice-actions" }, confirm, dismiss);
+    choice.append(warning, fieldset, actions);
+
+    button.addEventListener("click", () => {
+      choice.hidden = false;
+      selected = "redacted";
+      for (const input of fieldset.querySelectorAll("input")) {
+        input.checked = input.value === "redacted";
+      }
+    });
+    dismiss.addEventListener("click", () => { choice.hidden = true; });
+    confirm.addEventListener("click", async () => {
+      const text = build(report, { mode: selected, generatedAt: new Date().toISOString() });
+      choice.hidden = true;
+      await copyWithButtonFeedback(button, text, label);
+    });
+
+    return h("div", { class: "analysis-prompt-wrap" }, lede, button, choice);
+  }
+
   function renderReport(report) {
     const v2 = isSchemaV2(report);
     const level = LEVELS[report.level] || LEVELS.mild;
@@ -649,7 +714,7 @@
           ),
         ),
       ),
-      h("div", { class: "result-actions" }, copyButton, againButton,
+      h("div", { class: "result-actions" }, copyButton, v2 ? analysisPromptBlock(report) : null, againButton,
         h("span", { class: "note" }, "The copy is numbers only. No names, no digits, nothing to doxx.")),
       notes.length ? h("p", { class: "caveat" }, notes.join(" ")) : null,
       h("p", { class: "caveat" },

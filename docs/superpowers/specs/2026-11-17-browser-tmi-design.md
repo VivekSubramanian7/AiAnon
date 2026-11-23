@@ -44,10 +44,14 @@ tests/web/*.test.mjs                 node --test (Node 22, no npm packages)
 ```
 
 - The worker holds the extracted text between stages, so the detective rescans without re-reading the file.
-- Transformers.js and the ONNX Runtime WebAssembly load from jsDelivr (pinned) only when the detective
-  is called; the model loads from Hugging Face and is kept in the browser cache.
-- Vercel only serves the page, code and lists (a few MB per visit). The model can't be on Vercel: Hobby's
-  upload limit is 100 MB and its 100 GB/month bandwidth would last about 950 detective downloads.
+- Transformers.js and the ONNX Runtime WebAssembly are served from `web/vendor` (byte for byte the npm
+  packages, recorded in `vendor/SHA256SUMS`) and load only when the detective is called. The model loads from
+  Hugging Face at the pinned revision; each file is checked against its SHA-256 before use (`modelFetch` in
+  `lib/detective.js`) and kept in the browser cache. The CSP allows scripts from this site only.
+  (Changed 2026-11-23: they first loaded from jsDelivr, unchecked.)
+- Vercel serves the page, code and lists (a few MB per visit) and the 14 MB WebAssembly runtime once per detective
+  visitor. The model can't be on Vercel: Hobby's upload limit is 100 MB and its 100 GB/month bandwidth would last
+  about 950 detective downloads.
 
 ## Behaviour carried over from the Python TMI
 

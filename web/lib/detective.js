@@ -1,17 +1,90 @@
 // The detective: bert-base-NER (Hugging Face's official browser build, 8-bit, 104 MB) via Transformers.js.
-// Loaded only when the visitor asks for it; the model comes from Hugging Face, pinned to one revision,
-// and stays in the browser cache afterwards.
+// Loaded only when the visitor asks for it. Transformers.js and ONNX Runtime are served from this site
+// (web/vendor, checked against npm's published hashes; see vendor/SHA256SUMS). The model comes from Hugging
+// Face, pinned to one revision; every file is checked against its SHA-256 before use, and stays in the browser
+// cache afterwards.
 //
 // Transformers.js's token-classification pipeline has no character offsets and no "first" aggregation,
 // so this splits text into words the way BERT does, tokenizes word by word, and labels each word with its
 // first piece. That reproduces the Python benchmark (HF pipeline, aggregation_strategy="first").
 
-export const TRANSFORMERS_URL = "https://cdn.jsdelivr.net/npm/@huggingface/transformers@4.3.2/dist/transformers.min.js";
+export const TRANSFORMERS_URL = new URL("../vendor/transformers-4.3.2.min.js", import.meta.url).href;
+// The ONNX Runtime build Transformers.js 4.3.2 is compiled against (its JavaScript is bundled inside it).
+// The plain CPU build: the detective runs on WebAssembly only, so the WebGPU build (twice the size) isn't needed.
+const ORT_DIR = new URL("../vendor/onnxruntime-web-1.31.0-dev.20260914-8d85527a0/", import.meta.url);
+export const ORT_FILES = {
+  mjs: new URL("ort-wasm-simd-threaded.mjs", ORT_DIR).href,
+  wasm: new URL("ort-wasm-simd-threaded.wasm", ORT_DIR).href,
+};
 export const MODEL_ID = "Xenova/bert-base-NER";
 export const MODEL_REVISION = "8e892123e8b7c2c0c2bd1dcb598b7d244c4e53aa";
 export const MODEL_FILE = "onnx/model_quantized.onnx";
-export const MODEL_BYTES = 108_952_255;
 export const CACHE_NAME = "transformers-cache";
+// Everything the detective downloads, with size and SHA-256. The model's hash is Hugging Face's own LFS record;
+// the JSON files were hashed after checking they match Hugging Face's git ids for this revision.
+export const MODEL_FILES = {
+  "config.json": { bytes: 999, sha256: "a73a2eccc921bbdea95a94b49a157d3694b5c2abbae7a6f3000e14404a9c31a8" },
+  "tokenizer.json": { bytes: 668_923, sha256: "343989712a36cd8b253efeaf8baf6a08b9d2583f78e395e83832e8ee9f8d8ee1" },
+  "tokenizer_config.json": { bytes: 385, sha256: "5be1a180e9badb4811a6c31502d70fb35a085af5457982937419c42d7530bae6" },
+  [MODEL_FILE]: { bytes: 108_952_255, sha256: "caaee70a5518ec7f9e46e5308fcc9263a8c227703a9ce46cf61c69a552349648" },
+};
+export const MODEL_BYTES = MODEL_FILES[MODEL_FILE].bytes;
+const MODEL_BASE = `https://huggingface.co/${MODEL_ID}/resolve/`;
+
+/** A download that doesn't match its published SHA-256 (or size). Nothing from it is used or cached. */
+export class IntegrityError extends Error {
+  constructor(file) {
+    super(`${file} doesn't match its published SHA-256, so it was thrown away`);
+    this.name = "IntegrityError";
+  }
+}
+
+async function sha256Hex(bytes) {
+  const digest = new Uint8Array(await crypto.subtle.digest("SHA-256", bytes));
+  return Array.from(digest, (b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+/** Passes the body through, and errors it at the end unless it has exactly the expected size and hash. */
+function verified(file, { bytes, sha256 }) {
+  const data = new Uint8Array(bytes);
+  let length = 0;
+  return new TransformStream({
+    transform(chunk, controller) {
+      if (length + chunk.length > bytes) throw new IntegrityError(file);
+      data.set(chunk, length);
+      length += chunk.length;
+      controller.enqueue(chunk);
+    },
+    async flush() {
+      if (length !== bytes || (await sha256Hex(data)) !== sha256) throw new IntegrityError(file);
+    },
+  });
+}
+
+/**
+ * The fetch Transformers.js uses (env.fetch). It only reaches the pinned files in MODEL_FILES, and only hands
+ * them over once their SHA-256 matches; Transformers.js caches a file only after reading all of it, so a bad
+ * download is never cached. Transformers.js 4.3.2 checks that tokenizer_config.json exists on the "main" branch,
+ * without the revision: that check is answered here, so nothing outside the pinned revision is ever requested.
+ */
+export function modelFetch(fetchImpl, files = MODEL_FILES) {
+  return async (input, init = {}) => {
+    const url = typeof input === "string" ? input : input.url ?? String(input);
+    if (!url.startsWith(MODEL_BASE)) throw new Error(`The detective only downloads ${MODEL_ID}, not ${url}`);
+    const [revision, ...path] = url.slice(MODEL_BASE.length).split("/");
+    if (revision !== MODEL_REVISION && revision !== "main") throw new Error(`Unexpected model revision: ${url}`);
+    const file = path.join("/");
+    const expected = files[file];
+    if (!expected) return new Response(null, { status: 404, statusText: "Not Found" });
+    if (new Headers(init.headers).has("Range")) { // an existence check
+      return new Response(null, { status: 200, headers: { "content-length": String(expected.bytes) } });
+    }
+    const response = await fetchImpl(`${MODEL_BASE}${MODEL_REVISION}/${file}`, init);
+    if (!response.ok || !response.body) return response;
+    const { status, statusText, headers } = response;
+    return new Response(response.body.pipeThrough(verified(file, expected)), { status, statusText, headers });
+  };
+}
 
 const LABELS = { PER: "PERSON", ORG: "ORG", LOC: "LOCATION" }; // MISC is ignored, as in the Python benchmark
 const MAX_PIECES = 510; // 512 minus [CLS] and [SEP]
@@ -77,6 +150,10 @@ export async function loadDetective({ onDownload } = {}) {
   env.allowLocalModels = false;
   env.allowRemoteModels = true;
   env.useBrowserCache = true;
+  env.fetch = modelFetch(globalThis.fetch.bind(globalThis));
+  // ONNX Runtime from this site, imported directly (the WebAssembly cache would turn it into a blob: URL).
+  env.useWasmCache = false;
+  env.backends.onnx.wasm.wasmPaths = { ...ORT_FILES };
 
   const progress_callback = (p) => {
     if (p.status === "progress" && typeof p.file === "string" && p.file.endsWith(".onnx")) {

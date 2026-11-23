@@ -101,6 +101,12 @@ async function detective(input) {
 
 function friendly(err, stage) {
   if (err instanceof ExtractError) return { message: err.message };
+  if (stage === "detective" && err?.name === "IntegrityError") {
+    return {
+      message: "The detective's files didn't match their fingerprints, so we threw them away unopened. Try again later.",
+      retry: true,
+    };
+  }
   if (stage === "detective") {
     return {
       message: "The detective couldn't get here. Check your connection (the 104 MB download needs one) and try again.",

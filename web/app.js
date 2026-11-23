@@ -261,7 +261,8 @@ function setDetectiveState(state, message, retry) {
 function detectivePanel(cached) {
   const fine = cached
     ? "Already on this device from last time. No download, straight to work."
-    : `${MODEL_MB} MB, one time. Works on your device. Your memories never leave the room.`
+    : `${MODEL_MB} MB, one time, from Hugging Face (they'll see your IP address, like any website). `
+      + "It works on your device. Your memories never leave the room."
       + (isMetered() ? " That's a chunk of mobile data, so Wi-Fi is your friend." : "");
   const button = h("button", { class: "btn btn-primary btn-detective", type: "button" }, "Call in the detective");
   button.addEventListener("click", callDetective);

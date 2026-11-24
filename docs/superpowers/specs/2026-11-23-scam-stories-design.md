@@ -112,7 +112,7 @@ file only. Each recipe:
 | `scam` | the scam's common name: "Bank impersonation call" |
 | `about` | `you` or `others` |
 | `impact` | how bad it would be if it happened, one of three calm labels: **A hassle**, **Costly**, **Hard to undo**. Drives the sort (§3). |
-| `pieces` | list of `{ label, kinds[], who, key, optional }`: `who` is `you` or `others`; `key: true` marks the piece without which the story can't happen; `optional: true` pieces show when found but don't count towards the total |
+| `pieces` | list of `{ label, kinds[], who, key, optional, yoursOnly }`: `who` is `you`, `others` or `family` (§3); `key: true` marks the piece without which the story can't happen; `optional: true` pieces show when found but don't count towards the total; `yoursOnly: true` (card, IBAN and ID-number key pieces) is filled only by the account holder's own row. (Changed 2026-11-24: added `yoursOnly` and `who: family`.) |
 | `howItGoes` | 2–3 sentences, ≤ 50 words, second person, "could"/"would" |
 | `fix` | 1–2 concrete actions that break the chain |
 | `source` | `{ name, url }`: an official page describing this scam |
@@ -161,11 +161,15 @@ Notes on specific recipes:
     `third_party`.
   - `who: others` accepts `third_party` only (for `children`, any subject: the detector only fires on "my son/
     daughter/kid/child").
+  - (Changed 2026-11-24: the child piece of recipe 11 is `who: family`, not "any subject". The detector also fires
+    on "her daughter", so a colleague's child made a "Hi Mum" story. `family` accepts `account_holder` and
+    `unknown` rows only, never `third_party`, and always shows as **in your file**.)
   - `account_email` / `account_phone` (from the export's account file) count as **yours**, confirmed.
   - (Changed 2026-11-24: card, IBAN and ID-number key pieces need the account holder's own row (`yoursOnly`);
     `unknown` never fills them. A payee's IBAN is not yours.)
-- When more than one row fits, show the best (confidence, then `account_holder` over `unknown`) and its masked
-  `example`.
+- When more than one row fits, show the best (`account_holder` over `unknown`, then confidence, then the order of
+  the piece's kinds) and its masked `example`. (Changed 2026-11-24: this line first said confidence before subject;
+  the code and plan always put the account holder's own row first.)
 
 **When a story shows**
 - Its key piece is found, **and** at least half of its counted pieces are found (optional pieces don't count, but
@@ -178,10 +182,14 @@ Notes on specific recipes:
 
 **Nothing qualifies:** show a calm result: "Not much to build with here." Then the recipe with the most pieces
 found, presented as "the closest someone could get", with its missing pieces, so the visitor still learns what to
-keep out of their chats.
+keep out of their chats. (Changed 2026-11-24: the closest card is reduced so it never reads as a full story under
+the calm headline: title, scam name, the found and missing pieces, "They would still need: …" naming the missing
+counted pieces, and what stops it; no impact label and no "How it goes".)
 
 **Everything else:** below the stories, one line per life area that has findings no shown story used, e.g. "Also
-in here: 4 places and 2 organisations." Counts only, from `report.pieces`.
+in here: 4 places and 2 organisations." Counts only, from `report.pieces`. (Changed 2026-11-24: kinds that filled a
+piece on any card on the page, including the cards behind "N more" and the closest card, are left out. Keyword-only
+sensitive kinds are counted as mentions, e.g. "1 health mention", not "1 health detail".)
 
 ### 4. Writing rules (for every recipe)
 
@@ -229,7 +237,9 @@ New order (both front ends):
 - After the detective runs, stories are rebuilt from the new report like everything else.
 - "Copy my results" stays numbers only, keeping the promise next to the button ("No names, no digits, nothing to
   doxx"): "Someone could try 3 things with my file: 1 hard to undo, 2 costly." No story titles, since titles such
-  as "A call from immigration" or "A fake pharmacy" would reveal sensitive topics.
+  as "A call from immigration" or "A fake pharmacy" would reveal sensitive topics. (Changed 2026-11-24: the list
+  now ends with "and", and "A hassle" reads "that's a hassle": "…: 1 hard to undo, 2 costly and 1 that's a
+  hassle.")
 - The existing case-file extras:
   - The "Case closed. N things the frisk missed" line (detective stage) stays, directly under the story headline:
     it's the payoff for the download.
@@ -259,8 +269,9 @@ New order (both front ends):
 
 Visitors can be anywhere, so every `fix` and `howItGoes` must hold in any country:
 - Name the action, not the local rule: "ask your bank to reverse it; most banks can for a debit you didn't agree
-  to", not "SEPA refunds within 8 weeks". "Ask your mobile provider for a SIM lock or port-out PIN", not a
-  specific carrier's setting. "Check with the authority's official website", not a named agency.
+  to", not "SEPA refunds within 8 weeks". "Ask your mobile provider to add a PIN or extra checks before anyone can
+  swap or move your number", not a specific carrier's setting. "Check with the authority's official website", not
+  a named agency. (Changed 2026-11-24: the SIM example now matches recipe 6's wording.)
 - No phone numbers, deadlines or amounts that only apply in one country.
 - `source` is one official page per scam: an international body (such as Europol) where one covers it, otherwise a
   national government, police or consumer-protection page, in English. The source illustrates that the scam is

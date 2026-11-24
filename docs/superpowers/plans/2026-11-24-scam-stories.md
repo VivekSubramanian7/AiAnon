@@ -25,7 +25,9 @@ pytest for the scanner.
 - A piece is filled only by confidence `confirmed`, `high` or `medium`. `low` never fills a piece.
 - Subjects: `who: "you"` accepts `account_holder` (state `yours`) and `unknown` (state `looks-yours`), never
   `third_party`; `who: "others"` accepts `third_party` only; `who: "any"` accepts every subject (used only for
-  `children`).
+  `children`). (Changed 2026-11-24: `who: "any"` is replaced by `who: "family"`, which accepts `account_holder` and
+  `unknown` only, never `third_party`, always shown as `others` ("in your file"); still used only for `children`.
+  A colleague's child must not make a "Hi Mum" story.)
 - "Your name" is `self_name` only and always `optional: true`.
 - Impact labels, exactly: `"Hard to undo"`, `"Costly"`, `"A hassle"`; sort order is that order.
 - Writing rules for recipe text: title ≤ 8 words; `howItGoes` 2–3 sentences, ≤ 50 words, second person, "could" /

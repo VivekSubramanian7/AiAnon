@@ -100,7 +100,7 @@ export const RECIPES = [
       + "to sort out the unpaid debt.",
     fix: [
       "Delete your ID number and date of birth from the chatbot's memory.",
-      "Check your credit report for loans or accounts you didn't open.",
+      "If your country has credit reports, check yours for loans or accounts you didn't open.",
     ],
     source: {
       name: "Europol: Tips and advice to prevent identity theft",
@@ -147,7 +147,7 @@ export const RECIPES = [
       + "have your number moved to their SIM card. Your phone would lose signal, and the one-time codes your bank "
       + "and email send by text would go to them.",
     fix: [
-      "Ask your mobile provider for a SIM lock or port-out PIN, so your number can't be moved without it.",
+      "Ask your mobile provider to add a PIN or extra checks before anyone can swap or move your number.",
       "Delete your phone number and date of birth from the chatbot's memory.",
     ],
     source: {
@@ -171,8 +171,9 @@ export const RECIPES = [
       + "visa or papers. Knowing your status and employer makes it sound real, and they would ask for a fee or your "
       + "personal details to fix it.",
     fix: [
-      "Hang up on any call that asks for a fee or details to fix your visa.",
-      "Check with the immigration authority through its official website, not a number the caller gives you.",
+      "If someone contacts you about your visa, hang up and check with the immigration authority through its "
+        + "official website.",
+      "Delete your visa details and employer from the chatbot's memory.",
     ],
     source: {
       name: "US Federal Trade Commission: Scammers impersonate US immigration officers",

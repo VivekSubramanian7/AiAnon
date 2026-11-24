@@ -1,6 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { matchRecipe, pickStories, piecesFromReport, storyView, IMPACT_ORDER } from "../../web/lib/stories.js";
+import { RECIPES as LIBRARY, KIND_NOUNS } from "../../web/lib/stories-data.js";
 
 const p = (kind, subject = "account_holder", confidence = "high", example = `${kind}-ex`) => ({
   kind, subject, count: 1, confidence, example,
@@ -214,4 +216,34 @@ test("also line: only the kind that actually filled a multi-kind piece counts as
   const rs = [recipe("r", "Costly", [piece("Secret", ["jwt", "api_token"], { key: true })])];
   const v = storyView({ pieces: [p("jwt"), p("api_token", "account_holder", "high")] }, rs);
   assert.equal(v.also, "Also in here: 1 api token.");
+});
+
+// The mock memories' stories, read against each file in samples/mock-memories (reviewed by Vivek).
+// - chatgpt-saved-memories: birth date and personal email are Dana's. The IBAN is one she paid a charge to, not
+//   her own; it shows as "looks like yours" (unknown subject), so direct-debit is a known over-read.
+// - gemini-saved-info: Kofi's phone, birthday and email; "allergic to peanuts" is the health condition.
+// - bot-answer: the bot lists Sam's birthday, emails and "your number".
+// - clean-memory: preferences only; nothing to build with and nothing close.
+// - chatgpt-export: Priya's phone, birthday and "flat 4B at 18 Elm Grove".
+// - claude-export: Marcus's phone, birth date and salary IBAN. The file holds others' contacts (a referee's
+//   email, the movers' phone), but the row that fills friends-message is his own email, tagged third_party.
+// - chatgpt-export-large: "My number is …" only; no birth date or address, so sim-swap is just the closest.
+const MOCK_STORIES = {
+  "chatgpt-saved-memories.txt": { shown: ["bank-call", "direct-debit"], more: [], closest: null },
+  "gemini-saved-info.txt": { shown: ["sim-swap", "fake-insurer", "bank-call"], more: [], closest: null },
+  "bot-answer-what-do-you-remember.txt": { shown: ["sim-swap", "bank-call"], more: [], closest: null },
+  "clean-memory.txt": { shown: [], more: [], closest: null },
+  "chatgpt-export.zip": { shown: ["sim-swap", "bank-call", "doorstep"], more: [], closest: null },
+  "claude-export.zip": { shown: ["sim-swap", "friends-message", "bank-call"], more: ["direct-debit"], closest: null },
+  "chatgpt-export-large.zip": { shown: [], more: [], closest: "sim-swap" },
+};
+
+test("stories for the mock memories", () => {
+  const fixture = JSON.parse(readFileSync(new URL("fixtures/stage1.json", import.meta.url), "utf8"));
+  assert.deepEqual(Object.keys(fixture.reports).sort(), Object.keys(MOCK_STORIES).sort());
+  for (const [name, report] of Object.entries(fixture.reports)) {
+    const v = storyView(report, LIBRARY, KIND_NOUNS);
+    const got = { shown: idsOf(v.shown), more: idsOf(v.more), closest: v.closest ? v.closest.id : null };
+    assert.deepEqual(got, MOCK_STORIES[name], name);
+  }
 });

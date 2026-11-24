@@ -24,6 +24,8 @@
 | **Confidence** | How sure are we this is real PII in *your* text? | `confirmed` · `high` · `medium` · `low` · `unscanned` |
 | **Subject** | Who does it refer to? | `account_holder` · `third_party` · `unknown` · `not_applicable` |
 
+`pieces` is a flat tally of the same **uncapped** findings, one row per (kind, subject): `count`, best `confidence`, and one masked `example` (the first of the group in finding sort order). Rows sort by `kind`, then subject. Its counts sum to `totals.unique`. Later "scam story" text is built on it (`build_pieces` in `lib/scanner/findings.py`, `buildPieces` in `web/lib/sensitivity.js`).
+
 `domainMatrix` is built from **uncapped** findings (same as `bands`). A finding with two domains appears in two columns and counts once in `bands` / `totals.unique`. Do not sum cells or `uniqueByDomain` to get the global unique count. `kindsByCell[domain][harm][kind]` is the unique-finding count per PII type in that cell — what the matrix shows on click. `interests` has no kinds in v1, so that column is usually empty. Kind → domain lives in `lib/scanner/domains.py`.
 
 Mirror UI should **lead with H1–H3** and **confirmed/high** only for claims about the account holder. Keyword counts are **low** confidence unless anchored to a masked span.

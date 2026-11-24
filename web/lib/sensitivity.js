@@ -142,6 +142,26 @@ export function bandCounts(rows) {
   return result;
 }
 
+export function buildPieces(findings) {
+  const groups = new Map();
+  for (const row of sortFindings(findings)) {
+    const key = JSON.stringify([row.kind, row.subject]);
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(row);
+  }
+  const pieces = [...groups.values()].map((rows) => ({
+    kind: rows[0].kind,
+    subject: rows[0].subject,
+    count: rows.length,
+    confidence: rows.map((r) => r.confidence).reduce((a, b) => ((CONFIDENCE_RANK[a] ?? 99) <= (CONFIDENCE_RANK[b] ?? 99) ? a : b)),
+    example: rows[0].masked,
+  }));
+  return pieces.sort((a, b) => {
+    if (a.kind !== b.kind) return a.kind < b.kind ? -1 : 1;
+    return (SUBJECT_ORDER[a.subject] ?? 99) - (SUBJECT_ORDER[b.subject] ?? 99);
+  });
+}
+
 // Another person's name stays "unknown" next to "I" or "my" ("I met Tom" is not about Tom being you).
 const NOT_SELF_KINDS = new Set(["name"]);
 

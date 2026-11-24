@@ -13,6 +13,7 @@ from lib.scanner.findings import (
     assemble,
     band_counts,
     build_coverage,
+    build_pieces,
     build_readouts,
     cap_findings,
     classify_subject,
@@ -239,3 +240,16 @@ def test_envelope_zip_masked_contacts():
     assert "a@example.com" not in blob
     extracted, _ = prepare_upload("export.zip", payload)
     assert not any("a@example.com" in s.text for s in extracted.segments)
+
+def test_build_pieces_groups_by_kind_and_subject():
+    rows = [
+        {"harm": "H4", "kind": "phone", "confidence": "high", "subject": "third_party", "masked": "+44 •••• ••• 789", "id": "f-02"},
+        {"harm": "H6", "kind": "phone", "confidence": "low", "subject": "third_party", "masked": "0•••• •••111", "id": "f-05"},
+        {"harm": "H2", "kind": "date_of_birth", "confidence": "medium", "subject": "account_holder", "masked": "14/0•/19••", "id": "f-01"},
+        {"harm": "H4", "kind": "phone", "confidence": "medium", "subject": "account_holder", "masked": "+49 •••• ••• 123", "id": "f-03"},
+    ]
+    assert build_pieces(rows) == [
+        {"kind": "date_of_birth", "subject": "account_holder", "count": 1, "confidence": "medium", "example": "14/0•/19••"},
+        {"kind": "phone", "subject": "account_holder", "count": 1, "confidence": "medium", "example": "+49 •••• ••• 123"},
+        {"kind": "phone", "subject": "third_party", "count": 2, "confidence": "high", "example": "+44 •••• ••• 789"},
+    ]

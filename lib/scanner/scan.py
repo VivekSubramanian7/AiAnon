@@ -19,6 +19,7 @@ from lib.scanner.extract import Extracted, Segment
 from lib.scanner.findings import (
     assemble,
     band_counts,
+    build_pieces,
     build_coverage,
     build_readouts,
     cap_findings,
@@ -207,6 +208,7 @@ def scan(
         "findings": findings,
         "bands": bands,
         "domainMatrix": domain_matrix,
+        "pieces": build_pieces(all_findings),
         "readouts": readouts,
         "coverage": coverage,
         "elapsedMs": round((time.perf_counter() - started) * 1000),

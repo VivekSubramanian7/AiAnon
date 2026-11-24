@@ -706,6 +706,85 @@
     },
     "multiDomain": 0
    },
+   "pieces": [
+    {
+     "kind": "age",
+     "subject": "unknown",
+     "count": 1,
+     "confidence": "medium",
+     "example": "30s"
+    },
+    {
+     "kind": "date_of_birth",
+     "subject": "unknown",
+     "count": 1,
+     "confidence": "medium",
+     "example": "••.••.••••"
+    },
+    {
+     "kind": "email",
+     "subject": "unknown",
+     "count": 1,
+     "confidence": "medium",
+     "example": "d•••.•••••••••@e••••••.com"
+    },
+    {
+     "kind": "handle",
+     "subject": "unknown",
+     "count": 1,
+     "confidence": "medium",
+     "example": "@d•••_••••_•••••"
+    },
+    {
+     "kind": "health",
+     "subject": "unknown",
+     "count": 1,
+     "confidence": "low",
+     "example": "a•••••"
+    },
+    {
+     "kind": "iban",
+     "subject": "unknown",
+     "count": 1,
+     "confidence": "high",
+     "example": "•••• •••• •••• •••• •••• 32"
+    },
+    {
+     "kind": "name",
+     "subject": "unknown",
+     "count": 3,
+     "confidence": "low",
+     "example": "C•••• D••••"
+    },
+    {
+     "kind": "org",
+     "subject": "unknown",
+     "count": 2,
+     "confidence": "low",
+     "example": "S• M•••'• H•••••••"
+    },
+    {
+     "kind": "phone",
+     "subject": "unknown",
+     "count": 1,
+     "confidence": "low",
+     "example": "+•• •••• ••••23"
+    },
+    {
+     "kind": "place",
+     "subject": "unknown",
+     "count": 4,
+     "confidence": "low",
+     "example": "L••••"
+    },
+    {
+     "kind": "self_name",
+     "subject": "account_holder",
+     "count": 1,
+     "confidence": "medium",
+     "example": "D••• W••••••••"
+    }
+   ],
    "readouts": {
     "credentials": {
      "harmBand": "H1",
@@ -1306,6 +1385,64 @@
     },
     "multiDomain": 0
    },
+   "pieces": [
+    {
+     "kind": "age",
+     "subject": "unknown",
+     "count": 1,
+     "confidence": "medium",
+     "example": "30s"
+    },
+    {
+     "kind": "date_of_birth",
+     "subject": "account_holder",
+     "count": 1,
+     "confidence": "medium",
+     "example": "••/••/••••"
+    },
+    {
+     "kind": "email",
+     "subject": "account_holder",
+     "count": 1,
+     "confidence": "medium",
+     "example": "k•••.••••••@e••••••.com"
+    },
+    {
+     "kind": "health",
+     "subject": "account_holder",
+     "count": 1,
+     "confidence": "medium",
+     "example": "a•••••••"
+    },
+    {
+     "kind": "org",
+     "subject": "account_holder",
+     "count": 1,
+     "confidence": "low",
+     "example": "B••• R••• S••••••"
+    },
+    {
+     "kind": "phone",
+     "subject": "account_holder",
+     "count": 1,
+     "confidence": "high",
+     "example": "+••• •• ••• ••87"
+    },
+    {
+     "kind": "place",
+     "subject": "account_holder",
+     "count": 2,
+     "confidence": "low",
+     "example": "A••••"
+    },
+    {
+     "kind": "self_name",
+     "subject": "account_holder",
+     "count": 1,
+     "confidence": "medium",
+     "example": "K••• M•••••"
+    }
+   ],
    "readouts": {
     "credentials": {
      "harmBand": "H1",
@@ -1921,6 +2058,57 @@
     },
     "multiDomain": 0
    },
+   "pieces": [
+    {
+     "kind": "date_of_birth",
+     "subject": "unknown",
+     "count": 1,
+     "confidence": "medium",
+     "example": "••/••/••••"
+    },
+    {
+     "kind": "email",
+     "subject": "unknown",
+     "count": 2,
+     "confidence": "medium",
+     "example": "s••••••••@e••••••.org"
+    },
+    {
+     "kind": "name",
+     "subject": "unknown",
+     "count": 2,
+     "confidence": "low",
+     "example": "S•• R•••••"
+    },
+    {
+     "kind": "org",
+     "subject": "account_holder",
+     "count": 1,
+     "confidence": "low",
+     "example": "F•••• S••••• B•••"
+    },
+    {
+     "kind": "org",
+     "subject": "unknown",
+     "count": 1,
+     "confidence": "low",
+     "example": "L•••••• P••• H••• S•••••"
+    },
+    {
+     "kind": "phone",
+     "subject": "unknown",
+     "count": 1,
+     "confidence": "high",
+     "example": "+• ••• ••• ••19"
+    },
+    {
+     "kind": "place",
+     "subject": "unknown",
+     "count": 2,
+     "confidence": "low",
+     "example": "D•••••"
+    }
+   ],
    "readouts": {
     "credentials": {
      "harmBand": "H1",
@@ -2304,6 +2492,7 @@
     },
     "multiDomain": 0
    },
+   "pieces": [],
    "readouts": {
     "credentials": {
      "harmBand": "H1",
@@ -3147,6 +3336,120 @@
     },
     "multiDomain": 0
    },
+   "pieces": [
+    {
+     "kind": "account_email",
+     "subject": "account_holder",
+     "count": 1,
+     "confidence": "confirmed",
+     "example": "p••••.•@e••••••.org"
+    },
+    {
+     "kind": "account_phone",
+     "subject": "account_holder",
+     "count": 1,
+     "confidence": "confirmed",
+     "example": "+•••••••••47"
+    },
+    {
+     "kind": "age",
+     "subject": "unknown",
+     "count": 1,
+     "confidence": "medium",
+     "example": "30s"
+    },
+    {
+     "kind": "date_of_birth",
+     "subject": "account_holder",
+     "count": 1,
+     "confidence": "medium",
+     "example": "••/••/••••"
+    },
+    {
+     "kind": "email",
+     "subject": "account_holder",
+     "count": 1,
+     "confidence": "medium",
+     "example": "p••••.•@e••••••.org"
+    },
+    {
+     "kind": "handle",
+     "subject": "account_holder",
+     "count": 1,
+     "confidence": "medium",
+     "example": "@p•••••••••"
+    },
+    {
+     "kind": "name",
+     "subject": "unknown",
+     "count": 6,
+     "confidence": "low",
+     "example": "P••••"
+    },
+    {
+     "kind": "org",
+     "subject": "account_holder",
+     "count": 1,
+     "confidence": "low",
+     "example": "I••••••"
+    },
+    {
+     "kind": "org",
+     "subject": "unknown",
+     "count": 1,
+     "confidence": "low",
+     "example": "C•••••• H•••••"
+    },
+    {
+     "kind": "phone",
+     "subject": "account_holder",
+     "count": 1,
+     "confidence": "high",
+     "example": "+• ••• ••• ••47"
+    },
+    {
+     "kind": "place",
+     "subject": "account_holder",
+     "count": 3,
+     "confidence": "low",
+     "example": "A•••••"
+    },
+    {
+     "kind": "place",
+     "subject": "unknown",
+     "count": 1,
+     "confidence": "low",
+     "example": "L•••••"
+    },
+    {
+     "kind": "profile_url",
+     "subject": "account_holder",
+     "count": 1,
+     "confidence": "medium",
+     "example": "github.com/•••"
+    },
+    {
+     "kind": "self_name",
+     "subject": "account_holder",
+     "count": 2,
+     "confidence": "medium",
+     "example": "P••••"
+    },
+    {
+     "kind": "street_address",
+     "subject": "account_holder",
+     "count": 1,
+     "confidence": "medium",
+     "example": "1• E•• G••••"
+    },
+    {
+     "kind": "url",
+     "subject": "account_holder",
+     "count": 1,
+     "confidence": "medium",
+     "example": "github.com/•••"
+    }
+   ],
    "readouts": {
     "credentials": {
      "harmBand": "H1",
@@ -3889,6 +4192,99 @@
     },
     "multiDomain": 0
    },
+   "pieces": [
+    {
+     "kind": "date",
+     "subject": "unknown",
+     "count": 1,
+     "confidence": "medium",
+     "example": "••.••.2026"
+    },
+    {
+     "kind": "date_of_birth",
+     "subject": "account_holder",
+     "count": 1,
+     "confidence": "medium",
+     "example": "•••• •• ••.••.••••"
+    },
+    {
+     "kind": "email",
+     "subject": "unknown",
+     "count": 1,
+     "confidence": "medium",
+     "example": "i•••••.••••••@e••••••.de"
+    },
+    {
+     "kind": "email",
+     "subject": "third_party",
+     "count": 1,
+     "confidence": "medium",
+     "example": "m•••••.•••••@e••••••.net"
+    },
+    {
+     "kind": "iban",
+     "subject": "account_holder",
+     "count": 1,
+     "confidence": "high",
+     "example": "•••• •••• •••• •••• •••• 00"
+    },
+    {
+     "kind": "name",
+     "subject": "unknown",
+     "count": 2,
+     "confidence": "low",
+     "example": "I••••• S•••••"
+    },
+    {
+     "kind": "name",
+     "subject": "third_party",
+     "count": 2,
+     "confidence": "low",
+     "example": "A•••"
+    },
+    {
+     "kind": "org",
+     "subject": "account_holder",
+     "count": 1,
+     "confidence": "low",
+     "example": "N•••••••• L••••••••"
+    },
+    {
+     "kind": "phone",
+     "subject": "account_holder",
+     "count": 1,
+     "confidence": "high",
+     "example": "+•• ••• ••• ••98"
+    },
+    {
+     "kind": "phone",
+     "subject": "unknown",
+     "count": 1,
+     "confidence": "high",
+     "example": "+• ••• ••• ••01"
+    },
+    {
+     "kind": "place",
+     "subject": "account_holder",
+     "count": 2,
+     "confidence": "low",
+     "example": "H••••••"
+    },
+    {
+     "kind": "place",
+     "subject": "third_party",
+     "count": 1,
+     "confidence": "low",
+     "example": "M•••• G••••"
+    },
+    {
+     "kind": "self_name",
+     "subject": "account_holder",
+     "count": 1,
+     "confidence": "medium",
+     "example": "M•••••"
+    }
+   ],
    "readouts": {
     "credentials": {
      "harmBand": "H1",
@@ -4729,6 +5125,50 @@
     },
     "multiDomain": 0
    },
+   "pieces": [
+    {
+     "kind": "email",
+     "subject": "unknown",
+     "count": 114,
+     "confidence": "medium",
+     "example": "k•••.••••@e••••••.com"
+    },
+    {
+     "kind": "name",
+     "subject": "unknown",
+     "count": 69,
+     "confidence": "low",
+     "example": "P••••"
+    },
+    {
+     "kind": "phone",
+     "subject": "account_holder",
+     "count": 100,
+     "confidence": "high",
+     "example": "+• ••• ••• ••64"
+    },
+    {
+     "kind": "place",
+     "subject": "account_holder",
+     "count": 2,
+     "confidence": "low",
+     "example": "A•••••"
+    },
+    {
+     "kind": "place",
+     "subject": "unknown",
+     "count": 7,
+     "confidence": "low",
+     "example": "M••••••••"
+    },
+    {
+     "kind": "self_name",
+     "subject": "account_holder",
+     "count": 1,
+     "confidence": "medium",
+     "example": "P••••"
+    }
+   ],
    "readouts": {
     "credentials": {
      "harmBand": "H1",

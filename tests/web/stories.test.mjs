@@ -71,6 +71,15 @@ test("who: any accepts every subject and always shows as others; who: others nee
   assert.equal(matchRecipe(others, [p("children", "account_holder")], 0).cards[0].state, "missing");
 });
 
+test("a yoursOnly piece is filled only by the account holder's own row", () => {
+  const r = recipe("iban", "Costly", [piece("IBAN", ["iban"], { key: true, yoursOnly: true })]);
+  const unknown = matchRecipe(r, [p("iban", "unknown", "confirmed", "PAYEE")], 0);
+  assert.deepEqual([unknown.cards[0].state, unknown.cards[0].example, unknown.qualifies], ["missing", null, false]);
+  assert.equal(matchRecipe(r, [p("iban", "third_party")], 0).cards[0].state, "missing");
+  const mine = matchRecipe(r, [p("iban", "unknown", "confirmed", "PAYEE"), p("iban", "account_holder", "medium", "MINE")], 0);
+  assert.deepEqual([mine.cards[0].state, mine.cards[0].example, mine.qualifies], ["yours", "MINE", true]);
+});
+
 test("a story needs its key piece and half its counted pieces", () => {
   const mk = (n) => recipe("a", "Costly", [
     piece("K", ["health"], { key: true }), piece("B", ["email"]), piece("C", ["phone"]),
@@ -220,7 +229,7 @@ test("also line: only the kind that actually filled a multi-kind piece counts as
 
 // The mock memories' stories, read against each file in samples/mock-memories (reviewed by Vivek).
 // - chatgpt-saved-memories: birth date and personal email are Dana's. The IBAN is one she paid a charge to, not
-//   her own; it shows as "looks like yours" (unknown subject), so direct-debit is a known over-read.
+//   her own; its row is "unknown", so the yoursOnly IBAN piece stays empty and direct-debit does not show.
 // - gemini-saved-info: Kofi's phone, birthday and email; "allergic to peanuts" is the health condition.
 // - bot-answer: the bot lists Sam's birthday, emails and "your number".
 // - clean-memory: preferences only; nothing to build with and nothing close.
@@ -229,7 +238,7 @@ test("also line: only the kind that actually filled a multi-kind piece counts as
 //   email, the movers' phone), but the row that fills friends-message is his own email, tagged third_party.
 // - chatgpt-export-large: "My number is …" only; no birth date or address, so sim-swap is just the closest.
 const MOCK_STORIES = {
-  "chatgpt-saved-memories.txt": { shown: ["bank-call", "direct-debit"], more: [], closest: null },
+  "chatgpt-saved-memories.txt": { shown: ["bank-call"], more: [], closest: null },
   "gemini-saved-info.txt": { shown: ["sim-swap", "fake-insurer", "bank-call"], more: [], closest: null },
   "bot-answer-what-do-you-remember.txt": { shown: ["sim-swap", "bank-call"], more: [], closest: null },
   "clean-memory.txt": { shown: [], more: [], closest: null },

@@ -1,6 +1,7 @@
 // Scam stories: the recipe library and the nouns for the "Also in here" line. Plain data; edit wording here only.
 // Each recipe is a real, documented scam. Matching rules live in stories.js; the spec is
 // docs/superpowers/specs/2026-11-23-scam-stories-design.md (§2 recipe table, §4 writing rules, "Country").
+// `yoursOnly: true` (card, IBAN and ID key pieces): filled only by the account holder's own row, never "unknown".
 
 const YOUR_NAME = { label: "Your name", kinds: ["self_name"], who: "you", optional: true };
 const HOME_ADDRESS = { label: "Home address", kinds: ["street_address", "gps"], who: "you" };
@@ -44,7 +45,7 @@ export const RECIPES = [
     about: "you",
     impact: "Costly",
     pieces: [
-      { label: "Card number", kinds: ["payment_card"], who: "you", key: true },
+      { label: "Card number", kinds: ["payment_card"], who: "you", key: true, yoursOnly: true },
       HOME_ADDRESS,
       YOUR_NAME,
     ],
@@ -67,7 +68,7 @@ export const RECIPES = [
     about: "you",
     impact: "Costly",
     pieces: [
-      { label: "Bank account number (IBAN)", kinds: ["iban"], who: "you", key: true },
+      { label: "Bank account number (IBAN)", kinds: ["iban"], who: "you", key: true, yoursOnly: true },
       HOME_ADDRESS,
       YOUR_NAME,
     ],
@@ -89,7 +90,7 @@ export const RECIPES = [
     about: "you",
     impact: "Hard to undo",
     pieces: [
-      { label: "Government ID number", kinds: ["national_id"], who: "you", key: true },
+      { label: "Government ID number", kinds: ["national_id"], who: "you", key: true, yoursOnly: true },
       DATE_OF_BIRTH,
       HOME_ADDRESS,
       YOUR_NAME,
@@ -109,7 +110,7 @@ export const RECIPES = [
   {
     id: "bank-call",
     title: "Call your bank, pretending to be you",
-    scam: "Bank impersonation call",
+    scam: "Account takeover by phone",
     about: "you",
     impact: "Costly",
     pieces: [

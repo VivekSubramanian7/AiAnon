@@ -76,6 +76,23 @@ test("who is you, others or any; any only for children", () => {
   }
 });
 
+test("yoursOnly only on you-pieces, exactly the card, IBAN and ID key pieces", () => {
+  const flagged = [];
+  for (const r of RECIPES) {
+    for (const p of r.pieces) {
+      if (!("yoursOnly" in p)) continue;
+      assert.equal(p.yoursOnly, true, `${r.id}: ${p.label} yoursOnly must be true when set`);
+      assert.equal(p.who, "you", `${r.id}: ${p.label}`);
+      flagged.push([r.id, p.kinds.join(","), Boolean(p.key)]);
+    }
+  }
+  assert.deepEqual(flagged, [
+    ["card-online", "payment_card", true],
+    ["direct-debit", "iban", true],
+    ["open-accounts", "national_id", true],
+  ]);
+});
+
 test("writing rules", () => {
   for (const r of RECIPES) {
     assert.ok(words(r.title).length <= 8, `${r.id}: title too long`);

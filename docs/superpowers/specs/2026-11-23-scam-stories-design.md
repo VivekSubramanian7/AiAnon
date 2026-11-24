@@ -162,6 +162,8 @@ Notes on specific recipes:
   - `who: others` accepts `third_party` only (for `children`, any subject: the detector only fires on "my son/
     daughter/kid/child").
   - `account_email` / `account_phone` (from the export's account file) count as **yours**, confirmed.
+  - (Changed 2026-11-24: card, IBAN and ID-number key pieces need the account holder's own row (`yoursOnly`);
+    `unknown` never fills them. A payee's IBAN is not yours.)
 - When more than one row fits, show the best (confidence, then `account_holder` over `unknown`) and its masked
   `example`.
 

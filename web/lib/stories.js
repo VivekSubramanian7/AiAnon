@@ -18,6 +18,8 @@ export function piecesFromReport(report) {
 function stateFor(row, piece) {
   if (!piece.kinds.includes(row.kind)) return null;
   if (CONFIDENCE_RANK[row.confidence] === undefined) return null;
+  // Card, IBAN and ID numbers: only the account holder's own row (a payee's IBAN is not yours).
+  if (piece.yoursOnly) return row.subject === "account_holder" ? "yours" : null;
   if (piece.who === "any") return "others";
   if (piece.who === "others") return row.subject === "third_party" ? "others" : null;
   if (row.subject === "account_holder") return "yours";

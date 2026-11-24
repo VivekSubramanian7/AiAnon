@@ -241,6 +241,7 @@ def test_envelope_zip_masked_contacts():
     extracted, _ = prepare_upload("export.zip", payload)
     assert not any("a@example.com" in s.text for s in extracted.segments)
 
+
 def test_build_pieces_groups_by_kind_and_subject():
     rows = [
         {"harm": "H4", "kind": "phone", "confidence": "high", "subject": "third_party", "masked": "+44 •••• ••• 789", "id": "f-02"},

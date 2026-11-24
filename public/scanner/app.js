@@ -10,11 +10,13 @@ import {
   h,
   isSchemaV2,
   meterSegments,
-  partitionFindings,
   readoutsSheet,
   sameFilter,
-  standOut,
+  evidenceToggle,
+  storySheet,
 } from "/static/lib/report-view.js";
+import { storyView } from "/static/lib/stories.js";
+import { KIND_NOUNS, RECIPES } from "/static/lib/stories-data.js";
 
 (() => {
   "use strict";
@@ -207,13 +209,9 @@ import {
     const level = LEVELS[report.level] || LEVELS.mild;
     if (isSchemaV2(report)) {
       const ro = report.readouts;
-      const { lead } = partitionFindings(report.findings);
-      const leadPhrase = lead.length === 0
-        ? "nothing critical stands out"
-        : `${plural(lead.length, "serious lead", "serious leads")} ${lead.length === 1 ? "stands" : "stand"} out`;
       const conf = (key) => ro[key]?.confidence || "low";
       const corpus = ro.corpusVolume?.score ?? report.score;
-      let text = `If this leaked, ${leadPhrase}. TMI: `
+      let text = `${storyView(report, RECIPES, KIND_NOUNS).summary} TMI: `
         + `Credentials ${ro.credentials.score}/100 (${conf("credentials")}); `
         + `Intimate & safety ${ro.intimateSafety.score}/100 (${conf("intimateSafety")}); `
         + `Identity bridges ${ro.identityBridges.score}/100 (${conf("identityBridges")}); `
@@ -268,13 +266,8 @@ import {
     if (source.truncated) notes.push("That export was huge, so we scanned the first 5 million characters.");
     if (source.failedChunks) notes.push(`${source.failedChunks} chunk(s) couldn't be read and were skipped.`);
 
-    const { lead } = v2 ? partitionFindings(report.findings) : { lead: [] };
-    const headlineMark = v2
-      ? (lead.length === 0 ? "nothing critical" : plural(lead.length, "serious lead", "serious leads"))
-      : (n === 0 ? "nothing" : plural(n, "thing", "things"));
-    const verdictTitle = v2
-      ? ["If this leaked, ", h("mark", {}, headlineMark), ` ${standOut(lead.length)}.`]
-      : ["Your AI knows ", h("mark", {}, headlineMark), " about you."];
+    const headlineMark = n === 0 ? "nothing" : plural(n, "thing", "things");
+    const verdictTitle = ["Your AI knows ", h("mark", {}, headlineMark), " about you."];
 
     matrixFilter = { domain: null, harm: null };
     const matrixHost = h("div", { class: "matrix-host" });
@@ -291,10 +284,10 @@ import {
     paintMatrix();
 
     const verdictSheet = h("div", { class: `sheet verdict${v2 ? " is-v2" : ""}` },
-      h("div", { class: "sheet-head" }, h("span", {}, "Case file"), h("span", {}, `Exhibit A · ${source.label}`)),
+      h("div", { class: "sheet-head" }, h("span", {}, v2 ? "Case facts" : "Case file"), h("span", {}, `Exhibit A · ${source.label}`)),
       h("div", { class: "verdict-body" },
         h("div", { class: "verdict-top" },
-          h("h2", { class: "verdict-title", id: "verdict-title" }, ...verdictTitle),
+          v2 ? null : h("h2", { class: "verdict-title", id: "verdict-title" }, ...verdictTitle),
           h("p", { class: "stamp", "aria-label": `Verdict: ${level.stamp}` }, level.stamp),
         ),
         h("p", { class: "verdict-quip" }, level.quip),
@@ -320,11 +313,9 @@ import {
       : null;
 
     const sections = [
-      v2 ? matrixHost : null,
-      v2 ? readoutsSheet(report.readouts, report.coverage) : null,
-      v2 ? findingsHost : null,
+      v2 ? storySheet(report, { reveal: null }) : null,
       verdictSheet,
-      v2 ? corpusGroups : group("Points straight at you", "Any one of these identifies you on its own.", direct),
+      v2 ? evidenceToggle(matrixHost, readoutsSheet(report.readouts, report.coverage), findingsHost, corpusGroups) : group("Points straight at you", "Any one of these identifies you on its own.", direct),
       v2 ? null : group("Points at you in a crowd", "Harmless alone. Together they narrow it down to you.", context),
       h("div", { class: "sheet next" },
         h("div", { class: "sheet-head" }, h("span", {}, "Now what"), h("span", {}, "Damage control")),

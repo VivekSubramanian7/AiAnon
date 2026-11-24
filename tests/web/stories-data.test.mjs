@@ -67,11 +67,11 @@ test("your name is always optional", () => {
   }
 });
 
-test("who is you, others or any; any only for children", () => {
+test("who is you, others or family; family only for children", () => {
   for (const r of RECIPES) {
     for (const p of r.pieces) {
-      assert.ok(["you", "others", "any"].includes(p.who), `${r.id}: ${p.label} who ${p.who}`);
-      if (p.who === "any") assert.deepEqual(p.kinds, ["children"], `${r.id}: ${p.label}`);
+      assert.ok(["you", "others", "family"].includes(p.who), `${r.id}: ${p.label} who ${p.who}`);
+      if (p.who === "family") assert.deepEqual(p.kinds, ["children"], `${r.id}: ${p.label}`);
     }
   }
 });
@@ -105,6 +105,12 @@ test("writing rules", () => {
         assert.ok(CAPS_ALLOWED.has(w), `${r.id}: all-caps "${w}"`);
       }
     }
+  }
+});
+
+test("keyword-based sensitive kinds are counted as mentions, not details", () => {
+  for (const kind of ["health", "immigration", "religion", "sexual_orientation", "children"]) {
+    for (const n of KIND_NOUNS[kind]) assert.match(n, /\bmentions?\b/, `${kind}: "${n}"`);
   }
 });
 

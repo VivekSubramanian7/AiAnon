@@ -298,11 +298,6 @@ export function findingsSheet(report, filter = {}) {
   );
 }
 
-/** "1 serious lead stands out", "3 serious leads stand out", "nothing critical stands out". */
-export function standOut(n) {
-  return n <= 1 ? "stands out" : "stand out";
-}
-
 export async function copyText(text) {
   try {
     await navigator.clipboard.writeText(text);
@@ -388,19 +383,23 @@ function storyPiece(piece) {
   );
 }
 
+// The closest card (nothing qualifies) has no impact or "How it goes", and says what is still missing instead.
 function storyCard(card, number) {
   return h("article", { class: "story" },
     h("div", { class: "story-head" },
       number ? h("span", { class: "story-num" }, String(number)) : null,
       h("h3", { class: "story-title" }, card.title),
-      h("span", { class: "story-impact" }, card.impact),
+      card.impact ? h("span", { class: "story-impact" }, card.impact) : null,
     ),
     h("p", { class: "story-scam" }, card.scam, " \u00b7 ",
       h("a", { href: card.source.url, target: "_blank", rel: "noreferrer" }, card.source.name)),
     card.about === "others" ? h("p", { class: "label story-about" }, "About people you mention") : null,
     h("ul", { class: "story-pieces" }, card.pieces.map(storyPiece)),
-    h("h4", { class: "label story-sub" }, "How it goes"),
-    h("p", { class: "story-text" }, card.howItGoes),
+    card.stillNeed ? h("p", { class: "story-text story-need" }, card.stillNeed) : null,
+    card.howItGoes ? [
+      h("h4", { class: "label story-sub" }, "How it goes"),
+      h("p", { class: "story-text" }, card.howItGoes),
+    ] : null,
     h("h4", { class: "label story-sub" }, "What stops it"),
     h("ul", { class: "story-fix" }, card.fix.map((line) => h("li", {}, line))),
   );

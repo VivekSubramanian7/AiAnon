@@ -334,7 +334,8 @@ import { KIND_NOUNS, RECIPES } from "/static/lib/stories-data.js";
       notes.length ? h("p", { class: "caveat" }, notes.join(" ")) : null,
       h("p", { class: "caveat" },
         v2
-          ? "Counts are distinct values. Harm readouts use masked findings; corpus detail is the legacy category roll-up. English only."
+          ? "Counts are distinct values. Harm readouts use masked findings; corpus detail is the legacy category roll-up. "
+            + "\"Not found\" means we didn't spot it, not that it isn't there. English only."
           : "Counts are distinct values, so ten mentions of your mum is still one name. We're good, not perfect: "
             + "we miss most street addresses and health details, and sometimes call a band a company. English only."),
     ];

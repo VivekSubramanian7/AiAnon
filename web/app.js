@@ -480,7 +480,7 @@ function renderReport(report, ctx) {
       v2
         ? "Counts are distinct values. Harm readouts use masked findings; corpus detail is the legacy category roll-up. "
           + (isFrisk ? "The quick frisk only knows names on its list until you call the detective. " : "")
-          + "English only."
+          + "\"Not found\" means we didn't spot it, not that it isn't there. English only."
         : "Counts are distinct values, so ten mentions of your mum is still one name. "
           + (isFrisk
             ? "The quick frisk only knows names on its list (mostly English-speaking ones) and companies that end in Inc, Ltd and friends. "

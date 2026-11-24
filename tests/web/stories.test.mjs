@@ -62,13 +62,26 @@ test("third-party rows never fill a you-piece and you-rows never fill an others-
   assert.equal(matchRecipe(others, [rows[0]], 0).cards[0].state, "missing");
 });
 
-test("who: any accepts every subject and always shows as others; who: others needs third_party", () => {
-  const any = recipe("c", "Costly", [piece("Child", ["children"], { key: true, who: "any" })], "others");
-  for (const subject of ["third_party", "account_holder"]) {
-    assert.equal(matchRecipe(any, [p("children", subject)], 0).cards[0].state, "others");
+test("who: family takes the account holder's or an unknown row, shown as others, never a third party's", () => {
+  const family = recipe("c", "Costly", [piece("Child", ["children"], { key: true, who: "family" })], "others");
+  for (const subject of ["account_holder", "unknown"]) {
+    const m = matchRecipe(family, [p("children", subject, "medium", "MY")], 0);
+    assert.deepEqual([m.cards[0].state, m.cards[0].example, m.qualifies], ["others", "MY", true], subject);
   }
+  const theirs = matchRecipe(family, [p("children", "third_party", "medium", "HER")], 0);
+  assert.deepEqual([theirs.cards[0].state, theirs.cards[0].example, theirs.qualifies], ["missing", null, false]);
+  const both = matchRecipe(family, [p("children", "third_party", "confirmed", "HER"), p("children", "unknown", "medium", "MY")], 0);
+  assert.equal(both.cards[0].example, "MY");
   const others = recipe("o", "Costly", [piece("Child", ["children"], { key: true, who: "others" })], "others");
   assert.equal(matchRecipe(others, [p("children", "account_holder")], 0).cards[0].state, "missing");
+});
+
+test("hi-mum is not built from someone else's child", () => {
+  const theirs = storyView({ pieces: [p("children", "third_party", "medium")] }, LIBRARY, KIND_NOUNS);
+  assert.ok(!idsOf([...theirs.shown, ...theirs.more]).includes("hi-mum"));
+  const mine = storyView({ pieces: [p("children", "unknown", "medium")] }, LIBRARY, KIND_NOUNS);
+  assert.ok(idsOf(mine.shown).includes("hi-mum"));
+  assert.equal(mine.shown.find((c) => c.id === "hi-mum").pieces[0].state, "others");
 });
 
 test("a yoursOnly piece is filled only by the account holder's own row", () => {
@@ -170,8 +183,25 @@ test("headline, summary and also lines", () => {
 
   const three = storyView({ pieces: [p("health"), p("email"), p("phone")] }, RECIPES);
   assert.equal(three.headline, "If this leaked, someone could try 3 things.");
-  assert.equal(three.summary, "Someone could try 3 things with my file: 1 hard to undo, 2 costly.");
+  assert.equal(three.summary, "Someone could try 3 things with my file: 1 hard to undo and 2 costly.");
   assert.deepEqual(IMPACT_ORDER, ["Hard to undo", "Costly", "A hassle"]);
+});
+
+test("summary reads naturally for one and several of each impact", () => {
+  const k = (id, impact, kind) => recipe(id, impact, [piece(kind, [kind], { key: true })]);
+  const rs = [
+    k("h1", "Hard to undo", "health"), k("h2", "Hard to undo", "iban"),
+    k("c1", "Costly", "email"), k("c2", "Costly", "phone"),
+    k("a1", "A hassle", "street_address"), k("a2", "A hassle", "gps"),
+  ];
+  const sum = (...kinds) => storyView({ pieces: kinds.map((kind) => p(kind)) }, rs).summary;
+  assert.equal(sum("street_address"), "Someone could try 1 thing with my file: 1 that's a hassle.");
+  assert.equal(sum("street_address", "gps"), "Someone could try 2 things with my file: 2 that are a hassle.");
+  assert.equal(sum("email", "street_address"), "Someone could try 2 things with my file: 1 costly and 1 that's a hassle.");
+  assert.equal(sum("health", "email", "phone", "street_address"),
+    "Someone could try 4 things with my file: 1 hard to undo, 2 costly and 1 that's a hassle.");
+  assert.equal(sum("health", "iban", "email", "phone", "street_address", "gps"),
+    "Someone could try 6 things with my file: 2 hard to undo, 2 costly and 2 that are a hassle.");
 });
 
 test("story cards carry recipe text and piece states", () => {
@@ -181,6 +211,43 @@ test("story cards carry recipe text and piece states", () => {
   assert.equal(v.shown[0].id, "r1");
   assert.equal(v.shown[0].pieces[0].example, "H*");
   assert.equal(v.closest, null);
+});
+
+test("a card shows an optional piece only when it is found", () => {
+  const rs = [recipe("r", "Costly", [
+    piece("K", ["health"], { key: true }), piece("B", ["email"]), piece("Name", ["self_name"], { optional: true }),
+  ])];
+  const without = storyView({ pieces: [p("health")] }, rs);
+  assert.deepEqual(without.shown[0].pieces.map((c) => [c.label, c.state]), [["K", "yours"], ["B", "missing"]]);
+  const withName = storyView({ pieces: [p("health"), p("self_name")] }, rs);
+  assert.deepEqual(withName.shown[0].pieces.map((c) => [c.label, c.state]),
+    [["K", "yours"], ["B", "missing"], ["Name", "yours"]]);
+  // The real library: a date of birth alone never lists "Your name — not found".
+  const dob = storyView({ pieces: [p("date_of_birth", "unknown", "medium")] }, LIBRARY, KIND_NOUNS);
+  for (const card of [...dob.shown, ...dob.more, dob.closest].filter(Boolean)) {
+    assert.ok(!card.pieces.some((c) => c.optional && c.state === "missing"), card.id);
+  }
+});
+
+test("the closest card is reduced: no impact or how-it-goes, and names what is still needed", () => {
+  const rs = [recipe("near", "Hard to undo", [
+    piece("Government ID number", ["national_id"], { key: true }), piece("Date of birth", ["date_of_birth"]),
+    piece("Home address", ["street_address"]), piece("Your name", ["self_name"], { optional: true }),
+  ])];
+  const v = storyView({ pieces: [p("date_of_birth", "unknown", "medium", "D*")] }, rs);
+  assert.equal(v.headline, "Not much to build with here.");
+  assert.equal(v.shown.length, 0);
+  assert.deepEqual(Object.keys(v.closest).sort(),
+    ["about", "fix", "found", "id", "pieces", "scam", "source", "stillNeed", "title", "total"]);
+  assert.equal(v.closest.stillNeed, "They would still need: government ID number and home address.");
+  assert.deepEqual(v.closest.pieces.map((c) => [c.label, c.state, c.example]),
+    [["Government ID number", "missing", null], ["Date of birth", "looks-yours", "D*"], ["Home address", "missing", null]]);
+  // The real library, the reviewer's probe: "Born on 14/03/1985." alone.
+  const real = storyView({ pieces: [p("date_of_birth", "unknown", "medium")] }, LIBRARY, KIND_NOUNS);
+  assert.equal(real.closest.id, "open-accounts");
+  assert.equal(real.closest.impact, undefined);
+  assert.equal(real.closest.howItGoes, undefined);
+  assert.equal(real.closest.stillNeed, "They would still need: government ID number and home address.");
 });
 
 test("also line: unused kinds, summed across subjects, top 4, nouns or labels", () => {
@@ -221,13 +288,29 @@ test("a low-confidence-only file gets the calm result", () => {
   assert.equal(v.closest, null);
 });
 
+test("also line skips kinds that filled the closest card or a card behind \"more\"", () => {
+  const k = (id, impact, kinds) => recipe(id, impact, kinds.map((kind, i) => piece(kind, [kind], { key: i === 0 })));
+  const four = [
+    k("a", "Hard to undo", ["health"]), k("b", "Costly", ["email"]), k("c", "Costly", ["phone"]),
+    k("d", "A hassle", ["iban"]),
+  ];
+  const busy = storyView({ pieces: [p("health"), p("email"), p("phone"), p("iban"), p("age")] }, four);
+  assert.deepEqual(idsOf(busy.more), ["d"]);
+  assert.equal(busy.also, "Also in here: 1 age.");
+
+  const near = [k("n", "Costly", ["national_id", "date_of_birth", "street_address"])];
+  const calm = storyView({ pieces: [p("date_of_birth", "unknown", "medium"), p("age")] }, near);
+  assert.equal(calm.closest.id, "n");
+  assert.equal(calm.also, "Also in here: 1 age.");
+});
+
 test("also line: only the kind that actually filled a multi-kind piece counts as used", () => {
   const rs = [recipe("r", "Costly", [piece("Secret", ["jwt", "api_token"], { key: true })])];
   const v = storyView({ pieces: [p("jwt"), p("api_token", "account_holder", "high")] }, rs);
   assert.equal(v.also, "Also in here: 1 api token.");
 });
 
-// The mock memories' stories, read against each file in samples/mock-memories (reviewed by Vivek).
+// The mock memories' stories, read against each file in samples/mock-memories (to be reviewed by Vivek).
 // - chatgpt-saved-memories: birth date and personal email are Dana's. The IBAN is one she paid a charge to, not
 //   her own; its row is "unknown", so the yoursOnly IBAN piece stays empty and direct-debit does not show.
 // - gemini-saved-info: Kofi's phone, birthday and email; "allergic to peanuts" is the health condition.

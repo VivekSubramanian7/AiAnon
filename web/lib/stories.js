@@ -9,6 +9,12 @@ const CONFIDENCE_RANK = { confirmed: 0, high: 1, medium: 2 };
 const SUBJECT_RANK = { account_holder: 0, unknown: 1 };
 const SHOWN_LIMIT = 3;
 const ALSO_LIMIT = 4;
+// "Someone could try 4 things with my file: 1 hard to undo, 2 costly and 1 that's a hassle."
+const SUMMARY_PHRASE = {
+  "Hard to undo": () => "hard to undo",
+  Costly: () => "costly",
+  "A hassle": (n) => (n === 1 ? "that's a hassle" : "that are a hassle"),
+};
 
 export function piecesFromReport(report) {
   return Array.isArray(report?.pieces) ? report.pieces : buildPieces(report?.findings ?? []);
@@ -20,7 +26,10 @@ function stateFor(row, piece) {
   if (CONFIDENCE_RANK[row.confidence] === undefined) return null;
   // Card, IBAN and ID numbers: only the account holder's own row (a payee's IBAN is not yours).
   if (piece.yoursOnly) return row.subject === "account_holder" ? "yours" : null;
-  if (piece.who === "any") return "others";
+  // A child the visitor mentions ("my son"): their own or unknown rows, never someone else's child.
+  if (piece.who === "family") {
+    return row.subject === "account_holder" || row.subject === "unknown" ? "others" : null;
+  }
   if (piece.who === "others") return row.subject === "third_party" ? "others" : null;
   if (row.subject === "account_holder") return "yours";
   return row.subject === "unknown" ? "looks-yours" : null;
@@ -118,7 +127,8 @@ function toCard(match) {
     howItGoes: recipe.howItGoes,
     fix: recipe.fix,
     source: recipe.source,
-    pieces: match.cards,
+    // Optional pieces show only when found; a missing one is not something they would need.
+    pieces: match.cards.filter((c) => !(c.optional && c.state === "missing")),
     found: match.found,
     total: match.total,
   };
@@ -129,9 +139,24 @@ function joinList(items) {
   return `${items.slice(0, -1).join(", ")} and ${items[items.length - 1]}`;
 }
 
-function alsoLine(pieces, shown, nouns) {
+/** "Government ID number" -> "government ID number"; leaves "IBAN …" alone. */
+function lowerFirst(label) {
+  return label.length > 1 && label[1] === label[1].toLowerCase() ? label[0].toLowerCase() + label.slice(1) : label;
+}
+
+/**
+ * The closest card under the calm headline: no impact label and no "How it goes", so it never reads as a full
+ * story. It names the counted pieces still missing instead.
+ */
+function toClosestCard(match) {
+  const { impact, howItGoes, ...card } = toCard(match);
+  const missing = match.cards.filter((c) => !c.optional && c.state === "missing").map((c) => lowerFirst(c.label));
+  return { ...card, stillNeed: missing.length ? `They would still need: ${joinList(missing)}.` : null };
+}
+
+function alsoLine(pieces, matches, nouns) {
   const used = new Set();
-  for (const match of shown) for (const kind of match.usedKinds) used.add(kind);
+  for (const match of matches) for (const kind of match.usedKinds) used.add(kind);
   const counts = new Map();
   for (const row of pieces) {
     if (!used.has(row.kind)) counts.set(row.kind, (counts.get(row.kind) ?? 0) + row.count);
@@ -159,16 +184,17 @@ export function storyView(report, recipes, nouns = {}) {
       impact,
       [...shown, ...more].filter((m) => m.recipe.impact === impact).length,
     ]);
-    const parts = counts.filter(([, c]) => c).map(([impact, c]) => `${c} ${impact.toLowerCase()}`);
-    summary = `Someone could try ${things} with my file: ${parts.join(", ")}.`;
+    const parts = counts.filter(([, c]) => c).map(([impact, c]) => `${c} ${SUMMARY_PHRASE[impact](c)}`);
+    summary = `Someone could try ${things} with my file: ${joinList(parts)}.`;
   }
 
   return {
     headline: n ? `If this leaked, someone could try ${things}.` : "Not much to build with here.",
     shown: shown.map(toCard),
     more: more.map(toCard),
-    closest: closest ? toCard(closest) : null,
-    also: alsoLine(pieces, shown, nouns),
+    closest: closest ? toClosestCard(closest) : null,
+    // Kinds that filled any card on the page (shown, behind "more", or the closest) are not repeated here.
+    also: alsoLine(pieces, [...shown, ...more, ...(closest ? [closest] : [])], nouns),
     summary,
   };
 }

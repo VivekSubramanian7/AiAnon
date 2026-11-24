@@ -2,6 +2,8 @@
 // Each recipe is a real, documented scam. Matching rules live in stories.js; the spec is
 // docs/superpowers/specs/2026-11-23-scam-stories-design.md (§2 recipe table, §4 writing rules, "Country").
 // `yoursOnly: true` (card, IBAN and ID key pieces): filled only by the account holder's own row, never "unknown".
+// `who: "family"` (the child piece only): filled by the account holder's or an unknown row ("my son"), never a
+// third party's ("her daughter"); always shown as "in your file".
 
 const YOUR_NAME = { label: "Your name", kinds: ["self_name"], who: "you", optional: true };
 const HOME_ADDRESS = { label: "Home address", kinds: ["street_address", "gps"], who: "you" };
@@ -171,8 +173,8 @@ export const RECIPES = [
       + "visa or papers. Knowing your status and employer makes it sound real, and they would ask for a fee or your "
       + "personal details to fix it.",
     fix: [
-      "If someone contacts you about your visa, hang up and check with the immigration authority through its "
-        + "official website.",
+      "If someone calls or writes to you about your visa, don't pay or share details; check with the immigration "
+        + "authority through its official website.",
       "Delete your visa details and employer from the chatbot's memory.",
     ],
     source: {
@@ -257,7 +259,7 @@ export const RECIPES = [
     about: "others",
     impact: "Costly",
     pieces: [
-      { label: "That you have a child", kinds: ["children"], who: "any", key: true },
+      { label: "That you have a child", kinds: ["children"], who: "family", key: true },
       { label: "Your phone number", kinds: ["phone", "account_phone"], who: "you" },
       YOUR_NAME,
     ],
@@ -298,6 +300,8 @@ export const RECIPES = [
 ];
 
 // [singular, plural] for the "Also in here: 4 places and 2 organisations." line. Every kind in KIND_LABELS.
+// Keyword-based sensitive kinds (health, immigration, religion, sexuality, children) say "mention": a bare keyword
+// is not a confirmed detail.
 export const KIND_NOUNS = {
   aws_access_key: ["cloud access key", "cloud access keys"],
   private_key: ["private key", "private keys"],
@@ -307,11 +311,11 @@ export const KIND_NOUNS = {
   tokenized_url: ["private link", "private links"],
   payment_card: ["card number", "card numbers"],
   national_id: ["identity number", "identity numbers"],
-  health: ["health detail", "health details"],
+  health: ["health mention", "health mentions"],
   religion: ["mention of religion", "mentions of religion"],
   sexual_orientation: ["mention of sexuality", "mentions of sexuality"],
   children: ["mention of children", "mentions of children"],
-  immigration: ["immigration detail", "immigration details"],
+  immigration: ["immigration mention", "immigration mentions"],
   street_address: ["street address", "street addresses"],
   gps: ["map location", "map locations"],
   profile_url: ["profile link", "profile links"],

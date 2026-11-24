@@ -5,6 +5,8 @@
 import { DOMAINS, DOMAIN_LABELS, kindsForCell } from "./domains.js";
 import { KIND_LABELS } from "./sensitivity.js";
 import { buildAnalysisPrompt } from "./analysis-prompt.js";
+import { storyView } from "./stories.js";
+import { RECIPES, KIND_NOUNS } from "./stories-data.js";
 
 export function h(tag, attrs, ...children) {
   const el = document.createElement(tag);
@@ -296,11 +298,6 @@ export function findingsSheet(report, filter = {}) {
   );
 }
 
-/** "1 serious lead stands out", "3 serious leads stand out", "nothing critical stands out". */
-export function standOut(n) {
-  return n <= 1 ? "stands out" : "stand out";
-}
-
 export async function copyText(text) {
   try {
     await navigator.clipboard.writeText(text);
@@ -366,4 +363,83 @@ export function analysisPromptBlock(report) {
   });
 
   return h("div", { class: "analysis-prompt-wrap" }, lede, button, choice);
+}
+
+const PIECE_STATES = {
+  yours: ["\u2713", "yours"],
+  "looks-yours": ["\u2713", "looks like yours"],
+  others: ["\u2713", "in your file"],
+  missing: ["\u2717", "not found"],
+};
+
+function storyPiece(piece) {
+  const [symbol, text] = PIECE_STATES[piece.state] || PIECE_STATES.missing;
+  const found = piece.state !== "missing";
+  return h("li", { class: `story-piece is-${found ? "found" : "missing"}` },
+    h("span", { class: "story-piece-mark", "aria-hidden": "true" }, symbol),
+    h("span", { class: "story-piece-label" }, piece.label),
+    h("span", { class: "story-piece-state" }, text),
+    piece.example ? h("code", { class: "story-piece-example" }, piece.example) : null,
+  );
+}
+
+// The closest card (nothing qualifies) has no impact or "How it goes", and says what is still missing instead.
+function storyCard(card, number) {
+  return h("article", { class: "story" },
+    h("div", { class: "story-head" },
+      number ? h("span", { class: "story-num" }, String(number)) : null,
+      h("h3", { class: "story-title" }, card.title),
+      card.impact ? h("span", { class: "story-impact" }, card.impact) : null,
+    ),
+    h("p", { class: "story-scam" }, card.scam, " \u00b7 ",
+      h("a", { href: card.source.url, target: "_blank", rel: "noreferrer" }, card.source.name)),
+    card.about === "others" ? h("p", { class: "label story-about" }, "About people you mention") : null,
+    h("ul", { class: "story-pieces" }, card.pieces.map(storyPiece)),
+    card.stillNeed ? h("p", { class: "story-text story-need" }, card.stillNeed) : null,
+    card.howItGoes ? [
+      h("h4", { class: "label story-sub" }, "How it goes"),
+      h("p", { class: "story-text" }, card.howItGoes),
+    ] : null,
+    h("h4", { class: "label story-sub" }, "What stops it"),
+    h("ul", { class: "story-fix" }, card.fix.map((line) => h("li", {}, line))),
+  );
+}
+
+export function storySheet(report, { reveal = null } = {}) {
+  const view = storyView(report, RECIPES, KIND_NOUNS);
+  const body = h("div", { class: "story-body" },
+    h("h2", { class: "verdict-title", id: "verdict-title", tabindex: "-1" }, view.headline),
+    reveal ? h("p", { class: "reveal" }, reveal) : null,
+    view.shown.map((card, i) => storyCard(card, i + 1)),
+  );
+  if (view.more.length) {
+    const n = view.more.length;
+    body.append(h("details", { class: "story-more" },
+      h("summary", {}, `${n} more ${n === 1 ? "thing" : "things"} someone could try`),
+      view.more.map((card, i) => storyCard(card, view.shown.length + i + 1)),
+    ));
+  }
+  if (!view.shown.length && view.closest) {
+    body.append(h("p", { class: "story-closest-intro" }, "The closest someone could get:"),
+      storyCard(view.closest, null));
+  }
+  if (view.also) body.append(h("p", { class: "story-also" }, view.also));
+  return h("div", { class: "sheet story-sheet" },
+    h("div", { class: "sheet-head" }, h("span", {}, "Case file"), h("span", {}, "What a stranger could do")),
+    body,
+  );
+}
+
+export function evidenceToggle(...children) {
+  const id = `evidence-${Math.random().toString(36).slice(2, 9)}`;
+  const button = h("button", { class: "btn btn-ghost", type: "button", "aria-expanded": "false", "aria-controls": id },
+    "Show the evidence");
+  const region = h("div", { class: "evidence-region", id, hidden: true }, children);
+  button.addEventListener("click", () => {
+    const open = region.hidden;
+    region.hidden = !open;
+    button.setAttribute("aria-expanded", String(open));
+    button.textContent = open ? "Hide the evidence" : "Show the evidence";
+  });
+  return h("div", { class: "evidence-toggle" }, button, region);
 }

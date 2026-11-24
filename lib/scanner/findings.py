@@ -181,6 +181,24 @@ def band_counts(rows: List[dict]) -> Dict[str, dict]:
     return result
 
 
+def build_pieces(findings: List[dict]) -> List[dict]:
+    """One row per (kind, subject) over uncapped findings: how many, best confidence, one masked example."""
+    groups: Dict[Tuple[str, str], List[dict]] = defaultdict(list)
+    for row in sort_findings(findings):
+        groups[(row["kind"], row["subject"])].append(row)
+    pieces = [
+        {
+            "kind": kind,
+            "subject": subject,
+            "count": len(rows),
+            "confidence": min((r["confidence"] for r in rows), key=lambda c: CONFIDENCE_RANK.get(c, 99)),
+            "example": rows[0]["masked"],
+        }
+        for (kind, subject), rows in groups.items()
+    ]
+    return sorted(pieces, key=lambda p: (p["kind"], SUBJECT_ORDER.get(p["subject"], 99)))
+
+
 # Another person's name stays "unknown" next to "I" or "my" ("I met Tom" is not about Tom being you).
 NOT_SELF_KINDS = frozenset({"name"})
 

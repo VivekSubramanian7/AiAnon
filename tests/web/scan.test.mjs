@@ -7,6 +7,7 @@ import { createRules } from "../../web/lib/rules.js";
 import { extractFile, bytesSource, extractText } from "../../web/lib/extract.js";
 import { scan, buildChunks, splitLinesKeepEnds } from "../../web/lib/scan.js";
 import { mask, exposureScore, levelFor } from "../../web/lib/report.js";
+import { buildPieces } from "../../web/lib/sensitivity.js";
 import { readEnvelope, nullEnvelope } from "../../web/lib/envelope.js";
 
 const root = new URL("../../", import.meta.url);
@@ -59,4 +60,27 @@ test("masks, score and levels", () => {
   assert.equal(mask("ages", "36 years old"), "30s");
   assert.equal(exposureScore(0, 0), 0);
   assert.equal(levelFor(exposureScore(6, 4)), "oversharer");
+});
+
+test("buildPieces groups by kind and subject", () => {
+  const rows = [
+    { harm: "H4", kind: "phone", confidence: "high", subject: "third_party", masked: "+44 •••• ••• 789", id: "f-02" },
+    { harm: "H6", kind: "phone", confidence: "low", subject: "third_party", masked: "0•••• •••111", id: "f-05" },
+    { harm: "H2", kind: "date_of_birth", confidence: "medium", subject: "account_holder", masked: "14/0•/19••", id: "f-01" },
+    { harm: "H4", kind: "phone", confidence: "medium", subject: "account_holder", masked: "+49 •••• ••• 123", id: "f-03" },
+  ];
+  assert.deepEqual(buildPieces(rows), [
+    { kind: "date_of_birth", subject: "account_holder", count: 1, confidence: "medium", example: "14/0•/19••" },
+    { kind: "phone", subject: "account_holder", count: 1, confidence: "medium", example: "+49 •••• ••• 123" },
+    { kind: "phone", subject: "third_party", count: 2, confidence: "high", example: "+44 •••• ••• 789" },
+  ]);
+});
+
+test("pieces add up to the band totals for every mock", () => {
+  for (const name of fixture.files) {
+    const r = fixture.reports[name];
+    const fromPieces = r.pieces.reduce((n, p) => n + p.count, 0);
+    const fromBands = ["H1", "H2", "H3", "H4", "H5", "H6"].reduce((n, h) => n + r.bands[h].unique, 0);
+    assert.equal(fromPieces, fromBands, name);
+  }
 });

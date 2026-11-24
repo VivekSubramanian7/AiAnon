@@ -12,11 +12,13 @@ import {
   h,
   isSchemaV2,
   meterSegments,
-  partitionFindings,
   readoutsSheet,
   sameFilter,
-  standOut,
+  evidenceToggle,
+  storySheet,
 } from "./lib/report-view.js";
+import { storyView } from "./lib/stories.js";
+import { KIND_NOUNS, RECIPES } from "./lib/stories-data.js";
 
 const $ = (id) => document.getElementById(id);
 const els = {
@@ -329,13 +331,9 @@ function summaryText(report, stage) {
   const level = LEVELS[report.level] || LEVELS.mild;
   if (isSchemaV2(report)) {
     const ro = report.readouts;
-    const { lead } = partitionFindings(report.findings);
-    const leadPhrase = lead.length === 0
-      ? "nothing critical stands out"
-      : `${plural(lead.length, "serious lead", "serious leads")} ${lead.length === 1 ? "stands" : "stand"} out`;
     const conf = (key) => ro[key]?.confidence || "low";
     const corpus = ro.corpusVolume?.score ?? report.score;
-    let text = `If this leaked, ${leadPhrase}. TMI: `
+    let text = `${storyView(report, RECIPES, KIND_NOUNS).summary} TMI: `
       + `Credentials ${ro.credentials.score}/100 (${conf("credentials")}); `
       + `Intimate & safety ${ro.intimateSafety.score}/100 (${conf("intimateSafety")}); `
       + `Identity bridges ${ro.identityBridges.score}/100 (${conf("identityBridges")}); `
@@ -385,12 +383,8 @@ function renderReport(report, ctx) {
     ["Scan time", report.elapsedMs < 100 ? "under 0.1 s" : `${(report.elapsedMs / 1000).toFixed(1)} s`],
   ].filter(Boolean);
 
-  const { lead } = v2 ? partitionFindings(report.findings) : { lead: [] };
   let title;
-  if (v2) {
-    const headlineMark = lead.length === 0 ? "nothing critical" : plural(lead.length, "serious lead", "serious leads");
-    title = ["If this leaked, ", h("mark", {}, headlineMark), ` ${standOut(lead.length)}.`];
-  } else if (isFrisk) {
+  if (isFrisk) {
     title = n === 0 ? ["The frisk found ", h("mark", {}, "nothing"), ". Yet."]
       : ["Your AI knows at least ", h("mark", {}, plural(n, "thing", "things")), " about you."];
   } else {
@@ -430,14 +424,14 @@ function renderReport(report, ctx) {
   paintMatrix();
 
   const verdictSheet = h("div", { class: `sheet verdict${isFrisk ? " is-frisk" : ""}${v2 ? " is-v2" : ""}` },
-    h("div", { class: "sheet-head" }, h("span", {}, "Case file"),
+    h("div", { class: "sheet-head" }, h("span", {}, v2 ? "Case facts" : "Case file"),
       h("span", {}, `${isFrisk ? "Quick frisk" : "Detective's report"} · ${source.label}`)),
     h("div", { class: "verdict-body" },
       h("div", { class: "verdict-top" },
-        h("h2", { class: "verdict-title", id: "verdict-title" }, ...title),
+        v2 ? null : h("h2", { class: "verdict-title", id: "verdict-title" }, ...title),
         h("p", { class: `stamp${isFrisk ? " is-open" : ""}`, "aria-label": `Verdict: ${stamp}` }, stamp),
       ),
-      isFrisk ? null : h("p", { class: "reveal" }, revealLine(ctx.missed ?? 0, ctx.dropped ?? 0)),
+      v2 || isFrisk ? null : h("p", { class: "reveal" }, revealLine(ctx.missed ?? 0, ctx.dropped ?? 0)),
       h("p", { class: "verdict-quip" }, level.quip),
       v2 ? null : h("div", { class: "meter" },
         h("div", { class: "meter-head" },
@@ -461,12 +455,11 @@ function renderReport(report, ctx) {
     : null;
 
   const sections = [
-    v2 ? matrixHost : null,
-    v2 ? readoutsSheet(report.readouts, report.coverage) : null,
-    v2 ? findingsHost : null,
+    v2 ? storySheet(report, { reveal: isFrisk ? null : revealLine(ctx.missed ?? 0, ctx.dropped ?? 0) }) : null,
     verdictSheet,
     isFrisk ? detectivePanel(ctx.cached) : null,
-    v2 ? corpusGroups : group("Points straight at you", "Any one of these identifies you on its own.", direct, stage),
+    v2 ? evidenceToggle(matrixHost, readoutsSheet(report.readouts, report.coverage), findingsHost, corpusGroups)
+      : group("Points straight at you", "Any one of these identifies you on its own.", direct, stage),
     v2 ? null : group("Points at you in a crowd", "Harmless alone. Together they narrow it down to you.", context, stage),
     h("div", { class: "sheet next" },
       h("div", { class: "sheet-head" }, h("span", {}, "Now what"), h("span", {}, "Damage control")),

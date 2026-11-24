@@ -60,9 +60,13 @@ test("third-party rows never fill a you-piece and you-rows never fill an others-
   assert.equal(matchRecipe(others, [rows[0]], 0).cards[0].state, "missing");
 });
 
-test("children fills an others-piece from any subject", () => {
-  const r = recipe("c", "Costly", [piece("Child", ["children"], { key: true, who: "others" })], "others");
-  assert.equal(matchRecipe(r, [p("children", "account_holder")], 0).cards[0].state, "others");
+test("who: any accepts every subject and always shows as others; who: others needs third_party", () => {
+  const any = recipe("c", "Costly", [piece("Child", ["children"], { key: true, who: "any" })], "others");
+  for (const subject of ["third_party", "account_holder"]) {
+    assert.equal(matchRecipe(any, [p("children", subject)], 0).cards[0].state, "others");
+  }
+  const others = recipe("o", "Costly", [piece("Child", ["children"], { key: true, who: "others" })], "others");
+  assert.equal(matchRecipe(others, [p("children", "account_holder")], 0).cards[0].state, "missing");
 });
 
 test("a story needs its key piece and half its counted pieces", () => {
@@ -204,4 +208,10 @@ test("a low-confidence-only file gets the calm result", () => {
   assert.equal(v.headline, "Not much to build with here.");
   assert.equal(v.shown.length, 0);
   assert.equal(v.closest, null);
+});
+
+test("also line: only the kind that actually filled a multi-kind piece counts as used", () => {
+  const rs = [recipe("r", "Costly", [piece("Secret", ["jwt", "api_token"], { key: true })])];
+  const v = storyView({ pieces: [p("jwt"), p("api_token", "account_holder", "high")] }, rs);
+  assert.equal(v.also, "Also in here: 1 api token.");
 });

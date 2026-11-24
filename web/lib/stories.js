@@ -18,9 +18,8 @@ export function piecesFromReport(report) {
 function stateFor(row, piece) {
   if (!piece.kinds.includes(row.kind)) return null;
   if (CONFIDENCE_RANK[row.confidence] === undefined) return null;
-  if (piece.who === "others") {
-    return row.subject === "third_party" || row.kind === "children" ? "others" : null;
-  }
+  if (piece.who === "any") return "others";
+  if (piece.who === "others") return row.subject === "third_party" ? "others" : null;
   if (row.subject === "account_holder") return "yours";
   return row.subject === "unknown" ? "looks-yours" : null;
 }
@@ -47,21 +46,26 @@ function fillPiece(piece, pieces) {
     }
   }
   return {
-    label: piece.label,
-    state: best ? best.state : "missing",
-    example: best ? best.row.example ?? null : null,
-    key: Boolean(piece.key),
-    optional: Boolean(piece.optional),
+    kind: best ? best.row.kind : null,
+    card: {
+      label: piece.label,
+      state: best ? best.state : "missing",
+      example: best ? best.row.example ?? null : null,
+      key: Boolean(piece.key),
+      optional: Boolean(piece.optional),
+    },
   };
 }
 
 export function matchRecipe(recipe, pieces, index = 0) {
-  const cards = recipe.pieces.map((piece) => fillPiece(piece, pieces));
+  const fills = recipe.pieces.map((piece) => fillPiece(piece, pieces));
+  const cards = fills.map((f) => f.card);
+  const usedKinds = fills.map((f) => f.kind).filter(Boolean);
   const counted = cards.filter((c) => !c.optional);
   const found = counted.filter((c) => c.state !== "missing").length;
   const total = counted.length;
   const keyFound = cards.some((c) => c.key && c.state !== "missing");
-  return { recipe, index, cards, found, total, qualifies: keyFound && found * 2 >= total };
+  return { recipe, index, cards, usedKinds, found, total, qualifies: keyFound && found * 2 >= total };
 }
 
 const share = (m) => (m.total ? m.found / m.total : 0);
@@ -125,12 +129,7 @@ function joinList(items) {
 
 function alsoLine(pieces, shown, nouns) {
   const used = new Set();
-  for (const match of shown) {
-    match.recipe.pieces.forEach((piece, i) => {
-      if (match.cards[i].state === "missing") return;
-      for (const row of pieces) if (stateFor(row, piece)) used.add(row.kind);
-    });
-  }
+  for (const match of shown) for (const kind of match.usedKinds) used.add(kind);
   const counts = new Map();
   for (const row of pieces) {
     if (!used.has(row.kind)) counts.set(row.kind, (counts.get(row.kind) ?? 0) + row.count);

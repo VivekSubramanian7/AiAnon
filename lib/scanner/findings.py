@@ -100,6 +100,8 @@ SELF_NEGATIVE_RE = re.compile(
     r"mom|dad|wife|husband|partner)\b",
     re.I,
 )
+# Someone else named in an earlier sentence says nothing about this one: "My boss is Tom. My email is …".
+SENTENCE_BREAK_RE = re.compile(r"[.!?]\s|\n")
 
 H1_KINDS = frozenset({
     "private_key", "aws_access_key", "api_token", "jwt", "password_cue", "tokenized_url",
@@ -203,6 +205,13 @@ def build_pieces(findings: List[dict]) -> List[dict]:
 NOT_SELF_KINDS = frozenset({"name"})
 
 
+def _about_someone_else(text: str, kind: str) -> bool:
+    if THIRD_PARTY_RE.search(text):
+        return True
+    # "My husband and my daughter": family words don't make your own child someone else's.
+    return kind != "children" and bool(SELF_NEGATIVE_RE.search(text))
+
+
 def classify_subject(window: str, *, kind: str) -> str:
     if kind in H1_KINDS and not window.strip():
         return "account_holder"
@@ -210,11 +219,13 @@ def classify_subject(window: str, *, kind: str) -> str:
         return "account_holder"
     if kind == "child_name":
         return "third_party"
-    if THIRD_PARTY_RE.search(window) or SELF_NEGATIVE_RE.search(window):
+    sentence = SENTENCE_BREAK_RE.split(window)[-1]
+    if _about_someone_else(sentence, kind):
         return "third_party"
     if kind in NOT_SELF_KINDS:
         return "unknown"
-    if SELF_CUE_RE.search(window):
+    # Someone else came up in an earlier sentence: only a cue in this one makes it yours.
+    if SELF_CUE_RE.search(sentence if _about_someone_else(window, kind) else window):
         return "account_holder"
     if kind in H1_KINDS:
         return "account_holder"

@@ -314,19 +314,26 @@ test("also line: only the kind that actually filled a multi-kind piece counts as
 // - chatgpt-saved-memories: birth date and personal email are Dana's. The IBAN is one she paid a charge to, not
 //   her own; its row is "unknown", so the yoursOnly IBAN piece stays empty and direct-debit does not show.
 // - gemini-saved-info: Kofi's phone, birthday and email; "allergic to peanuts" is the health condition.
-// - bot-answer: the bot lists Sam's birthday, emails and "your number".
+// - bot-answer: the bot lists Sam's birthday, emails and "your number" (read as Sam's own: lib/scanner/voice.py).
+// - claude-memory-summary: Claude-style memory written to the user ("Your name is Ines Moreau", "your daughter",
+//   "your own anxiety", "your Niederlassungserlaubnis"). Read in the first person, so every fact is hers. Before
+//   that it gave only unknown or low-confidence rows: "Not much to build with here."
 // - clean-memory: preferences only; nothing to build with and nothing close.
 // - chatgpt-export: Priya's phone, birthday and "flat 4B at 18 Elm Grove".
 // - claude-export: Marcus's phone, birth date and salary IBAN. The file holds others' contacts (a referee's
-//   email, the movers' phone), but the row that fills friends-message is his own email, tagged third_party.
+//   email, the movers' phone), but none is tagged third_party, so friends-message does not show. (It used to,
+//   from his own email: "My wife Anna … Contact me at …" read the wife's sentence as the email's owner.)
 // - chatgpt-export-large: "My number is …" only; no birth date or address, so sim-swap is just the closest.
 const MOCK_STORIES = {
   "chatgpt-saved-memories.txt": { shown: ["bank-call"], more: [], closest: null },
   "gemini-saved-info.txt": { shown: ["sim-swap", "fake-insurer", "bank-call"], more: [], closest: null },
   "bot-answer-what-do-you-remember.txt": { shown: ["sim-swap", "bank-call"], more: [], closest: null },
+  "claude-memory-summary.txt": {
+    shown: ["immigration-call", "fake-insurer", "hi-mum"], more: ["work-message"], closest: null,
+  },
   "clean-memory.txt": { shown: [], more: [], closest: null },
   "chatgpt-export.zip": { shown: ["sim-swap", "bank-call", "doorstep"], more: [], closest: null },
-  "claude-export.zip": { shown: ["sim-swap", "friends-message", "bank-call"], more: ["direct-debit"], closest: null },
+  "claude-export.zip": { shown: ["sim-swap", "bank-call", "direct-debit"], more: [], closest: null },
   "chatgpt-export-large.zip": { shown: [], more: [], closest: "sim-swap" },
 };
 

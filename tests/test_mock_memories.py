@@ -44,6 +44,34 @@ def test_pasted_memories(name, expected):
     assert report["level"] in ("chatty", "oversharer")
 
 
+def test_claude_memory_summary_is_read_as_the_account_holders():
+    """Written to the user ("Your name is …", "your daughter"): every fact is hers, so the stories can use them."""
+    report, found = run("claude-memory-summary.txt")
+    assert report["source"]["format"] == "text"
+    assert (found["emails"], found["phones"]) == (1, 1)
+    pieces = {(p["kind"], p["subject"]): p["confidence"] for p in report["pieces"]}
+    for kind in ("self_name", "children", "health", "immigration", "email"):
+        assert pieces.get((kind, "account_holder")) == "medium", kind
+    assert pieces.get(("phone", "account_holder")) == "high"
+    assert any(kind == "employer" for kind, _ in pieces)
+    # Her husband and daughter come up in the same paragraph as her number: it stays hers.
+    assert not [k for k in pieces if k[1] == "third_party" and k[0] in ("phone", "email", "children")]
+    serialized = json.dumps(report)
+    for real in ("Ines", "Moreau", "Margaux", "0142", "ines.moreau", "Niederlassungserlaubnis", "thrombosis"):
+        assert real not in serialized
+
+
+def test_your_name_in_a_message_to_the_bot_is_not_yours():
+    message = "From now on your name is Ava Lindgren. Your last answer was wrong."
+    export = [{"mapping": {"a": {"message": {"author": {"role": "user"}, "content": {"parts": [message]}}}}}]
+    in_chat = scan(extract_file("conversations.json", json.dumps(export).encode()))
+    assert in_chat["source"]["kinds"] == {"message": 1}
+    assert not any(f["kind"] == "self_name" for f in in_chat["findings"])
+    # The same words in a pasted memory summary are the bot talking to you.
+    pasted = scan(extract_file("memory.txt", b"Your name is Ava Lindgren. You live in Oslo."))
+    assert any(f["kind"] == "self_name" for f in pasted["findings"])
+
+
 def test_clean_memory_is_suspiciously_clean():
     report, _ = run("clean-memory.txt")
     assert report["totals"]["unique"] == 0

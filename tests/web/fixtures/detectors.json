@@ -603,6 +603,434 @@
           ]
         }
       ]
+    },
+    {
+      "name": "children_plural",
+      "text": "my kids start school in May",
+      "inCodeBlock": false,
+      "findings": [
+        {
+          "harm": "H3",
+          "kind": "children",
+          "confidence": "medium",
+          "subject": "unknown",
+          "masked": "m\u2022 k\u2022\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "relationships"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "children_have",
+      "text": "I have two kids",
+      "inCodeBlock": false,
+      "findings": [
+        {
+          "harm": "H3",
+          "kind": "children",
+          "confidence": "medium",
+          "subject": "unknown",
+          "masked": "I h\u2022\u2022\u2022 t\u2022\u2022 k\u2022\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "relationships"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "children_then_age",
+      "text": "In October I asked about lazy-eye treatment for my then three-year-old.",
+      "inCodeBlock": false,
+      "findings": [
+        {
+          "harm": "H3",
+          "kind": "children",
+          "confidence": "medium",
+          "subject": "account_holder",
+          "masked": "m\u2022 t\u2022\u2022\u2022 t\u2022\u2022\u2022\u2022-\u2022\u2022\u2022\u2022-\u2022\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "relationships"
+          ]
+        },
+        {
+          "harm": "H3",
+          "kind": "health",
+          "confidence": "low",
+          "subject": "account_holder",
+          "masked": "l\u2022\u2022\u2022-\u2022\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "health"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "children_months",
+      "text": "my 6-month-old is teething",
+      "inCodeBlock": false,
+      "findings": [
+        {
+          "harm": "H3",
+          "kind": "children",
+          "confidence": "medium",
+          "subject": "unknown",
+          "masked": "m\u2022 6-\u2022\u2022\u2022\u2022\u2022-\u2022\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "relationships"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "children_age_object",
+      "text": "selling my 10-year-old car",
+      "inCodeBlock": false,
+      "findings": []
+    },
+    {
+      "name": "children_named",
+      "text": "Daughter is Mia, who loves drawing.",
+      "inCodeBlock": false,
+      "findings": [
+        {
+          "harm": "H3",
+          "kind": "children",
+          "confidence": "medium",
+          "subject": "unknown",
+          "masked": "D\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "relationships"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "children_named_accent",
+      "text": "Son is \u00c9lodie's twin",
+      "inCodeBlock": false,
+      "findings": [
+        {
+          "harm": "H3",
+          "kind": "children",
+          "confidence": "medium",
+          "subject": "unknown",
+          "masked": "S\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "relationships"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "children_named_once",
+      "text": "my daughter is Mia",
+      "inCodeBlock": false,
+      "findings": [
+        {
+          "harm": "H3",
+          "kind": "children",
+          "confidence": "medium",
+          "subject": "unknown",
+          "masked": "m\u2022 d\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "relationships"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "children_named_lower",
+      "text": "the son is unwell",
+      "inCodeBlock": false,
+      "findings": []
+    },
+    {
+      "name": "children_someone_elses",
+      "text": "Jess's son is Leo",
+      "inCodeBlock": false,
+      "findings": []
+    },
+    {
+      "name": "children_after_family",
+      "text": "I'm married to Tobias, and my daughter is Margaux.",
+      "inCodeBlock": false,
+      "findings": [
+        {
+          "harm": "H3",
+          "kind": "children",
+          "confidence": "medium",
+          "subject": "account_holder",
+          "masked": "m\u2022 d\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "relationships"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "health_own",
+      "text": "I've asked about my own anxiety",
+      "inCodeBlock": false,
+      "findings": [
+        {
+          "harm": "H3",
+          "kind": "health",
+          "confidence": "medium",
+          "subject": "account_holder",
+          "masked": "a\u2022\u2022\u2022\u2022\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "health"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "health_thrombosis",
+      "text": "I was diagnosed with a deep vein thrombosis",
+      "inCodeBlock": false,
+      "findings": [
+        {
+          "harm": "H3",
+          "kind": "health",
+          "confidence": "medium",
+          "subject": "account_holder",
+          "masked": "t\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "health"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "health_new_words",
+      "text": "feeling depressed after a seizure; epilepsy; a lazy eye",
+      "inCodeBlock": false,
+      "findings": [
+        {
+          "harm": "H3",
+          "kind": "health",
+          "confidence": "low",
+          "subject": "unknown",
+          "masked": "d\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "health"
+          ]
+        },
+        {
+          "harm": "H3",
+          "kind": "health",
+          "confidence": "low",
+          "subject": "unknown",
+          "masked": "s\u2022\u2022\u2022\u2022\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "health"
+          ]
+        },
+        {
+          "harm": "H3",
+          "kind": "health",
+          "confidence": "low",
+          "subject": "unknown",
+          "masked": "e\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "health"
+          ]
+        },
+        {
+          "harm": "H3",
+          "kind": "health",
+          "confidence": "low",
+          "subject": "unknown",
+          "masked": "l\u2022\u2022\u2022 e\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "health"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "health_left_out",
+      "text": "cabin fever and two glasses of wine",
+      "inCodeBlock": false,
+      "findings": []
+    },
+    {
+      "name": "immigration_settlement",
+      "text": "my Niederlassungserlaubnis came through",
+      "inCodeBlock": false,
+      "findings": [
+        {
+          "harm": "H3",
+          "kind": "immigration",
+          "confidence": "medium",
+          "subject": "account_holder",
+          "masked": "N\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "identity"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "immigration_terms",
+      "text": "a settlement permit, permanent residence, my green card, my student visa",
+      "inCodeBlock": false,
+      "findings": [
+        {
+          "harm": "H3",
+          "kind": "immigration",
+          "confidence": "medium",
+          "subject": "account_holder",
+          "masked": "g\u2022\u2022\u2022\u2022 c\u2022\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "identity"
+          ]
+        },
+        {
+          "harm": "H3",
+          "kind": "immigration",
+          "confidence": "medium",
+          "subject": "account_holder",
+          "masked": "s\u2022\u2022\u2022\u2022\u2022\u2022 v\u2022\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "identity"
+          ]
+        },
+        {
+          "harm": "H3",
+          "kind": "immigration",
+          "confidence": "low",
+          "subject": "unknown",
+          "masked": "s\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022 p\u2022\u2022\u2022\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "identity"
+          ]
+        },
+        {
+          "harm": "H3",
+          "kind": "immigration",
+          "confidence": "low",
+          "subject": "unknown",
+          "masked": "p\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022 r\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "identity"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "visa_card",
+      "text": "paid with my Visa card; my Visa expires in May",
+      "inCodeBlock": false,
+      "findings": []
+    },
+    {
+      "name": "right_to_work_home",
+      "text": "I have the right to work from home on Fridays",
+      "inCodeBlock": false,
+      "findings": []
+    },
+    {
+      "name": "street_after_family",
+      "text": "My wife is Anna. I live at 18 Elm Grove",
+      "inCodeBlock": false,
+      "findings": [
+        {
+          "harm": "H3",
+          "kind": "street_address",
+          "confidence": "medium",
+          "subject": "account_holder",
+          "masked": "1\u2022 E\u2022\u2022 G\u2022\u2022\u2022\u2022",
+          "category": null,
+          "source": "detector",
+          "inCodeBlock": false,
+          "count": 1,
+          "domains": [
+            "location"
+          ]
+        }
+      ]
     }
   ]
 }

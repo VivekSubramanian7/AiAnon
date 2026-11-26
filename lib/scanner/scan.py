@@ -26,6 +26,7 @@ from lib.scanner.findings import (
     promote,
 )
 from lib.scanner.report import Aggregator, context_before, cue_before, drop_nested_dates, exposure_score, level_for
+from lib.scanner.voice import read_in_first_person
 from lib.types import PipelineInput
 
 MAX_CHUNK_CHARS = 7500
@@ -138,7 +139,9 @@ def scan(
         code_blocks += n
         blanked_texts.append(blanked.strip())
 
-    chunks = build_chunks(blanked_texts)
+    # Memories written to the user ("Your daughter is Mia") are read in the first person; see voice.py.
+    read_texts = read_in_first_person(blanked_texts, extracted.segments)
+    chunks = build_chunks(read_texts)
     agg = Aggregator()
     segments_with_finds: set = set()
     failed_chunks = 0
@@ -163,7 +166,7 @@ def scan(
     for piece in original_pieces:
         for slice_text in fence_slices(piece):
             detector_hits.extend(detect(slice_text, in_code_block=True))
-    for piece in blanked_texts:
+    for piece in read_texts:
         if piece:
             detector_hits.extend(detect(piece, in_code_block=False))
 

@@ -64,6 +64,45 @@ def test_health_and_location():
     assert "gps" not in kinds("0.00000, 0.00000")
 
 
+def found(text, kind):
+    return [(h.value, h.confidence) for h in detect(text) if h.kind == kind]
+
+
+def test_children_as_memories_put_it():
+    assert found("my kids start school in May", "children")
+    assert found("I have two kids", "children")
+    assert found("lazy-eye treatment for my then three-year-old.", "children") == [("my then three-year-old", "medium")]
+    assert found("my 6-month-old is teething", "children")
+    assert found("my three year old's nursery", "children")
+    assert found("Daughter is Mia, who loves drawing.", "children") == [("Daughter", "medium")]
+    assert found("my daughter is Mia", "children") == [("my daughter", "medium")]  # one hit, not two
+    assert not found("selling my 10-year-old car", "children")
+    assert not found("my 30-year-old flat", "children")
+    assert not found("Jess's son is Leo", "children")
+    assert not found("the son is unwell", "children")
+
+
+def test_health_words_and_cues():
+    assert found("I've asked about my own anxiety", "health") == [("anxiety", "medium")]
+    assert found("I was diagnosed with a deep vein thrombosis", "health") == [("thrombosis", "medium")]
+    for text in ("feeling depressed", "a febrile seizure", "epilepsy", "treatment for a lazy eye", "lazy-eye drops"):
+        assert found(text, "health"), text
+    for text in ("cabin fever", "two glasses of wine"):  # left out on purpose: idioms and tableware
+        assert not found(text, "health"), text
+
+
+def test_immigration_terms():
+    assert found("my Niederlassungserlaubnis came through", "immigration") == [("Niederlassungserlaubnis", "medium")]
+    for text in ("a settlement permit", "permanent residence", "a permanent resident", "my green card",
+                 "indefinite leave to remain", "my student visa", "the visa application", "visa sponsorship",
+                 "proof of my right to work in the UK"):
+        assert found(text, "immigration"), text
+    # The card brand, and the right to work from home, are not immigration.
+    for text in ("paid with my Visa card", "my Visa ending 4242", "a Visa Business card", "my Visa expires in May",
+                 "the right to work from home", "a right to work remotely"):
+        assert not found(text, "immigration"), text
+
+
 def test_employer_and_compensation():
     hits = detect("I work at Acme")
     kinds_found = [h.kind for h in hits]

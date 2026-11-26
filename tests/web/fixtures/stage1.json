@@ -3,6 +3,7 @@
   "chatgpt-saved-memories.txt",
   "gemini-saved-info.txt",
   "bot-answer-what-do-you-remember.txt",
+  "claude-memory-summary.txt",
   "clean-memory.txt",
   "chatgpt-export.zip",
   "claude-export.zip",
@@ -1523,12 +1524,12 @@
     "failedChunks": 0
    },
    "totals": {
-    "mentions": 10,
-    "unique": 10,
+    "mentions": 11,
+    "unique": 11,
     "directUnique": 6,
-    "contextUnique": 4
+    "contextUnique": 5
    },
-   "score": 50,
+   "score": 52,
    "level": "oversharer",
    "categories": [
     {
@@ -1645,9 +1646,14 @@
      "key": "ages",
      "label": "Ages",
      "tier": "context",
-     "count": 0,
-     "unique": 0,
-     "examples": []
+     "count": 1,
+     "unique": 1,
+     "examples": [
+      {
+       "masked": "20s",
+       "count": 1
+      }
+     ]
     },
     {
      "key": "dates",
@@ -1672,7 +1678,7 @@
      "kind": "date_of_birth",
      "label": "Date of birth",
      "confidence": "medium",
-     "subject": "unknown",
+     "subject": "account_holder",
      "masked": "••/••/••••",
      "category": "birthdays",
      "source": "promoted",
@@ -1688,7 +1694,7 @@
      "kind": "phone",
      "label": "Phone number",
      "confidence": "high",
-     "subject": "unknown",
+     "subject": "account_holder",
      "masked": "+• ••• ••• ••19",
      "category": "phones",
      "source": "promoted",
@@ -1704,7 +1710,7 @@
      "kind": "email",
      "label": "Email",
      "confidence": "medium",
-     "subject": "unknown",
+     "subject": "account_holder",
      "masked": "s••••••••@e••••••.org",
      "category": "emails",
      "source": "promoted",
@@ -1720,7 +1726,7 @@
      "kind": "email",
      "label": "Email",
      "confidence": "medium",
-     "subject": "unknown",
+     "subject": "account_holder",
      "masked": "s.••••••@l••••••••••.•••••••.edu",
      "category": "emails",
      "source": "promoted",
@@ -1730,6 +1736,54 @@
       "identity"
      ],
      "id": "f-04"
+    },
+    {
+     "harm": "H4",
+     "kind": "self_name",
+     "label": "Your name",
+     "confidence": "medium",
+     "subject": "account_holder",
+     "masked": "S•• R•••••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "domains": [
+      "identity"
+     ],
+     "id": "f-05"
+    },
+    {
+     "harm": "H6",
+     "kind": "age",
+     "label": "Age",
+     "confidence": "medium",
+     "subject": "unknown",
+     "masked": "20s",
+     "category": "ages",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "domains": [
+      "identity"
+     ],
+     "id": "f-06"
+    },
+    {
+     "harm": "H6",
+     "kind": "org",
+     "label": "Organisation",
+     "confidence": "low",
+     "subject": "account_holder",
+     "masked": "L•••••• P••• H••• S•••••",
+     "category": "orgs",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "domains": [
+      "professional"
+     ],
+     "id": "f-07"
     },
     {
      "harm": "H6",
@@ -1745,54 +1799,6 @@
      "domains": [
       "professional"
      ],
-     "id": "f-05"
-    },
-    {
-     "harm": "H6",
-     "kind": "name",
-     "label": "Name",
-     "confidence": "low",
-     "subject": "unknown",
-     "masked": "S•• R•••••",
-     "category": "names",
-     "source": "promoted",
-     "inCodeBlock": false,
-     "count": 1,
-     "domains": [
-      "identity"
-     ],
-     "id": "f-06"
-    },
-    {
-     "harm": "H6",
-     "kind": "name",
-     "label": "Name",
-     "confidence": "low",
-     "subject": "unknown",
-     "masked": "J••••• L••",
-     "category": "names",
-     "source": "promoted",
-     "inCodeBlock": false,
-     "count": 1,
-     "domains": [
-      "identity"
-     ],
-     "id": "f-07"
-    },
-    {
-     "harm": "H6",
-     "kind": "org",
-     "label": "Organisation",
-     "confidence": "low",
-     "subject": "unknown",
-     "masked": "L•••••• P••• H••• S•••••",
-     "category": "orgs",
-     "source": "promoted",
-     "inCodeBlock": false,
-     "count": 1,
-     "domains": [
-      "professional"
-     ],
      "id": "f-08"
     },
     {
@@ -1800,7 +1806,7 @@
      "kind": "place",
      "label": "Place",
      "confidence": "low",
-     "subject": "unknown",
+     "subject": "account_holder",
      "masked": "D•••••",
      "category": "places",
      "source": "promoted",
@@ -1816,7 +1822,7 @@
      "kind": "place",
      "label": "Place",
      "confidence": "low",
-     "subject": "unknown",
+     "subject": "account_holder",
      "masked": "C•••••••",
      "category": "places",
      "source": "promoted",
@@ -1826,6 +1832,22 @@
       "location"
      ],
      "id": "f-10"
+    },
+    {
+     "harm": "H6",
+     "kind": "name",
+     "label": "Name",
+     "confidence": "low",
+     "subject": "third_party",
+     "masked": "J••••• L••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "domains": [
+      "identity"
+     ],
+     "id": "f-11"
     }
    ],
    "bands": {
@@ -1840,7 +1862,7 @@
       "medium": 1
      },
      "bySubject": {
-      "unknown": 1
+      "account_holder": 1
      }
     },
     "H3": {
@@ -1849,13 +1871,13 @@
      "bySubject": {}
     },
     "H4": {
-     "unique": 3,
+     "unique": 4,
      "byConfidence": {
       "high": 1,
-      "medium": 2
+      "medium": 3
      },
      "bySubject": {
-      "unknown": 3
+      "account_holder": 4
      }
     },
     "H5": {
@@ -1866,11 +1888,13 @@
     "H6": {
      "unique": 6,
      "byConfidence": {
-      "low": 6
+      "medium": 1,
+      "low": 5
      },
      "bySubject": {
-      "account_holder": 1,
-      "unknown": 5
+      "unknown": 1,
+      "account_holder": 4,
+      "third_party": 1
      }
     }
    },
@@ -1899,7 +1923,7 @@
       "H1": 0,
       "H2": 1,
       "H3": 0,
-      "H4": 3,
+      "H4": 4,
       "H5": 0,
       "H6": 2
      },
@@ -1977,11 +2001,13 @@
       "H3": {},
       "H4": {
        "phone": 1,
-       "email": 2
+       "email": 2,
+       "self_name": 1
       },
       "H5": {},
       "H6": {
-       "name": 2
+       "age": 1,
+       "name": 1
       }
      },
      "health": {
@@ -2047,7 +2073,7 @@
     },
     "uniqueByDomain": {
      "financial": 0,
-     "identity": 6,
+     "identity": 7,
      "health": 0,
      "professional": 2,
      "relationships": 0,
@@ -2060,53 +2086,60 @@
    },
    "pieces": [
     {
-     "kind": "date_of_birth",
+     "kind": "age",
      "subject": "unknown",
+     "count": 1,
+     "confidence": "medium",
+     "example": "20s"
+    },
+    {
+     "kind": "date_of_birth",
+     "subject": "account_holder",
      "count": 1,
      "confidence": "medium",
      "example": "••/••/••••"
     },
     {
      "kind": "email",
-     "subject": "unknown",
+     "subject": "account_holder",
      "count": 2,
      "confidence": "medium",
      "example": "s••••••••@e••••••.org"
     },
     {
      "kind": "name",
-     "subject": "unknown",
-     "count": 2,
+     "subject": "third_party",
+     "count": 1,
      "confidence": "low",
-     "example": "S•• R•••••"
+     "example": "J••••• L••"
     },
     {
      "kind": "org",
      "subject": "account_holder",
-     "count": 1,
-     "confidence": "low",
-     "example": "F•••• S••••• B•••"
-    },
-    {
-     "kind": "org",
-     "subject": "unknown",
-     "count": 1,
+     "count": 2,
      "confidence": "low",
      "example": "L•••••• P••• H••• S•••••"
     },
     {
      "kind": "phone",
-     "subject": "unknown",
+     "subject": "account_holder",
      "count": 1,
      "confidence": "high",
      "example": "+• ••• ••• ••19"
     },
     {
      "kind": "place",
-     "subject": "unknown",
+     "subject": "account_holder",
      "count": 2,
      "confidence": "low",
      "example": "D•••••"
+    },
+    {
+     "kind": "self_name",
+     "subject": "account_holder",
+     "count": 1,
+     "confidence": "medium",
+     "example": "S•• R•••••"
     }
    ],
    "readouts": {
@@ -2141,16 +2174,16 @@
     },
     "identityBridges": {
      "harmBand": "H4",
-     "score": 0,
-     "confidence": "low",
+     "score": 83,
+     "confidence": "high",
      "lowerBound": false,
-     "aboutYou": 0,
+     "aboutYou": 4,
      "aboutOthers": 0,
      "note": "Account-holder bridges only. Name-bag and unvalidated phones are corpus volume."
     },
     "corpusVolume": {
      "harmBand": "H6",
-     "score": 50,
+     "score": 52,
      "confidence": "low",
      "lowerBound": false,
      "legacyLevel": "oversharer"
@@ -2159,6 +2192,756 @@
    "coverage": {
     "truncated": false,
     "charactersScanned": 714,
+    "charactersSkipped": 0,
+    "truncationNote": null,
+    "codeBlocksSkipped": 0,
+    "assistantMessagesSkipped": 0,
+    "userJsonPresent": null,
+    "userJsonSkipped": null,
+    "binaryAttachments": null,
+    "unreadMembers": [],
+    "lowerBound": false
+   }
+  },
+  "claude-memory-summary.txt": {
+   "schemaVersion": 2,
+   "source": {
+    "format": "text",
+    "label": "pasted memories",
+    "conversations": 0,
+    "piecesScanned": 9,
+    "piecesWithFinds": 2,
+    "kinds": {
+     "memory": 9
+    },
+    "assistantMessagesSkipped": 0,
+    "codeBlocksSkipped": 0,
+    "charactersScanned": 818,
+    "charactersSkipped": 0,
+    "truncated": false,
+    "failedChunks": 0
+   },
+   "totals": {
+    "mentions": 7,
+    "unique": 7,
+    "directUnique": 4,
+    "contextUnique": 3
+   },
+   "score": 38,
+   "level": "chatty",
+   "categories": [
+    {
+     "key": "names",
+     "label": "Names",
+     "tier": "direct",
+     "count": 2,
+     "unique": 2,
+     "examples": [
+      {
+       "masked": "I••• M•••••",
+       "count": 1
+      },
+      {
+       "masked": "T•••••",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "emails",
+     "label": "Email addresses",
+     "tier": "direct",
+     "count": 1,
+     "unique": 1,
+     "examples": [
+      {
+       "masked": "i•••.••••••@e••••••.net",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "phones",
+     "label": "Phone numbers",
+     "tier": "direct",
+     "count": 1,
+     "unique": 1,
+     "examples": [
+      {
+       "masked": "+•• ••• ••• ••42",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "birthdays",
+     "label": "Birth dates",
+     "tier": "direct",
+     "count": 0,
+     "unique": 0,
+     "examples": []
+    },
+    {
+     "key": "bank",
+     "label": "Bank accounts",
+     "tier": "direct",
+     "count": 0,
+     "unique": 0,
+     "examples": []
+    },
+    {
+     "key": "handles",
+     "label": "Social handles",
+     "tier": "direct",
+     "count": 0,
+     "unique": 0,
+     "examples": []
+    },
+    {
+     "key": "places",
+     "label": "Places",
+     "tier": "context",
+     "count": 2,
+     "unique": 2,
+     "examples": [
+      {
+       "masked": "M•••••",
+       "count": 1
+      },
+      {
+       "masked": "L•••",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "orgs",
+     "label": "Companies and organisations",
+     "tier": "context",
+     "count": 1,
+     "unique": 1,
+     "examples": [
+      {
+       "masked": "L•••••••• F••••••",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "key": "ages",
+     "label": "Ages",
+     "tier": "context",
+     "count": 0,
+     "unique": 0,
+     "examples": []
+    },
+    {
+     "key": "dates",
+     "label": "Dates",
+     "tier": "context",
+     "count": 0,
+     "unique": 0,
+     "examples": []
+    },
+    {
+     "key": "links",
+     "label": "Links",
+     "tier": "context",
+     "count": 0,
+     "unique": 0,
+     "examples": []
+    }
+   ],
+   "findings": [
+    {
+     "harm": "H3",
+     "kind": "children",
+     "label": "Children",
+     "confidence": "medium",
+     "subject": "account_holder",
+     "masked": "m• d•••••••",
+     "category": null,
+     "source": "detector",
+     "inCodeBlock": false,
+     "count": 1,
+     "domains": [
+      "relationships"
+     ],
+     "id": "f-01"
+    },
+    {
+     "harm": "H3",
+     "kind": "children",
+     "label": "Children",
+     "confidence": "medium",
+     "subject": "account_holder",
+     "masked": "m• t••• t••••-••••-•••",
+     "category": null,
+     "source": "detector",
+     "inCodeBlock": false,
+     "count": 1,
+     "domains": [
+      "relationships"
+     ],
+     "id": "f-02"
+    },
+    {
+     "harm": "H3",
+     "kind": "health",
+     "label": "Health",
+     "confidence": "medium",
+     "subject": "account_holder",
+     "masked": "a••••••",
+     "category": null,
+     "source": "detector",
+     "inCodeBlock": false,
+     "count": 1,
+     "domains": [
+      "health"
+     ],
+     "id": "f-03"
+    },
+    {
+     "harm": "H3",
+     "kind": "health",
+     "label": "Health",
+     "confidence": "medium",
+     "subject": "account_holder",
+     "masked": "t•••••••••",
+     "category": null,
+     "source": "detector",
+     "inCodeBlock": false,
+     "count": 1,
+     "domains": [
+      "health"
+     ],
+     "id": "f-04"
+    },
+    {
+     "harm": "H3",
+     "kind": "immigration",
+     "label": "Immigration",
+     "confidence": "medium",
+     "subject": "account_holder",
+     "masked": "N••••••••••••••••••••••",
+     "category": null,
+     "source": "detector",
+     "inCodeBlock": false,
+     "count": 1,
+     "domains": [
+      "identity"
+     ],
+     "id": "f-05"
+    },
+    {
+     "harm": "H3",
+     "kind": "health",
+     "label": "Health",
+     "confidence": "low",
+     "subject": "account_holder",
+     "masked": "l•••-•••",
+     "category": null,
+     "source": "detector",
+     "inCodeBlock": false,
+     "count": 1,
+     "domains": [
+      "health"
+     ],
+     "id": "f-06"
+    },
+    {
+     "harm": "H4",
+     "kind": "phone",
+     "label": "Phone number",
+     "confidence": "high",
+     "subject": "account_holder",
+     "masked": "+•• ••• ••• ••42",
+     "category": "phones",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "domains": [
+      "identity"
+     ],
+     "id": "f-07"
+    },
+    {
+     "harm": "H4",
+     "kind": "email",
+     "label": "Email",
+     "confidence": "medium",
+     "subject": "account_holder",
+     "masked": "i•••.••••••@e••••••.net",
+     "category": "emails",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "domains": [
+      "identity"
+     ],
+     "id": "f-08"
+    },
+    {
+     "harm": "H4",
+     "kind": "self_name",
+     "label": "Your name",
+     "confidence": "medium",
+     "subject": "account_holder",
+     "masked": "I••• M•••••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "domains": [
+      "identity"
+     ],
+     "id": "f-09"
+    },
+    {
+     "harm": "H5",
+     "kind": "employer",
+     "label": "Employer",
+     "confidence": "medium",
+     "subject": "unknown",
+     "masked": "L•••••••• F••••••",
+     "category": null,
+     "source": "detector",
+     "inCodeBlock": false,
+     "count": 1,
+     "domains": [
+      "professional"
+     ],
+     "id": "f-10"
+    },
+    {
+     "harm": "H6",
+     "kind": "org",
+     "label": "Organisation",
+     "confidence": "low",
+     "subject": "account_holder",
+     "masked": "L•••••••• F••••••",
+     "category": "orgs",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "domains": [
+      "professional"
+     ],
+     "id": "f-11"
+    },
+    {
+     "harm": "H6",
+     "kind": "place",
+     "label": "Place",
+     "confidence": "low",
+     "subject": "account_holder",
+     "masked": "M•••••",
+     "category": "places",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "domains": [
+      "location"
+     ],
+     "id": "f-12"
+    },
+    {
+     "harm": "H6",
+     "kind": "place",
+     "label": "Place",
+     "confidence": "low",
+     "subject": "account_holder",
+     "masked": "L•••",
+     "category": "places",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "domains": [
+      "location"
+     ],
+     "id": "f-13"
+    },
+    {
+     "harm": "H6",
+     "kind": "name",
+     "label": "Name",
+     "confidence": "low",
+     "subject": "unknown",
+     "masked": "T•••••",
+     "category": "names",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 1,
+     "domains": [
+      "identity"
+     ],
+     "id": "f-14"
+    }
+   ],
+   "bands": {
+    "H1": {
+     "unique": 0,
+     "byConfidence": {},
+     "bySubject": {}
+    },
+    "H2": {
+     "unique": 0,
+     "byConfidence": {},
+     "bySubject": {}
+    },
+    "H3": {
+     "unique": 6,
+     "byConfidence": {
+      "medium": 5,
+      "low": 1
+     },
+     "bySubject": {
+      "account_holder": 6
+     }
+    },
+    "H4": {
+     "unique": 3,
+     "byConfidence": {
+      "high": 1,
+      "medium": 2
+     },
+     "bySubject": {
+      "account_holder": 3
+     }
+    },
+    "H5": {
+     "unique": 1,
+     "byConfidence": {
+      "medium": 1
+     },
+     "bySubject": {
+      "unknown": 1
+     }
+    },
+    "H6": {
+     "unique": 4,
+     "byConfidence": {
+      "low": 4
+     },
+     "bySubject": {
+      "account_holder": 3,
+      "unknown": 1
+     }
+    }
+   },
+   "domainMatrix": {
+    "domains": [
+     "financial",
+     "identity",
+     "health",
+     "professional",
+     "relationships",
+     "location",
+     "digital",
+     "interests",
+     "other"
+    ],
+    "cells": {
+     "financial": {
+      "H1": 0,
+      "H2": 0,
+      "H3": 0,
+      "H4": 0,
+      "H5": 0,
+      "H6": 0
+     },
+     "identity": {
+      "H1": 0,
+      "H2": 0,
+      "H3": 1,
+      "H4": 3,
+      "H5": 0,
+      "H6": 1
+     },
+     "health": {
+      "H1": 0,
+      "H2": 0,
+      "H3": 3,
+      "H4": 0,
+      "H5": 0,
+      "H6": 0
+     },
+     "professional": {
+      "H1": 0,
+      "H2": 0,
+      "H3": 0,
+      "H4": 0,
+      "H5": 1,
+      "H6": 1
+     },
+     "relationships": {
+      "H1": 0,
+      "H2": 0,
+      "H3": 2,
+      "H4": 0,
+      "H5": 0,
+      "H6": 0
+     },
+     "location": {
+      "H1": 0,
+      "H2": 0,
+      "H3": 0,
+      "H4": 0,
+      "H5": 0,
+      "H6": 2
+     },
+     "digital": {
+      "H1": 0,
+      "H2": 0,
+      "H3": 0,
+      "H4": 0,
+      "H5": 0,
+      "H6": 0
+     },
+     "interests": {
+      "H1": 0,
+      "H2": 0,
+      "H3": 0,
+      "H4": 0,
+      "H5": 0,
+      "H6": 0
+     },
+     "other": {
+      "H1": 0,
+      "H2": 0,
+      "H3": 0,
+      "H4": 0,
+      "H5": 0,
+      "H6": 0
+     }
+    },
+    "kindsByCell": {
+     "financial": {
+      "H1": {},
+      "H2": {},
+      "H3": {},
+      "H4": {},
+      "H5": {},
+      "H6": {}
+     },
+     "identity": {
+      "H1": {},
+      "H2": {},
+      "H3": {
+       "immigration": 1
+      },
+      "H4": {
+       "phone": 1,
+       "email": 1,
+       "self_name": 1
+      },
+      "H5": {},
+      "H6": {
+       "name": 1
+      }
+     },
+     "health": {
+      "H1": {},
+      "H2": {},
+      "H3": {
+       "health": 3
+      },
+      "H4": {},
+      "H5": {},
+      "H6": {}
+     },
+     "professional": {
+      "H1": {},
+      "H2": {},
+      "H3": {},
+      "H4": {},
+      "H5": {
+       "employer": 1
+      },
+      "H6": {
+       "org": 1
+      }
+     },
+     "relationships": {
+      "H1": {},
+      "H2": {},
+      "H3": {
+       "children": 2
+      },
+      "H4": {},
+      "H5": {},
+      "H6": {}
+     },
+     "location": {
+      "H1": {},
+      "H2": {},
+      "H3": {},
+      "H4": {},
+      "H5": {},
+      "H6": {
+       "place": 2
+      }
+     },
+     "digital": {
+      "H1": {},
+      "H2": {},
+      "H3": {},
+      "H4": {},
+      "H5": {},
+      "H6": {}
+     },
+     "interests": {
+      "H1": {},
+      "H2": {},
+      "H3": {},
+      "H4": {},
+      "H5": {},
+      "H6": {}
+     },
+     "other": {
+      "H1": {},
+      "H2": {},
+      "H3": {},
+      "H4": {},
+      "H5": {},
+      "H6": {}
+     }
+    },
+    "uniqueByDomain": {
+     "financial": 0,
+     "identity": 5,
+     "health": 3,
+     "professional": 2,
+     "relationships": 2,
+     "location": 2,
+     "digital": 0,
+     "interests": 0,
+     "other": 0
+    },
+    "multiDomain": 0
+   },
+   "pieces": [
+    {
+     "kind": "children",
+     "subject": "account_holder",
+     "count": 2,
+     "confidence": "medium",
+     "example": "m• d•••••••"
+    },
+    {
+     "kind": "email",
+     "subject": "account_holder",
+     "count": 1,
+     "confidence": "medium",
+     "example": "i•••.••••••@e••••••.net"
+    },
+    {
+     "kind": "employer",
+     "subject": "unknown",
+     "count": 1,
+     "confidence": "medium",
+     "example": "L•••••••• F••••••"
+    },
+    {
+     "kind": "health",
+     "subject": "account_holder",
+     "count": 3,
+     "confidence": "medium",
+     "example": "a••••••"
+    },
+    {
+     "kind": "immigration",
+     "subject": "account_holder",
+     "count": 1,
+     "confidence": "medium",
+     "example": "N••••••••••••••••••••••"
+    },
+    {
+     "kind": "name",
+     "subject": "unknown",
+     "count": 1,
+     "confidence": "low",
+     "example": "T•••••"
+    },
+    {
+     "kind": "org",
+     "subject": "account_holder",
+     "count": 1,
+     "confidence": "low",
+     "example": "L•••••••• F••••••"
+    },
+    {
+     "kind": "phone",
+     "subject": "account_holder",
+     "count": 1,
+     "confidence": "high",
+     "example": "+•• ••• ••• ••42"
+    },
+    {
+     "kind": "place",
+     "subject": "account_holder",
+     "count": 2,
+     "confidence": "low",
+     "example": "M•••••"
+    },
+    {
+     "kind": "self_name",
+     "subject": "account_holder",
+     "count": 1,
+     "confidence": "medium",
+     "example": "I••• M•••••"
+    }
+   ],
+   "readouts": {
+    "credentials": {
+     "harmBand": "H1",
+     "score": 0,
+     "confidence": "low",
+     "lowerBound": false,
+     "drivers": {
+      "private_key": 0,
+      "aws_access_key": 0,
+      "api_token": 0,
+      "jwt": 0,
+      "password_cue": 0,
+      "tokenized_url": 0
+     }
+    },
+    "intimateSafety": {
+     "harmBand": "H3",
+     "score": 83,
+     "confidence": "medium",
+     "lowerBound": false,
+     "note": "Keyword and pattern hits. Not a diagnosis.",
+     "drivers": {
+      "health": 3,
+      "religion": 0,
+      "sexual_orientation": 0,
+      "children": 2,
+      "precise_location": 0,
+      "immigration": 1
+     }
+    },
+    "identityBridges": {
+     "harmBand": "H4",
+     "score": 75,
+     "confidence": "high",
+     "lowerBound": false,
+     "aboutYou": 3,
+     "aboutOthers": 0,
+     "note": "Account-holder bridges only. Name-bag and unvalidated phones are corpus volume."
+    },
+    "corpusVolume": {
+     "harmBand": "H6",
+     "score": 38,
+     "confidence": "low",
+     "lowerBound": false,
+     "legacyLevel": "chatty"
+    }
+   },
+   "coverage": {
+    "truncated": false,
+    "charactersScanned": 818,
     "charactersSkipped": 0,
     "truncationNote": null,
     "codeBlocksSkipped": 0,
@@ -3761,6 +4544,22 @@
     },
     {
      "harm": "H4",
+     "kind": "email",
+     "label": "Email",
+     "confidence": "medium",
+     "subject": "account_holder",
+     "masked": "m•••••.•••••@e••••••.net",
+     "category": "emails",
+     "source": "promoted",
+     "inCodeBlock": false,
+     "count": 2,
+     "domains": [
+      "identity"
+     ],
+     "id": "f-05"
+    },
+    {
+     "harm": "H4",
      "kind": "self_name",
      "label": "Your name",
      "confidence": "medium",
@@ -3773,7 +4572,7 @@
      "domains": [
       "identity"
      ],
-     "id": "f-05"
+     "id": "f-06"
     },
     {
      "harm": "H4",
@@ -3786,22 +4585,6 @@
      "source": "promoted",
      "inCodeBlock": false,
      "count": 1,
-     "domains": [
-      "identity"
-     ],
-     "id": "f-06"
-    },
-    {
-     "harm": "H4",
-     "kind": "email",
-     "label": "Email",
-     "confidence": "medium",
-     "subject": "third_party",
-     "masked": "m•••••.•••••@e••••••.net",
-     "category": "emails",
-     "source": "promoted",
-     "inCodeBlock": false,
-     "count": 2,
      "domains": [
       "identity"
      ],
@@ -3980,9 +4763,8 @@
       "medium": 3
      },
      "bySubject": {
-      "account_holder": 2,
-      "unknown": 2,
-      "third_party": 1
+      "account_holder": 3,
+      "unknown": 2
      }
     },
     "H5": {
@@ -4108,8 +4890,8 @@
       "H3": {},
       "H4": {
        "phone": 2,
-       "self_name": 1,
-       "email": 2
+       "email": 2,
+       "self_name": 1
       },
       "H5": {},
       "H6": {
@@ -4209,17 +4991,17 @@
     },
     {
      "kind": "email",
+     "subject": "account_holder",
+     "count": 1,
+     "confidence": "medium",
+     "example": "m•••••.•••••@e••••••.net"
+    },
+    {
+     "kind": "email",
      "subject": "unknown",
      "count": 1,
      "confidence": "medium",
      "example": "i•••••.••••••@e••••••.de"
-    },
-    {
-     "kind": "email",
-     "subject": "third_party",
-     "count": 1,
-     "confidence": "medium",
-     "example": "m•••••.•••••@e••••••.net"
     },
     {
      "kind": "iban",
@@ -4317,11 +5099,11 @@
     },
     "identityBridges": {
      "harmBand": "H4",
-     "score": 64,
+     "score": 75,
      "confidence": "high",
      "lowerBound": true,
-     "aboutYou": 2,
-     "aboutOthers": 1,
+     "aboutYou": 3,
+     "aboutOthers": 0,
      "note": "Account-holder bridges only. Name-bag and unvalidated phones are corpus volume."
     },
     "corpusVolume": {

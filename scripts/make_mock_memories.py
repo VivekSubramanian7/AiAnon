@@ -65,6 +65,23 @@ Here's what I remember about you:
 Let me know if you want me to forget any of this.
 """
 
+# A memory summary in the style of Claude's memory: written to the user, in paragraphs under topic headings.
+CLAUDE_MEMORY_SUMMARY = """\
+Here's what I remember about you, grouped by topic.
+
+Work context
+You work at Lindqvist Freight in Munich as a logistics planner, mostly in Excel and SQL. You moved there from Lyon in 2019, and your Niederlassungserlaubnis came through in March.
+
+Personal context
+Your name is Ines Moreau. You're married to Tobias, and your daughter is Margaux. You shared your mobile number, +49 170 555 0142, and your email, ines.moreau@example.net, while drafting a letter to your landlord.
+
+Top of mind
+You've asked about your own anxiety a few times, and about breathing exercises before big presentations. Last spring you were diagnosed with a deep vein thrombosis after a long flight.
+
+Brief history
+In October you asked about lazy-eye treatment for your then three-year-old. You prefer short answers, British spelling and worked examples.
+"""
+
 CLEAN_MEMORY = """\
 Prefers concise answers.
 Likes Python and TypeScript.
@@ -310,6 +327,7 @@ def main():
         "chatgpt-saved-memories.txt": CHATGPT_SAVED_MEMORIES.encode(),
         "gemini-saved-info.txt": GEMINI_SAVED_INFO.encode(),
         "bot-answer-what-do-you-remember.txt": BOT_ANSWER.encode(),
+        "claude-memory-summary.txt": CLAUDE_MEMORY_SUMMARY.encode(),
         "clean-memory.txt": CLEAN_MEMORY.encode(),
         "chatgpt-export.zip": chatgpt_export_zip(),
         "claude-export.zip": claude_export_zip(),

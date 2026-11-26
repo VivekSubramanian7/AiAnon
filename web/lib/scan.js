@@ -6,6 +6,7 @@ import { stripPatterns } from "./patterns.js";
 import { nameTokens } from "./entities.js";
 import { Aggregator, contextBefore, cueBefore, dropNestedDates, exposureScore, levelFor } from "./report.js";
 import { detect, fenceSlices } from "./detectors.js";
+import { readInFirstPerson } from "./voice.js";
 import { buildDomainMatrix } from "./domains.js";
 import {
   assemble,
@@ -137,7 +138,9 @@ export function prepareTexts(extracted, charBudget = MAX_SCAN_CHARS) {
 export async function scan(extracted, findEntities, { onProgress, shouldStop, envelope = null, charBudget = MAX_SCAN_CHARS } = {}) {
   const started = performance.now();
   const { texts, originalPieces, codeBlocks, truncated, charsSkipped } = prepareTexts(extracted, charBudget);
-  const chunks = buildChunks(texts);
+  // Memories written to the user ("Your daughter is Mia") are read in the first person; see voice.js.
+  const readTexts = readInFirstPerson(texts, extracted.segments);
+  const chunks = buildChunks(readTexts);
   const agg = new Aggregator();
   const withFinds = new Set();
   let failedChunks = 0;
@@ -166,7 +169,7 @@ export async function scan(extracted, findEntities, { onProgress, shouldStop, en
   for (const piece of originalPieces) {
     for (const sliceText of fenceSlices(piece)) detectorHits.push(...detect(sliceText, { inCodeBlock: true }));
   }
-  for (const piece of texts) {
+  for (const piece of readTexts) {
     if (piece) detectorHits.push(...detect(piece, { inCodeBlock: false }));
   }
 

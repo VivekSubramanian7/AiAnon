@@ -24,6 +24,20 @@
 | **Confidence** | How sure are we this is real PII in *your* text? | `confirmed` · `high` · `medium` · `low` · `unscanned` |
 | **Subject** | Who does it refer to? | `account_holder` · `third_party` · `unknown` · `not_applicable` |
 
+### Who "you" is (decided 2026-11-26)
+
+The subject and keyword rules are written for the first person: "my name is", "my daughter", "I have asthma". Claude's memory, and a bot's answer to "what do you remember about me?", are written to the user instead: "Your name is Jo Bloggs.", "You're married to Sam. Your daughter is Mia." Read as they are, such a memory gives only `unknown` subjects and `low` confidence, so no scam story can use it.
+
+Decision: memories written to the user are rewritten word for word into the first person before they are read ("your" → "my", "you're" → "I'm", "you" → "I"), so every existing rule applies unchanged. One small function per scanner does it, kept in step: `lib/scanner/voice.py` and `web/lib/voice.js`. The rewritten text is never shown or stored. It applies only:
+
+- to **memory** segments: pasted or saved memories, and memory files inside an export. Never to the user's own messages, custom instructions or project prompts, where "you" is the bot ("your name is ChatGPT", "your answer was wrong"). Assistant replies are never read at all.
+- when those memories say "you/your" **more often than "I/my"**. First-person saved info that also addresses the bot ("I'm vegetarian. My name is Kofi. Your name is Ava.") keeps "you" as the bot. Third-person lists ("Name is Dana.") have neither and are left alone.
+
+Two subject rules came with it, because a memory summary runs many facts into one paragraph:
+
+- Someone else named in an **earlier sentence** no longer makes a finding theirs: in "My wife is Anna. Contact me at …" the contact is not the wife's. A self cue then counts only in the finding's own sentence, so "My boss is Tom. Email: …" is `unknown`, not yours.
+- For `children`, family words ("my husband", "my son") don't make the child someone else's: "my husband and my daughter" is still your daughter. "Her", "their", "my friend's" still do.
+
 `pieces` is a flat tally of the same **uncapped** findings, one row per (kind, subject): `count`, best `confidence`, and one masked `example` (the first of the group in finding sort order). Rows sort by `kind`, then subject. Its counts sum to the band `unique` totals (H1–H6 in `bands`). It is built by `build_pieces` in `lib/scanner/findings.py` and `buildPieces` in `web/lib/sensitivity.js`. The scam stories that open the results page are matched against it (`storyView` in `web/lib/stories.js`, recipes in `web/lib/stories-data.js`); a report without `pieces` falls back to `findings`.
 
 `domainMatrix` is built from **uncapped** findings (same as `bands`). A finding with two domains appears in two columns and counts once in `bands` / `totals.unique`. Do not sum cells or `uniqueByDomain` to get the global unique count. `kindsByCell[domain][harm][kind]` is the unique-finding count per PII type in that cell — what the matrix shows on click. `interests` has no kinds in v1, so that column is usually empty. Kind → domain lives in `lib/scanner/domains.py`.
@@ -69,10 +83,10 @@ GDPR Art. 9 / 10 and physical safety — can dominate harm **without** re-identi
 | Health | conditions, meds, therapy (masked span) | keyword hit ≠ diagnosis |
 | Religion, sexual orientation, ethnicity, politics | explicit self-reference | Art. 9 subset |
 | Criminal allegations | Art. 10 | rare |
-| Children / dependents | “my daughter”, school + child | safety + children’s data |
+| Children / dependents | “my daughter”, “my kids”, “my then three-year-old”, “I have two kids”, “Daughter is Mia” | safety + children’s data; an age under 18 counts only before punctuation, a child word or a verb like “is” (“my 10-year-old car” is not a child) |
 | Street address + postcode | flat, street, UK full postcode | not “city name only” |
 | Precise GPS | 5+ decimal places, repeated | not placeholder `0.0` |
-| Immigration **status narrative** | permit, blue card, right to work | sensitive; distinct from passport **number** (H2) |
+| Immigration **status narrative** | permit, blue card, Niederlassungserlaubnis, settlement permit, permanent residence, green card, “student visa”, “visa application”, right to work | sensitive; distinct from passport **number** (H2). “Visa” alone is the card brand; “right to work from home” is not immigration |
 
 ### H4 — Identity bridges
 

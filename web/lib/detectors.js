@@ -21,11 +21,38 @@ const SSN_RE = /\b(?!000|666|9\d{2})\d{3}-(?!00)\d{2}-(?!0000)\d{4}\b/;
 const NINO_RE = /\b[A-CEGHJ-PR-TW-Z]{2}\d{6}[A-D]\b/i;
 const AADHAAR_RE = /\b\d{4}\s\d{4}\s\d{4}\b/;
 
+// A short, deliberate list, not a medical dictionary. Left out on purpose: "fever" (cabin fever, World Cup fever)
+// and "glasses" (wine glasses).
 const HEALTH_RE =
-  /\b(?:diabetes|asthma|allerg(?:y|ic)|anxiety|depression|adhd|therapy|medication|prescription|pregnant|disability)\w*\b/i;
-const IMMIGRATION_RE = /\b(?:work permit|blue card|aufenthaltstitel|residence permit|right to work)\b/i;
+  /\b(?:diabetes|asthma|allerg(?:y|ic)|anxiety|depress(?:ion|ed|ive)|adhd|therapy|medication|prescription|pregnant|disability|epilep(?:sy|tic)|seizure|thrombosis|lazy[- ]eye)\w*\b/i;
+// "Visa" alone is also the card brand, so only a kind of visa or a visa process counts ("student visa", "visa
+// application"; not "my Visa card", "my Visa expires"). "Right to work from home" is not immigration.
+const IMMIGRATION_RE = new RegExp(
+  "\\b(?:work permit|blue card|aufenthaltstitel|niederlassungserlaubnis|residence permit|settlement permit|"
+    + "permanent residen(?:ce|cy|t)|green card|indefinite leave to remain|right to work(?! (?:from home|remotely))|"
+    + "(?:work|student|tourist|visitor|spouse|partner|family|skilled worker|working holiday|transit|h-?1b|schengen) "
+    + "visas?|visa (?:applications?|status|sponsor\\w*|renewal|extension|interview|appointment|holder|refus\\w*|denied))\\b",
+  "i",
+);
 const RELIGION_RE = /\b(?:hindu|muslim|christian|sikh|jewish|buddhist)\b/i;
-const CHILDREN_RE = /\b(?:my (?:son|daughter|kid|child)|(?:son|daughter)'s name)\b/i;
+// A child's age in years (under 18), months or weeks, said the way a parent says it: "my then three-year-old.",
+// "my 6-month-old is teething". Not "my 10-year-old car": a noun after the age that isn't a child stops it.
+const CHILD_AGE =
+  "(?:1[0-7]|[1-9]|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|"
+  + "sixteen|seventeen)[- ]years?[- ]old|"
+  + "(?:\\d{1,2}|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)[- ](?:months?|weeks?)[- ]old";
+const CHILD_AGE_END =
+  "(?=['’]s\\b|[ \\t]*(?:[\\n.,;:!?)]|$)|"
+  + "\\s+(?:sons?|daughters?|boys?|girls?|kids?|child|twins|is|was|has|had|who|and|starts?|started|will)\\b)";
+const CHILD_WORDS = "(?:sons?|daughters?|kids?|child(?:ren)?)";
+// "(son|daughter) is <Name>": group 1 is the next character, which must be a capital (checked in detectH2H3).
+// Not after a possessive: "Jess's son is Leo" is Jess's child.
+const CHILDREN_RE = new RegExp(
+  `\\b(?:my (?:then )?(?:${CHILD_WORDS}|(?:${CHILD_AGE})${CHILD_AGE_END})|(?:son|daughter)'s name|`
+    + `I have (?:a|an|one|two|three|four|five|\\d) (?:young |little |teenage |twin )?(?:${CHILD_WORDS}|twins)|`
+    + "(?<!['’]s )(?:son|daughter)(?= is (?:called |named )?(\\S)))\\b",
+  "i",
+);
 const ORIENTATION_RE = /\b(?:gay|lesbian|bisexual|lgbtq)\b/i;
 // House number, a capitalised street name, a street word: "18 Elm Grove", "221B Baker Street".
 const STREET_RE =
@@ -47,7 +74,7 @@ const OS_DENY = new Set([
   "username", "user", "name",
 ]);
 
-const SELF_CUE_MEDIUM = /\b(?:I have|I'm|I've been|my therapist|diagnosed)\b/i;
+const SELF_CUE_MEDIUM = /\b(?:I have|I'm|I've been|my own|my therapist|diagnosed)\b/i;
 const GOV_CUE_RE = /(?:ssn|social security|aadhaar|nino|national insurance|passport|tax id|pan card).{0,32}$/i;
 const CARD_CUE_RE = /(?:card|visa|mastercard|cvv|pan).{0,24}$/i;
 
@@ -192,6 +219,7 @@ function detectH2H3(text) {
   ];
   for (const [pattern, kind, harm] of lexicon) {
     for (const m of text.matchAll(new RegExp(pattern.source, pattern.flags + "g"))) {
+      if (kind === "children" && m[1] && m[1] === m[1].toLowerCase()) continue; // "son is unwell": only "son is Leo"
       const win = windowBefore(text, m.index);
       let conf = "low";
       if (kind === "health" && SELF_CUE_MEDIUM.test(win + m[0])) conf = "medium";

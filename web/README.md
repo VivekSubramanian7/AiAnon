@@ -41,6 +41,9 @@ regenerate the fixtures:
 1. New Project → import this repository.
 2. **Root Directory: `web`**. Framework preset: Other. No build command, no output directory.
 3. Deploy. `vercel.json` sets the headers (COOP/COEP for multi-threading, CSP, caching).
+4. Project → **Analytics** → Enable Web Analytics. `app.js` loads Vercel's script from `/_vercel/insights/script.js`
+   (same origin, so the CSP needs no change). It counts page visits without cookies and never sees the scanned file.
+   It is skipped on localhost, where that path doesn't exist.
 
 Vercel's Hobby plan is for personal, non-commercial use; a commercial launch needs Pro. The model is not hosted on
 Vercel (Hobby's 100 MB upload limit; and 104 MB per visitor would use up the bandwidth quickly), so Vercel only

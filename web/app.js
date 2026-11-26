@@ -1,5 +1,6 @@
 // TMI in the browser: drop or paste, quick frisk in a worker, then (if asked) the detective.
-// No frameworks, no trackers, no uploads. The worker only ever hands back counts and masked examples.
+// No frameworks, no cookies, no uploads; Vercel Web Analytics counts visits only (loadAnalytics). The worker only
+// ever hands back counts and masked examples.
 
 import { MODEL_BYTES, detectiveIsCached, forgetDetective } from "./lib/detective.js";
 import {
@@ -547,8 +548,21 @@ els.forget.addEventListener("click", async () => {
   els.forget.disabled = true;
 });
 
+/**
+ * Vercel Web Analytics: counts page visits, with no cookies and nothing from the scan. Vercel serves the script at
+ * this path once Web Analytics is switched on for the project; it doesn't exist when running locally, so skip it there.
+ */
+function loadAnalytics() {
+  if (["localhost", "127.0.0.1", "[::1]"].includes(location.hostname)) return;
+  const script = document.createElement("script");
+  script.defer = true;
+  script.src = "/_vercel/insights/script.js";
+  document.head.append(script);
+}
+
 spawnWorker();
 detectiveIsCached().then((cached) => { els.forget.hidden = !cached; });
+loadAnalytics();
 
 document.querySelectorAll(".copy-prompt").forEach((button) => {
   const hint = button.querySelector(".copy-prompt-hint");

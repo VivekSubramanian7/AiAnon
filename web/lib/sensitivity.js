@@ -58,6 +58,8 @@ const THIRD_PARTY_RE =
 const SELF_CUE_RE = /\b(?:I|I'm|I've|my|me|mine)\b/i;
 const SELF_NEGATIVE_RE =
   /\bmy (?:colleague|friend|boss|manager|client|son|daughter|kid|mom|dad|wife|husband|partner)\b/i;
+// Someone else named in an earlier sentence says nothing about this one: "My boss is Tom. My email is …".
+const SENTENCE_BREAK_RE = /[.!?]\s|\n/;
 const H1_KINDS = new Set(["private_key", "aws_access_key", "api_token", "jwt", "password_cue", "tokenized_url"]);
 
 function sortKey(row) {
@@ -165,13 +167,21 @@ export function buildPieces(findings) {
 // Another person's name stays "unknown" next to "I" or "my" ("I met Tom" is not about Tom being you).
 const NOT_SELF_KINDS = new Set(["name"]);
 
+function aboutSomeoneElse(text, kind) {
+  if (THIRD_PARTY_RE.test(text)) return true;
+  // "My husband and my daughter": family words don't make your own child someone else's.
+  return kind !== "children" && SELF_NEGATIVE_RE.test(text);
+}
+
 export function classifySubject(window, { kind }) {
   if (H1_KINDS.has(kind) && !window.trim()) return "account_holder";
   if (kind === "self_name") return "account_holder";
   if (kind === "child_name") return "third_party";
-  if (THIRD_PARTY_RE.test(window) || SELF_NEGATIVE_RE.test(window)) return "third_party";
+  const sentence = window.split(SENTENCE_BREAK_RE).at(-1);
+  if (aboutSomeoneElse(sentence, kind)) return "third_party";
   if (NOT_SELF_KINDS.has(kind)) return "unknown";
-  if (SELF_CUE_RE.test(window)) return "account_holder";
+  // Someone else came up in an earlier sentence: only a cue in this one makes it yours.
+  if (SELF_CUE_RE.test(aboutSomeoneElse(window, kind) ? sentence : window)) return "account_holder";
   if (H1_KINDS.has(kind)) return "account_holder";
   return "unknown";
 }

@@ -104,6 +104,26 @@ def test_classify_subject_uses_the_text_before_the_value():
     assert classify_subject("", kind="self_name") == "account_holder"
 
 
+def test_classify_subject_someone_else_counts_only_in_the_same_sentence():
+    # Memory summaries run several facts into one paragraph: "my daughter" two sentences back is not this email's owner.
+    assert classify_subject("My boss is Tom. My email is ", kind="email") == "account_holder"
+    assert classify_subject("my daughter is Margaux. I shared my mobile number, ", kind="phone") == "account_holder"
+    assert classify_subject("I emailed my boss at ", kind="email") == "third_party"
+    assert classify_subject("My partner is Sam, and his number is ", kind="phone") == "third_party"
+    # Someone else came up earlier and nothing in this sentence says it's yours: unknown, not yours.
+    assert classify_subject("My boss is Tom. Email: ", kind="email") == "unknown"
+    assert classify_subject("I live in Leeds. Email: ", kind="email") == "account_holder"
+
+
+def test_classify_subject_family_words_dont_make_your_child_someone_elses():
+    assert classify_subject("I'm married to Tobias, and ", kind="children") == "account_holder"
+    assert classify_subject("My husband and ", kind="children") == "account_holder"
+    assert classify_subject("my son is 6 and ", kind="children") == "account_holder"
+    assert classify_subject("her ", kind="children") == "third_party"
+    assert classify_subject("my friend's ", kind="children") == "third_party"
+    assert classify_subject("my colleague and ", kind="children") == "third_party"
+
+
 def test_password_mask_hides_first_character_and_length():
     assert mask_kind("password_cue", "Hunter2-Summer!") == "•" * 8
     assert mask_kind("password_cue", "abc12345") == "•" * 8

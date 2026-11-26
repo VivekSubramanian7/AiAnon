@@ -22,6 +22,7 @@ OUT = os.path.join(REPO, "tests", "web", "fixtures")
 
 MOCK_FILES = [
     "chatgpt-saved-memories.txt", "gemini-saved-info.txt", "bot-answer-what-do-you-remember.txt",
+    "claude-memory-summary.txt",
     "clean-memory.txt", "chatgpt-export.zip", "claude-export.zip", "chatgpt-export-large.zip",
 ]
 

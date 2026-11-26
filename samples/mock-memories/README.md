@@ -8,13 +8,17 @@ Regenerate them with `python scripts/make_mock_memories.py`. See exactly what ea
 real values included, with `python scripts/scan_mock_memories.py`.
 `tests/test_mock_memories.py` checks the results below.
 
+The bot answer and the Claude memory summary talk to the user ("you", "your"). The scanner reads memories like
+these in the first person, so "your daughter" counts as the user's own (see `lib/scanner/voice.py`).
+
 ## The files
 
 | File | What it is | Result |
 |---|---|---|
 | `chatgpt-saved-memories.txt` | ChatGPT's memory list, as copied from Settings → Personalization → Manage memories (Dana, a nurse in Leeds) | 16 things, score 66, Certified oversharer |
 | `gemini-saved-info.txt` | Gemini "Saved info", first-person (Kofi, Accra → London) | 9 things, score 45, Chatty |
-| `bot-answer-what-do-you-remember.txt` | A bot's reply to "What do you remember about me?" (Sam, a teacher in Denver) | 10 things, score 50, Certified oversharer |
+| `bot-answer-what-do-you-remember.txt` | A bot's reply to "What do you remember about me?" (Sam, a teacher in Denver) | 11 things, score 52, Certified oversharer |
+| `claude-memory-summary.txt` | A memory summary in the style of Claude's memory, written to the user ("Your name is …") in paragraphs under topic headings (Ines, Lyon → Munich) | 9 things, score 45, Chatty |
 | `clean-memory.txt` | Only preferences: no names, places or numbers | 0 things, score 0, Suspiciously clean |
 | `chatgpt-export.zip` | ChatGPT data export: 6 conversations about Priya in Austin | 16 things, score 66, Certified oversharer |
 | `claude-export.zip` | Claude data export: conversations, memories, a project and an attached CV (Marcus, Hamburg → Toronto) | 17 things, score 73, Certified oversharer |
@@ -36,7 +40,8 @@ The exports contain traps the scanner has to avoid:
 |---|---|---|
 | ChatGPT saved memories | 4 names, email, phone, birth date (03.07.1989), IBAN, @handle, age, 4 places | asthma, St Mary's Hospital |
 | Gemini saved info | 2 names, email, phone, birth date (22/01/1995), age, Accra and London, Blue Room Studios | peanut allergy |
-| Bot answer | 2 names, 2 emails, phone, birth date (08/04/1997), Denver and Colorado, school and bank | the age ("You're 29" isn't in the age rule) |
+| Bot answer | 2 names, 2 emails, phone, birth date (08/04/1997), age, Denver and Colorado, school and bank | |
+| Claude memory summary | her name (as yours), phone, email, Munich and Lyon, Lindqvist Freight as employer, the Niederlassungserlaubnis, her daughter and "your then three-year-old", anxiety and thrombosis as health | "lazy-eye" stays low: it is the child's, and nothing says it's hers |
 | ChatGPT export | 5 names ("Priya" merges into "Priya Natarajan"), email, phone, birthday (12/09/1993), @handle, GitHub link, age 33, Austin, Lisbon and Texas, 2 employers | the street address "flat 4B at 18 Elm Grove"; the travel date `2026-05-14` |
 | Claude export | 6 names, 2 emails, 2 phones, birth date (21.11.1985), IBAN, Hamburg and Toronto, 2 companies, a move-out date | the school name; "Kuehne Freight" gets counted as a name, not a company |
 

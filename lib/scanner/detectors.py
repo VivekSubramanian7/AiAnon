@@ -35,15 +35,40 @@ SSN_RE = re.compile(r"\b(?!000|666|9\d{2})\d{3}-(?!00)\d{2}-(?!0000)\d{4}\b")
 NINO_RE = re.compile(r"\b[A-CEGHJ-PR-TW-Z]{2}\d{6}[A-D]\b", re.I)
 AADHAAR_RE = re.compile(r"\b\d{4}\s\d{4}\s\d{4}\b")
 
+# A short, deliberate list, not a medical dictionary. Left out on purpose: "fever" (cabin fever, World Cup fever)
+# and "glasses" (wine glasses).
 HEALTH_RE = re.compile(
-    r"(?i)\b(?:diabetes|asthma|allerg(?:y|ic)|anxiety|depression|adhd|therapy|"
-    r"medication|prescription|pregnant|disability)\w*\b"
+    r"(?i)\b(?:diabetes|asthma|allerg(?:y|ic)|anxiety|depress(?:ion|ed|ive)|adhd|therapy|"
+    r"medication|prescription|pregnant|disability|epilep(?:sy|tic)|seizure|thrombosis|lazy[- ]eye)\w*\b"
 )
+# "Visa" alone is also the card brand, so only a kind of visa or a visa process counts ("student visa", "visa
+# application"; not "my Visa card", "my Visa expires"). "Right to work from home" is not immigration.
 IMMIGRATION_RE = re.compile(
-    r"(?i)\b(?:work permit|blue card|aufenthaltstitel|residence permit|right to work)\b"
+    r"(?i)\b(?:work permit|blue card|aufenthaltstitel|niederlassungserlaubnis|residence permit|settlement permit|"
+    r"permanent residen(?:ce|cy|t)|green card|indefinite leave to remain|right to work(?! (?:from home|remotely))|"
+    r"(?:work|student|tourist|visitor|spouse|partner|family|skilled worker|working holiday|transit|h-?1b|schengen) "
+    r"visas?|visa (?:applications?|status|sponsor\w*|renewal|extension|interview|appointment|holder|refus\w*|denied))\b"
 )
 RELIGION_RE = re.compile(r"(?i)\b(?:hindu|muslim|christian|sikh|jewish|buddhist)\b")
-CHILDREN_RE = re.compile(r"(?i)\b(?:my (?:son|daughter|kid|child)|(?:son|daughter)'s name)\b")
+# A child's age in years (under 18), months or weeks, said the way a parent says it: "my then three-year-old.",
+# "my 6-month-old is teething". Not "my 10-year-old car": a noun after the age that isn't a child stops it.
+CHILD_AGE = (
+    r"(?:1[0-7]|[1-9]|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|"
+    r"sixteen|seventeen)[- ]years?[- ]old|"
+    r"(?:\d{1,2}|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)[- ](?:months?|weeks?)[- ]old"
+)
+CHILD_AGE_END = (
+    r"(?=['’]s\b|[ \t]*(?:[\n.,;:!?)]|$)|"
+    r"\s+(?:sons?|daughters?|boys?|girls?|kids?|child|twins|is|was|has|had|who|and|starts?|started|will)\b)"
+)
+CHILD_WORDS = r"(?:sons?|daughters?|kids?|child(?:ren)?)"
+# "(son|daughter) is <Name>": group 1 is the next character, which must be a capital (checked in detect_h2_h3).
+# Not after a possessive: "Jess's son is Leo" is Jess's child.
+CHILDREN_RE = re.compile(
+    rf"(?i)\b(?:my (?:then )?(?:{CHILD_WORDS}|(?:{CHILD_AGE}){CHILD_AGE_END})|(?:son|daughter)'s name|"
+    rf"I have (?:a|an|one|two|three|four|five|\d) (?:young |little |teenage |twin )?(?:{CHILD_WORDS}|twins)|"
+    r"(?<!['’]s )(?:son|daughter)(?= is (?:called |named )?(\S)))\b"
+)
 ORIENTATION_RE = re.compile(r"(?i)\b(?:gay|lesbian|bisexual|lgbtq)\b")
 # House number, a capitalised street name, a street word: "18 Elm Grove", "221B Baker Street".
 STREET_RE = re.compile(
@@ -68,7 +93,7 @@ OS_DENY = frozenset({
 })
 
 SELF_CUE_MEDIUM = re.compile(
-    r"(?i)\b(?:I have|I'm|I've been|my therapist|diagnosed)\b"
+    r"(?i)\b(?:I have|I'm|I've been|my own|my therapist|diagnosed)\b"
 )
 SELF_RELIGION = re.compile(r"(?i)\b(?:I'm|I am)\s*$")
 
@@ -245,6 +270,8 @@ def detect_h2_h3(text: str) -> List[Hit]:
         (ORIENTATION_RE, "sexual_orientation", "H3"),
     ):
         for m in pattern.finditer(text):
+            if kind == "children" and m.group(1) and not m.group(1).isupper():
+                continue  # "son is unwell": only "son is Leo" names a child
             win = _window(text, m.start())
             conf = "low"
             if kind == "health" and SELF_CUE_MEDIUM.search(win + m.group(0)):

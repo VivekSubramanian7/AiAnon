@@ -48,6 +48,14 @@
        "source": "memory"
       },
       {
+       "text": "The bot answer and the Claude memory summary talk to the user (\"you\", \"your\"). The scanner reads memories like",
+       "source": "memory"
+      },
+      {
+       "text": "these in the first person, so \"your daughter\" counts as the user's own (see `lib/scanner/voice.py`).",
+       "source": "memory"
+      },
+      {
        "text": "## The files",
        "source": "memory"
       },
@@ -68,7 +76,11 @@
        "source": "memory"
       },
       {
-       "text": "| `bot-answer-what-do-you-remember.txt` | A bot's reply to \"What do you remember about me?\" (Sam, a teacher in Denver) | 10 things, score 50, Certified oversharer |",
+       "text": "| `bot-answer-what-do-you-remember.txt` | A bot's reply to \"What do you remember about me?\" (Sam, a teacher in Denver) | 11 things, score 52, Certified oversharer |",
+       "source": "memory"
+      },
+      {
+       "text": "| `claude-memory-summary.txt` | A memory summary in the style of Claude's memory, written to the user (\"Your name is …\") in paragraphs under topic headings (Ines, Lyon → Munich) | 9 things, score 45, Chatty |",
        "source": "memory"
       },
       {
@@ -140,7 +152,11 @@
        "source": "memory"
       },
       {
-       "text": "| Bot answer | 2 names, 2 emails, phone, birth date (08/04/1997), Denver and Colorado, school and bank | the age (\"You're 29\" isn't in the age rule) |",
+       "text": "| Bot answer | 2 names, 2 emails, phone, birth date (08/04/1997), age, Denver and Colorado, school and bank | |",
+       "source": "memory"
+      },
+      {
+       "text": "| Claude memory summary | her name (as yours), phone, email, Munich and Lyon, Lindqvist Freight as employer, the Niederlassungserlaubnis, her daughter and \"your then three-year-old\", anxiety and thrombosis as health | \"lazy-eye\" stays low: it is the child's, and nothing says it's hers |",
        "source": "memory"
       },
       {
@@ -476,6 +492,58 @@
       {
        "text": "- Book movers (call Dave Kowalski at +1 416 555 0101)\n- Register Lena at school\n- Close the Hamburg flat by 31.07.2026",
        "source": "project"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "sample:claude-memory-summary.txt",
+   "kind": "file",
+   "path": "samples/mock-memories/claude-memory-summary.txt",
+   "name": "claude-memory-summary.txt",
+   "expect": {
+    "ok": {
+     "format": "text",
+     "conversations": 0,
+     "assistantMessagesSkipped": 0,
+     "filesRead": [],
+     "segments": [
+      {
+       "text": "Here's what I remember about you, grouped by topic.",
+       "source": "memory"
+      },
+      {
+       "text": "Work context",
+       "source": "memory"
+      },
+      {
+       "text": "You work at Lindqvist Freight in Munich as a logistics planner, mostly in Excel and SQL. You moved there from Lyon in 2019, and your Niederlassungserlaubnis came through in March.",
+       "source": "memory"
+      },
+      {
+       "text": "Personal context",
+       "source": "memory"
+      },
+      {
+       "text": "Your name is Ines Moreau. You're married to Tobias, and your daughter is Margaux. You shared your mobile number, +49 170 555 0142, and your email, ines.moreau@example.net, while drafting a letter to your landlord.",
+       "source": "memory"
+      },
+      {
+       "text": "Top of mind",
+       "source": "memory"
+      },
+      {
+       "text": "You've asked about your own anxiety a few times, and about breathing exercises before big presentations. Last spring you were diagnosed with a deep vein thrombosis after a long flight.",
+       "source": "memory"
+      },
+      {
+       "text": "Brief history",
+       "source": "memory"
+      },
+      {
+       "text": "In October you asked about lazy-eye treatment for your then three-year-old. You prefer short answers, British spelling and worked examples.",
+       "source": "memory"
       }
      ]
     }

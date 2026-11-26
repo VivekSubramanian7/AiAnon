@@ -4,7 +4,8 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import {
-  bertWords, groupWords, modelFetch, IntegrityError, MODEL_FILES, MODEL_FILE, MODEL_ID, MODEL_REVISION,
+  bertWords, groupWords, modelFetch, checkedCache, IntegrityError, MODEL_FILES, MODEL_FILE, MODEL_ID, MODEL_REVISION,
+  UNPINNED_REVISION,
 } from "../../web/lib/detective.js";
 
 test("words split like BERT: punctuation stands alone", () => {
@@ -59,7 +60,7 @@ async function readAll(response) { // as Transformers.js reads a download
 test("a file matching its SHA-256 comes through unchanged, always from the pinned revision", async () => {
   const fetchImpl = fakeFetch(GOOD);
   const get = modelFetch(fetchImpl, FILES);
-  for (const revision of [MODEL_REVISION, "main"]) {
+  for (const revision of [MODEL_REVISION, UNPINNED_REVISION]) {
     const response = await get(`${BASE}${revision}/config.json`);
     assert.deepEqual(new Uint8Array(await readAll(response)), GOOD);
   }
@@ -79,7 +80,9 @@ test("a tampered, longer or shorter file errors the download, so it is never use
 test("existence checks are answered without a request; other files are missing", async () => {
   const fetchImpl = fakeFetch(GOOD);
   const get = modelFetch(fetchImpl, FILES);
-  const head = await get(`${BASE}main/config.json`, { method: "GET", headers: new Headers({ Range: "bytes=0-0" }) });
+  const head = await get(`${BASE}${UNPINNED_REVISION}/config.json`, {
+    method: "GET", headers: new Headers({ Range: "bytes=0-0" }),
+  });
   assert.equal(head.status, 200);
   assert.equal(head.headers.get("content-length"), String(GOOD.length));
   assert.equal((await get(`${BASE}${MODEL_REVISION}/generation_config.json`)).status, 404);
@@ -95,6 +98,54 @@ test("anything but the pinned model is refused", async () => {
     "https://example.com/Xenova/bert-base-NER/resolve/main/config.json", // another host
   ]) await assert.rejects(get(url));
   assert.equal(fetchImpl.calls.length, 0);
+});
+
+// ---------- the browser cache: a stored file comes out only if it still matches ----------
+
+function fakeCache(entries = {}) { // the parts of the Cache API Transformers.js and checkedCache use
+  const store = new Map(Object.entries(entries));
+  const url = (key) => (typeof key === "string" ? key : key.url); // like the real one, keys may be Requests
+  return {
+    store,
+    match: async (key) => (store.has(url(key)) ? new Response(store.get(url(key))) : undefined),
+    put: async (key, response) => { store.set(url(key), new Uint8Array(await response.arrayBuffer())); },
+    delete: async (key) => store.delete(url(key)),
+  };
+}
+
+const CONFIG_URL = `${BASE}${MODEL_REVISION}/config.json`;
+
+test("a stored file that still matches comes out of the cache unchanged", async () => {
+  const cache = checkedCache(fakeCache({ [CONFIG_URL]: GOOD }), FILES);
+  for (let i = 0; i < 2; i++) { // the second read skips the hash, not the file
+    const response = await cache.match(CONFIG_URL);
+    assert.deepEqual(new Uint8Array(await response.arrayBuffer()), GOOD);
+  }
+  assert.deepEqual(new Uint8Array(await (await cache.match(new Request(CONFIG_URL))).arrayBuffer()), GOOD);
+});
+
+test("a stored file that no longer matches is deleted and reported missing, so it is downloaded again", async () => {
+  const tampered = GOOD.slice();
+  tampered[3] ^= 1;
+  for (const body of [tampered, new Uint8Array([...GOOD, 32]), GOOD.slice(0, -1)]) {
+    const inner = fakeCache({ [CONFIG_URL]: body });
+    assert.equal(await checkedCache(inner, FILES).match(CONFIG_URL), undefined);
+    assert.equal(inner.store.has(CONFIG_URL), false);
+  }
+});
+
+test("only the pinned files come out of the cache; a miss stays a miss; put stores", async () => {
+  const others = [
+    `${BASE}${UNPINNED_REVISION}/config.json`, // not the pinned revision
+    `${BASE}${MODEL_REVISION}/generation_config.json`, // not one of the files
+    "https://huggingface.co/someone/bert-base-NER/resolve/main/config.json", // another model
+  ];
+  const inner = fakeCache(Object.fromEntries(others.map((url) => [url, GOOD])));
+  const cache = checkedCache(inner, FILES);
+  for (const url of others) assert.equal(await cache.match(url), undefined);
+  assert.equal(await cache.match(CONFIG_URL), undefined);
+  await cache.put(CONFIG_URL, new Response(GOOD));
+  assert.deepEqual(new Uint8Array(await (await cache.match(CONFIG_URL)).arrayBuffer()), GOOD);
 });
 
 test("the real list covers every file the detective loads", () => {

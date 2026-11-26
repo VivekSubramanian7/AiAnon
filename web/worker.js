@@ -12,7 +12,7 @@ import { extractFile, extractText, fileSource, ExtractError } from "./lib/extrac
 import { createRules } from "./lib/rules.js";
 import { scan, prepareTexts, buildChunks } from "./lib/scan.js";
 import { readEnvelope, nullEnvelope } from "./lib/envelope.js";
-import { loadDetective } from "./lib/detective.js";
+import { loadDetective, IntegrityError } from "./lib/detective.js";
 
 let rulesPromise = null;
 let detectivePromise = null;
@@ -101,7 +101,7 @@ async function detective(input) {
 
 function friendly(err, stage) {
   if (err instanceof ExtractError) return { message: err.message };
-  if (stage === "detective" && err?.name === "IntegrityError") {
+  if (stage === "detective" && err instanceof IntegrityError) {
     return {
       message: "The detective's files didn't match their fingerprints, so we threw them away unopened. Try again later.",
       retry: true,

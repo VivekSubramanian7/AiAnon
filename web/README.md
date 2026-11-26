@@ -17,16 +17,20 @@ No build step and no npm packages. All code runs from this site; the only other 
   (`onnxruntime-web` 1.31.0-dev.20260914, a pre-release that Transformers.js pins; its JavaScript is bundled inside
   Transformers.js, so the two can't be upgraded separately). The detective uses the plain CPU build (14 MB, not the
   27 MB WebGPU one). The files are byte for byte the npm packages, which matched npm's published integrity hashes and
-  jsDelivr's copies. `vendor/SHA256SUMS` records them and `tests/web/vendor.test.mjs` checks them.
+  jsDelivr's copies. `vendor/SHA256SUMS` records them, and the quick frisk's libphonenumber-js, and
+  `tests/web/vendor.test.mjs` checks them. There is no CI yet, so that check runs when you run the tests.
 - **The model:** `lib/detective.js` lists every file it may download with its SHA-256 (`MODEL_FILES`, from Hugging
   Face's records for the pinned revision). Transformers.js downloads through `modelFetch`, which requests only those
   files at that revision and errors a download whose size or hash doesn't match, so it is never used or cached.
+  Files read back from the browser cache go through `checkedCache`, which checks them again and deletes any that
+  no longer match, so they are downloaded afresh.
 - **CSP** (`vercel.json`): scripts and workers from this site only; connections to this site and Hugging Face only.
 - **Privacy:** Hugging Face sees the visitor's IP address when the detective downloads (the page says so). Nothing
   else leaves the tab.
 
 To update a vendored package: `npm pack <package>@<version>`, check the tarball against
 `npm view <package>@<version> dist.integrity`, copy the files, run `shasum -a 256 … > SHA256SUMS` from `web/vendor/`
+over every file in it
 (check with `shasum -a 256 -c SHA256SUMS`), and update the paths in `lib/detective.js`. To change the model revision, update `MODEL_REVISION` and `MODEL_FILES`
 from `https://huggingface.co/api/models/Xenova/bert-base-NER/tree/<revision>?recursive=true` (the LFS `oid` is the
 SHA-256; hash the small JSON files after checking their git ids).

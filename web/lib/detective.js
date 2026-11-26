@@ -1,8 +1,8 @@
 // The detective: bert-base-NER (Hugging Face's official browser build, 8-bit, 104 MB) via Transformers.js.
 // Loaded only when the visitor asks for it. Transformers.js and ONNX Runtime are served from this site
 // (web/vendor, checked against npm's published hashes; see vendor/SHA256SUMS). The model comes from Hugging
-// Face, pinned to one revision; every file is checked against its SHA-256 before use, and stays in the browser
-// cache afterwards.
+// Face, pinned to one revision, and stays in the browser cache afterwards. Every file is checked against its
+// SHA-256 when it is downloaded and again whenever it is read back from the cache.
 //
 // Transformers.js's token-classification pipeline has no character offsets and no "first" aggregation,
 // so this splits text into words the way BERT does, tokenizes word by word, and labels each word with its
@@ -29,6 +29,8 @@ export const MODEL_FILES = {
   [MODEL_FILE]: { bytes: 108_952_255, sha256: "caaee70a5518ec7f9e46e5308fcc9263a8c227703a9ce46cf61c69a552349648" },
 };
 export const MODEL_BYTES = MODEL_FILES[MODEL_FILE].bytes;
+// Transformers.js 4.3.2 asks whether tokenizer_config.json exists on this branch, without the pinned revision.
+export const UNPINNED_REVISION = "main";
 const MODEL_BASE = `https://huggingface.co/${MODEL_ID}/resolve/`;
 
 /** A download that doesn't match its published SHA-256 (or size). Nothing from it is used or cached. */
@@ -44,8 +46,16 @@ async function sha256Hex(bytes) {
   return Array.from(digest, (b) => b.toString(16).padStart(2, "0")).join("");
 }
 
-/** Passes the body through, and errors it at the end unless it has exactly the expected size and hash. */
-function verified(file, { bytes, sha256 }) {
+async function matches(bytes, expected) {
+  return bytes.length === expected.bytes && (await sha256Hex(bytes)) === expected.sha256;
+}
+
+/**
+ * A stream that passes the body through and errors it at the end unless it has exactly the expected size and
+ * hash. Chunks go on as they arrive so the download bar moves; Transformers.js only uses or caches a file once it
+ * has read all of it, so the error at the end still stops a bad file.
+ */
+function verifyingStream(file, { bytes, sha256 }) {
   const data = new Uint8Array(bytes);
   let length = 0;
   return new TransformStream({
@@ -56,24 +66,35 @@ function verified(file, { bytes, sha256 }) {
       controller.enqueue(chunk);
     },
     async flush() {
-      if (length !== bytes || (await sha256Hex(data)) !== sha256) throw new IntegrityError(file);
+      if (length !== bytes || !(await matches(data, { bytes, sha256 }))) throw new IntegrityError(file);
     },
   });
+}
+
+const urlOf = (input) => (typeof input === "string" ? input : input.url ?? String(input));
+
+/** "https://huggingface.co/Xenova/bert-base-NER/resolve/<revision>/<file>" -> { revision, file }, else null. */
+function modelPath(url) {
+  if (!url.startsWith(MODEL_BASE)) return null;
+  const [revision, ...path] = url.slice(MODEL_BASE.length).split("/");
+  return { revision, file: path.join("/") };
 }
 
 /**
  * The fetch Transformers.js uses (env.fetch). It only reaches the pinned files in MODEL_FILES, and only hands
  * them over once their SHA-256 matches; Transformers.js caches a file only after reading all of it, so a bad
- * download is never cached. Transformers.js 4.3.2 checks that tokenizer_config.json exists on the "main" branch,
- * without the revision: that check is answered here, so nothing outside the pinned revision is ever requested.
+ * download is never cached. The existence check on UNPINNED_REVISION is answered here, so nothing outside the
+ * pinned revision is ever requested.
  */
 export function modelFetch(fetchImpl, files = MODEL_FILES) {
   return async (input, init = {}) => {
-    const url = typeof input === "string" ? input : input.url ?? String(input);
-    if (!url.startsWith(MODEL_BASE)) throw new Error(`The detective only downloads ${MODEL_ID}, not ${url}`);
-    const [revision, ...path] = url.slice(MODEL_BASE.length).split("/");
-    if (revision !== MODEL_REVISION && revision !== "main") throw new Error(`Unexpected model revision: ${url}`);
-    const file = path.join("/");
+    const url = urlOf(input);
+    const where = modelPath(url);
+    if (!where) throw new Error(`The detective only downloads ${MODEL_ID}, not ${url}`);
+    const { revision, file } = where;
+    if (revision !== MODEL_REVISION && revision !== UNPINNED_REVISION) {
+      throw new Error(`Unexpected model revision: ${url}`);
+    }
     const expected = files[file];
     if (!expected) return new Response(null, { status: 404, statusText: "Not Found" });
     if (new Headers(init.headers).has("Range")) { // an existence check
@@ -82,8 +103,45 @@ export function modelFetch(fetchImpl, files = MODEL_FILES) {
     const response = await fetchImpl(`${MODEL_BASE}${MODEL_REVISION}/${file}`, init);
     if (!response.ok || !response.body) return response;
     const { status, statusText, headers } = response;
-    return new Response(response.body.pipeThrough(verified(file, expected)), { status, statusText, headers });
+    return new Response(response.body.pipeThrough(verifyingStream(file, expected)), { status, statusText, headers });
   };
+}
+
+/**
+ * The cache Transformers.js uses (env.customCache): the browser cache, except that a stored file comes out only
+ * if it is one of the pinned files in MODEL_FILES and still has its size and SHA-256. A file that doesn't is
+ * deleted and reported missing, so Transformers.js downloads it again through modelFetch. Each file is hashed
+ * once per page load.
+ */
+export function checkedCache(cache, files = MODEL_FILES) {
+  const checked = new Set();
+  return {
+    async match(key) {
+      const url = urlOf(key);
+      const where = modelPath(url);
+      const expected = where?.revision === MODEL_REVISION ? files[where.file] : undefined;
+      if (!expected) return undefined;
+      const response = await cache.match(key);
+      if (!response || checked.has(url)) return response;
+      const bytes = new Uint8Array(await response.arrayBuffer());
+      if (!(await matches(bytes, expected))) {
+        await cache.delete(key);
+        return undefined;
+      }
+      checked.add(url);
+      const { status, statusText, headers } = response;
+      return new Response(bytes, { status, statusText, headers });
+    },
+    put: (key, response) => cache.put(key, response),
+  };
+}
+
+async function openCache() {
+  try {
+    return await caches.open(CACHE_NAME);
+  } catch {
+    return null; // no Cache API here (or it's blocked): download every time
+  }
 }
 
 const LABELS = { PER: "PERSON", ORG: "ORG", LOC: "LOCATION" }; // MISC is ignored, as in the Python benchmark
@@ -149,7 +207,11 @@ export async function loadDetective({ onDownload } = {}) {
   const { env, AutoTokenizer, AutoModelForTokenClassification, Tensor } = await import(TRANSFORMERS_URL);
   env.allowLocalModels = false;
   env.allowRemoteModels = true;
-  env.useBrowserCache = true;
+  // Transformers.js reads its cache before it fetches, so the cache needs its own check (checkedCache).
+  env.useBrowserCache = false;
+  const cache = await openCache();
+  env.useCustomCache = cache !== null;
+  env.customCache = cache && checkedCache(cache);
   env.fetch = modelFetch(globalThis.fetch.bind(globalThis));
   // ONNX Runtime from this site, imported directly (the WebAssembly cache would turn it into a blob: URL).
   env.useWasmCache = false;

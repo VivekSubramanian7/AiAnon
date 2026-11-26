@@ -105,8 +105,8 @@ nothing is uploaded. It works in two stages:
 
 1. **Quick frisk:** the pattern rules above, ported to JavaScript, plus word lists and phrase rules for
    names, places and companies (about 1 MB). Finds about two thirds of the names spaCy finds.
-2. **The detective (opt-in):** `bert-base-NER` (104 MB, downloaded once from Hugging Face, then cached)
-   via Transformers.js. In benchmarks it finds more names (89%) and companies (62%) than spaCy (86%, 45%).
+2. **The detective (opt-in):** `bert-base-NER` (104 MB, downloaded once from Hugging Face, checked against
+   its SHA-256, then cached) via Transformers.js, which is served from the site itself. In benchmarks it finds more names (89%) and companies (62%) than spaCy (86%, 45%).
 
 ```bash
 python3 scripts/serve_web.py     # http://localhost:8079, with the same headers as Vercel
